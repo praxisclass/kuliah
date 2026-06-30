@@ -1,0 +1,1807 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Tim Pengajar Content Development">
+<meta name="description" content="Modul Praktikum interaktif Content Development untuk D3 Vokasi — ebook web mandiri (offline) dengan infografis dan fitur interaktif.">
+<title>Ebook Praktikum — Content Development (D3 Vokasi)</title>
+<style>
+/* ============================================================
+   DESIGN SYSTEM — Ebook Content Development
+   100% offline: font sistem, tanpa CDN. Semua inline.
+   ============================================================ */
+:root{
+  --c-bg:#f6f7fb; --c-surface:#ffffff; --c-surface-2:#f0f2f8;
+  --c-text:#1d2433; --c-text-soft:#54607a; --c-text-faint:#8a93a8;
+  --c-border:#e3e7f0; --c-border-strong:#ccd3e4;
+  --c-primary:#4f46e5; --c-primary-soft:#eef0fe; --c-primary-ink:#3a32c0;
+  --c-accent:#0ea5a4; --c-accent-soft:#e2f7f6;
+  --c-warn:#d97706; --c-warn-soft:#fef3e2;
+  --c-danger:#dc2626; --c-danger-soft:#fdeaea;
+  --c-ok:#16a34a; --c-ok-soft:#e7f6ec;
+  --c-info:#2563eb; --c-info-soft:#e8f0fe;
+  --shadow-sm:0 1px 2px rgba(20,30,60,.06),0 1px 3px rgba(20,30,60,.07);
+  --shadow-md:0 4px 12px rgba(20,30,60,.08),0 2px 6px rgba(20,30,60,.06);
+  --shadow-lg:0 18px 50px rgba(20,30,60,.16);
+  --radius:14px; --radius-sm:9px;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --sidebar-w:312px; --maxread:860px;
+}
+[data-theme="dark"]{
+  --c-bg:#0e1118; --c-surface:#161b25; --c-surface-2:#1d2430;
+  --c-text:#e8ecf5; --c-text-soft:#a9b3c7; --c-text-faint:#76819a;
+  --c-border:#27303f; --c-border-strong:#37425a;
+  --c-primary:#8b86ff; --c-primary-soft:#23244a; --c-primary-ink:#b6b2ff;
+  --c-accent:#3ad0ce; --c-accent-soft:#10312f;
+  --c-warn:#f0a64a; --c-warn-soft:#3a2a14;
+  --c-danger:#f06868; --c-danger-soft:#3a1c1c;
+  --c-ok:#52c97e; --c-ok-soft:#13301f;
+  --c-info:#5d97f5; --c-info-soft:#16243f;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+  --shadow-md:0 6px 18px rgba(0,0,0,.45);
+  --shadow-lg:0 18px 50px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--c-bg);color:var(--c-text);font-family:var(--sans);
+  font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* ---------- reading progress ---------- */
+#progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:120;
+  background:linear-gradient(90deg,var(--c-primary),var(--c-accent));transition:width .1s linear}
+
+/* ---------- top bar (mobile) ---------- */
+#topbar{position:fixed;top:0;left:0;right:0;height:56px;z-index:90;
+  background:var(--c-surface);border-bottom:1px solid var(--c-border);
+  display:none;align-items:center;gap:12px;padding:0 14px;box-shadow:var(--shadow-sm)}
+#topbar .brand{font-weight:800;font-size:15px;letter-spacing:-.01em}
+.iconbtn{appearance:none;border:1px solid var(--c-border);background:var(--c-surface);
+  color:var(--c-text);width:40px;height:40px;border-radius:10px;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;font-size:18px;transition:.15s}
+.iconbtn:hover{background:var(--c-surface-2);border-color:var(--c-border-strong)}
+
+/* ---------- sidebar ---------- */
+#sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);z-index:100;
+  background:var(--c-surface);border-right:1px solid var(--c-border);
+  display:flex;flex-direction:column;transition:transform .28s ease}
+.sb-head{padding:20px 20px 14px;border-bottom:1px solid var(--c-border)}
+.sb-logo{display:flex;align-items:center;gap:11px}
+.sb-logo .mark{width:38px;height:38px;border-radius:11px;flex:0 0 auto;
+  background:linear-gradient(135deg,var(--c-primary),var(--c-accent));
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px;box-shadow:var(--shadow-sm)}
+.sb-logo .t1{font-weight:800;font-size:15px;line-height:1.15;letter-spacing:-.01em}
+.sb-logo .t2{font-size:11.5px;color:var(--c-text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.sb-search{margin-top:14px;position:relative}
+.sb-search input{width:100%;padding:10px 12px 10px 34px;border-radius:10px;border:1px solid var(--c-border);
+  background:var(--c-surface-2);color:var(--c-text);font-size:13.5px;font-family:inherit;outline:none}
+.sb-search input:focus{border-color:var(--c-primary);box-shadow:0 0 0 3px var(--c-primary-soft)}
+.sb-search .ic{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--c-text-faint);font-size:13px}
+.sb-nav{flex:1;overflow-y:auto;padding:12px 10px 28px;scrollbar-width:thin}
+.sb-nav::-webkit-scrollbar{width:8px}
+.sb-nav::-webkit-scrollbar-thumb{background:var(--c-border-strong);border-radius:8px}
+.sb-group{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--c-text-faint);padding:14px 12px 6px}
+.sb-link{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;
+  color:var(--c-text-soft);text-decoration:none;font-size:14px;font-weight:500;transition:.13s;cursor:pointer;border:1px solid transparent}
+.sb-link:hover{background:var(--c-surface-2);color:var(--c-text)}
+.sb-link.active{background:var(--c-primary-soft);color:var(--c-primary-ink);font-weight:700;border-color:transparent}
+.sb-link .num{width:24px;height:24px;flex:0 0 auto;border-radius:7px;background:var(--c-surface-2);
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--c-text-soft)}
+.sb-link.active .num{background:var(--c-primary);color:#fff}
+.sb-foot{padding:12px 16px;border-top:1px solid var(--c-border);display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:var(--c-text-faint)}
+.toggle{appearance:none;border:1px solid var(--c-border);background:var(--c-surface-2);color:var(--c-text);
+  border-radius:20px;height:34px;padding:0 12px;cursor:pointer;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:7px;transition:.15s}
+.toggle:hover{border-color:var(--c-border-strong)}
+#backdrop{position:fixed;inset:0;background:rgba(8,12,22,.45);z-index:95;opacity:0;visibility:hidden;transition:.25s}
+#backdrop.show{opacity:1;visibility:visible}
+
+/* ---------- main ---------- */
+main{margin-left:var(--sidebar-w);padding:0;min-height:100vh}
+.wrap{max-width:var(--maxread);margin:0 auto;padding:54px 40px 120px}
+section.chapter{scroll-margin-top:24px;display:none;animation:fade .35s ease}
+section.chapter.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---------- typography ---------- */
+h1,h2,h3,h4{line-height:1.25;letter-spacing:-.015em;color:var(--c-text);scroll-margin-top:80px}
+h1{font-size:34px;font-weight:800;margin:.2em 0 .35em}
+h2{font-size:25px;font-weight:800;margin:1.9em 0 .6em;padding-bottom:.35em;border-bottom:2px solid var(--c-border)}
+h3{font-size:19.5px;font-weight:700;margin:1.6em 0 .5em;color:var(--c-text)}
+h4{font-size:16px;font-weight:700;margin:1.3em 0 .4em;color:var(--c-text-soft);text-transform:uppercase;letter-spacing:.04em;font-size:13.5px}
+p{margin:.7em 0}
+a{color:var(--c-primary-ink);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+strong{font-weight:700;color:var(--c-text)}
+ul,ol{margin:.7em 0;padding-left:1.4em}
+li{margin:.34em 0}
+ul.clean{list-style:none;padding-left:0}
+hr{border:none;border-top:1px solid var(--c-border);margin:2.4em 0}
+code{font-family:var(--mono);font-size:.86em;background:var(--c-surface-2);padding:.12em .4em;border-radius:5px;border:1px solid var(--c-border);color:var(--c-primary-ink)}
+.lead{font-size:19px;color:var(--c-text-soft);line-height:1.65}
+.muted{color:var(--c-text-faint)}
+.kbd{font-family:var(--mono);font-size:.8em;background:var(--c-surface);border:1px solid var(--c-border-strong);
+  border-bottom-width:2px;border-radius:6px;padding:.15em .5em;color:var(--c-text)}
+
+/* ---------- chapter hero ---------- */
+.chap-hero{background:linear-gradient(135deg,var(--c-primary),var(--c-accent));color:#fff;
+  border-radius:var(--radius);padding:30px 32px;margin:0 0 30px;box-shadow:var(--shadow-md);position:relative;overflow:hidden}
+.chap-hero::after{content:"";position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.10)}
+.chap-hero .eyebrow{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;opacity:.92}
+.chap-hero h1{color:#fff;margin:.15em 0 .25em;font-size:30px}
+.chap-hero p{color:rgba(255,255,255,.94);margin:.2em 0 0;max-width:60ch}
+.chap-hero .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.chap-hero .meta span{background:rgba(255,255,255,.16);backdrop-filter:blur(4px);border-radius:20px;
+  padding:5px 13px;font-size:12.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+
+/* ---------- callouts ---------- */
+.callout{border-radius:var(--radius-sm);padding:15px 18px 15px 16px;margin:1.3em 0;border:1px solid var(--c-border);
+  border-left-width:4px;background:var(--c-surface);display:flex;gap:13px;box-shadow:var(--shadow-sm)}
+.callout .ic{flex:0 0 auto;font-size:18px;line-height:1.5}
+.callout .body{flex:1;min-width:0}
+.callout .body>:first-child{margin-top:0}.callout .body>:last-child{margin-bottom:0}
+.callout .t{font-weight:700;display:block;margin-bottom:2px}
+.callout.tip{border-left-color:var(--c-accent);background:var(--c-accent-soft)}
+.callout.tip .t{color:var(--c-accent)}
+.callout.info{border-left-color:var(--c-info);background:var(--c-info-soft)}
+.callout.info .t{color:var(--c-info)}
+.callout.warn{border-left-color:var(--c-warn);background:var(--c-warn-soft)}
+.callout.warn .t{color:var(--c-warn)}
+.callout.danger{border-left-color:var(--c-danger);background:var(--c-danger-soft)}
+.callout.danger .t{color:var(--c-danger)}
+.callout.trouble{border-left-color:var(--c-danger);background:var(--c-surface)}
+.callout.trouble .t{color:var(--c-danger)}
+
+/* ---------- objective / target list ---------- */
+.objbox{background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--radius);padding:6px 22px 18px;margin:1.4em 0;box-shadow:var(--shadow-sm)}
+.objbox .objttl{font-weight:800;margin:16px 0 6px;font-size:15px;display:flex;align-items:center;gap:9px}
+.obj-list{list-style:none;padding-left:0;margin:.4em 0}
+.obj-list li{padding-left:30px;position:relative;margin:.5em 0}
+.obj-list li::before{content:"✓";position:absolute;left:0;top:0;width:21px;height:21px;border-radius:6px;
+  background:var(--c-ok-soft);color:var(--c-ok);font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center}
+
+/* ---------- step accordion ---------- */
+.steps{margin:1.4em 0;counter-reset:step}
+.step{border:1px solid var(--c-border);border-radius:var(--radius-sm);margin:10px 0;background:var(--c-surface);
+  overflow:hidden;box-shadow:var(--shadow-sm);transition:.18s}
+.step.open{box-shadow:var(--shadow-md);border-color:var(--c-border-strong)}
+.step>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:14px 18px;font-weight:700;user-select:none}
+.step>summary::-webkit-details-marker{display:none}
+.step>summary:hover{background:var(--c-surface-2)}
+.step .sidx{counter-increment:step;flex:0 0 auto;width:30px;height:30px;border-radius:9px;
+  background:var(--c-primary);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+.step .sidx::before{content:counter(step)}
+.step .stitle{flex:1;font-size:15.5px}
+.step .chev{flex:0 0 auto;color:var(--c-text-faint);transition:.2s;font-size:14px}
+.step[open] .chev{transform:rotate(90deg)}
+.step .scontent{padding:4px 20px 18px 64px;border-top:1px solid var(--c-border)}
+.step .scontent>:first-child{margin-top:.6em}
+.step .estimate{font-size:11.5px;font-weight:700;color:var(--c-text-faint);background:var(--c-surface-2);border-radius:14px;padding:3px 9px;flex:0 0 auto}
+
+/* ---------- cards / grids ---------- */
+.grid{display:grid;gap:16px;margin:1.4em 0}
+.grid.g2{grid-template-columns:repeat(2,1fr)}
+.grid.g3{grid-template-columns:repeat(3,1fr)}
+.grid.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--radius-sm);padding:18px;box-shadow:var(--shadow-sm)}
+.card h4{margin-top:.2em}
+.card .ic{font-size:24px;display:block;margin-bottom:8px}
+.statcard{text-align:center;padding:20px 14px}
+.statcard .big{font-size:34px;font-weight:800;line-height:1;background:linear-gradient(135deg,var(--c-primary),var(--c-accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.statcard .lbl{font-size:13px;color:var(--c-text-soft);margin-top:7px}
+
+/* ---------- tables ---------- */
+.tbl-wrap{overflow-x:auto;margin:1.4em 0;border:1px solid var(--c-border);border-radius:var(--radius-sm);box-shadow:var(--shadow-sm)}
+table{width:100%;border-collapse:collapse;font-size:14.5px;background:var(--c-surface)}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--c-border);vertical-align:top}
+thead th{background:var(--c-surface-2);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.03em;color:var(--c-text-soft)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--c-surface-2)}
+td.center,th.center{text-align:center}
+
+/* ---------- vs comparison ---------- */
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:0;margin:1.5em 0;align-items:stretch}
+.vs .col{background:var(--c-surface);border:1px solid var(--c-border);padding:18px 20px}
+.vs .col:first-child{border-radius:var(--radius-sm) 0 0 var(--radius-sm)}
+.vs .col:last-child{border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+.vs .col h4{margin-top:0;color:var(--c-text);text-transform:none;letter-spacing:0;font-size:15px}
+.vs .mid{display:flex;align-items:center;justify-content:center;background:var(--c-primary);color:#fff;font-weight:800;font-size:13px;padding:0 14px}
+.vs ul{margin:.4em 0;padding-left:1.1em;font-size:14px}
+
+/* ---------- infographic generic ---------- */
+.infographic{background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--radius);
+  padding:22px;margin:1.6em 0;box-shadow:var(--shadow-sm)}
+.infographic .figcap{font-size:12.5px;color:var(--c-text-faint);text-align:center;margin-top:12px;font-weight:600}
+.infographic svg{display:block;width:100%;height:auto}
+
+/* anatomy stack */
+.anatomy{display:flex;flex-direction:column;gap:8px;margin:1em 0}
+.anatomy .band{border-radius:9px;padding:13px 16px;color:#fff;position:relative;box-shadow:var(--shadow-sm)}
+.anatomy .band b{display:block;font-size:15px}
+.anatomy .band span{font-size:13px;opacity:.92}
+.anatomy .tag{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.22);border-radius:14px;padding:3px 10px;font-size:11px;font-weight:700}
+
+/* funnel */
+.funnel{display:flex;flex-direction:column;align-items:center;gap:6px;margin:1.2em 0}
+.funnel .fl{color:#fff;text-align:center;padding:13px;border-radius:8px;font-weight:600;box-shadow:var(--shadow-sm)}
+.funnel .fl small{display:block;font-weight:400;opacity:.9;font-size:12px}
+
+/* meter / gauge bars */
+.meter{margin:12px 0}
+.meter .mh{display:flex;justify-content:space-between;font-size:13.5px;font-weight:600;margin-bottom:5px}
+.meter .track{height:12px;border-radius:8px;background:var(--c-surface-2);overflow:hidden}
+.meter .fill{height:100%;border-radius:8px}
+
+/* pill / badge */
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:3px 11px;font-size:12.5px;font-weight:700}
+.pill.p{background:var(--c-primary-soft);color:var(--c-primary-ink)}
+.pill.ok{background:var(--c-ok-soft);color:var(--c-ok)}
+.pill.warn{background:var(--c-warn-soft);color:var(--c-warn)}
+.pill.bad{background:var(--c-danger-soft);color:var(--c-danger)}
+
+/* ---------- checklist (persist) ---------- */
+.checklist{background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--radius);padding:8px 20px 16px;margin:1.4em 0;box-shadow:var(--shadow-sm)}
+.checklist .ci{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px dashed var(--c-border)}
+.checklist .ci:last-child{border-bottom:none}
+.checklist input[type=checkbox]{appearance:none;width:22px;height:22px;flex:0 0 auto;margin-top:1px;border:2px solid var(--c-border-strong);border-radius:7px;cursor:pointer;position:relative;transition:.15s}
+.checklist input[type=checkbox]:checked{background:var(--c-ok);border-color:var(--c-ok)}
+.checklist input[type=checkbox]:checked::after{content:"✓";position:absolute;inset:0;color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+.checklist label{cursor:pointer;font-size:15px}
+.checklist input:checked + label{color:var(--c-text-faint);text-decoration:line-through}
+.ck-progress{font-size:13px;font-weight:700;color:var(--c-text-soft);padding:10px 0 4px}
+
+/* ---------- quiz ---------- */
+.quiz{background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--radius);padding:20px 22px;margin:1.5em 0;box-shadow:var(--shadow-sm)}
+.quiz .q{font-weight:700;margin-bottom:12px;display:flex;gap:10px}
+.quiz .q .qn{flex:0 0 auto;color:var(--c-primary)}
+.quiz .opt{display:block;border:1px solid var(--c-border);border-radius:9px;padding:11px 14px;margin:8px 0;cursor:pointer;transition:.13s;font-size:14.5px;background:var(--c-surface)}
+.quiz .opt:hover{border-color:var(--c-border-strong);background:var(--c-surface-2)}
+.quiz .opt.correct{border-color:var(--c-ok);background:var(--c-ok-soft);color:var(--c-ok);font-weight:600}
+.quiz .opt.wrong{border-color:var(--c-danger);background:var(--c-danger-soft);color:var(--c-danger)}
+.quiz .opt.dim{opacity:.55}
+.quiz .fb{margin-top:10px;font-size:13.5px;padding:10px 14px;border-radius:9px;display:none}
+.quiz .fb.show{display:block}
+.quiz .fb.good{background:var(--c-ok-soft);color:var(--c-ok)}
+.quiz .fb.bad{background:var(--c-danger-soft);color:var(--c-danger)}
+
+/* ---------- glossary tooltip ---------- */
+.term{border-bottom:1.5px dotted var(--c-primary);cursor:help;font-weight:600;color:var(--c-primary-ink);position:relative}
+.term:hover::after{content:attr(data-def);position:absolute;left:0;bottom:130%;width:280px;max-width:74vw;
+  background:var(--c-text);color:var(--c-surface);padding:10px 13px;border-radius:9px;font-size:12.5px;font-weight:400;line-height:1.5;
+  z-index:60;box-shadow:var(--shadow-lg);text-transform:none;letter-spacing:0}
+.term:hover::before{content:"";position:absolute;left:14px;bottom:118%;border:6px solid transparent;border-top-color:var(--c-text);z-index:60}
+
+/* ---------- template / copyable ---------- */
+.tpl{background:var(--c-surface-2);border:1px solid var(--c-border);border-radius:var(--radius-sm);margin:1.3em 0;overflow:hidden}
+.tpl .th{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:var(--c-surface);border-bottom:1px solid var(--c-border);font-size:13px;font-weight:700;color:var(--c-text-soft)}
+.tpl .copy{appearance:none;border:1px solid var(--c-border);background:var(--c-surface);color:var(--c-text);border-radius:7px;padding:4px 11px;font-size:12px;font-weight:600;cursor:pointer}
+.tpl .copy:hover{border-color:var(--c-primary);color:var(--c-primary-ink)}
+.tpl pre{margin:0;padding:14px 16px;font-family:var(--mono);font-size:13px;line-height:1.6;white-space:pre-wrap;color:var(--c-text)}
+
+/* ---------- rubric calculator ---------- */
+.calc{background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--radius);padding:20px 22px;margin:1.5em 0;box-shadow:var(--shadow-sm)}
+.calc .row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--c-border);flex-wrap:wrap}
+.calc .row .nm{flex:1;min-width:180px;font-weight:600;font-size:14.5px}
+.calc .row .wt{font-size:12.5px;color:var(--c-text-faint);font-weight:700}
+.calc input[type=range]{flex:1;min-width:120px;accent-color:var(--c-primary)}
+.calc .sc{width:54px;text-align:right;font-weight:800;font-variant-numeric:tabular-nums}
+.calc .total{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px}
+.calc .total .lbl{font-weight:700;font-size:16px}
+.calc .total .val{font-size:40px;font-weight:800;font-variant-numeric:tabular-nums}
+.calc .grade{font-size:13px;font-weight:700;padding:4px 12px;border-radius:20px}
+
+/* ---------- timeline / roadmap ---------- */
+.roadmap{position:relative;margin:1.6em 0;padding-left:8px}
+.roadmap::before{content:"";position:absolute;left:21px;top:8px;bottom:8px;width:2px;background:var(--c-border)}
+.rm{position:relative;padding:0 0 22px 52px}
+.rm .dot{position:absolute;left:11px;top:2px;width:22px;height:22px;border-radius:50%;background:var(--c-primary);
+  color:#fff;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px var(--c-bg)}
+.rm h4{margin:.1em 0 .2em;text-transform:none;letter-spacing:0;font-size:15.5px;color:var(--c-text)}
+.rm p{margin:.1em 0;font-size:14px;color:var(--c-text-soft)}
+
+/* ---------- chapter nav (prev/next) ---------- */
+.chapnav{display:flex;justify-content:space-between;gap:14px;margin-top:50px;border-top:1px solid var(--c-border);padding-top:24px}
+.chapnav a{flex:1;border:1px solid var(--c-border);border-radius:var(--radius-sm);padding:14px 18px;text-decoration:none;
+  color:var(--c-text);background:var(--c-surface);transition:.15s;box-shadow:var(--shadow-sm)}
+.chapnav a:hover{border-color:var(--c-primary);box-shadow:var(--shadow-md)}
+.chapnav a.next{text-align:right}
+.chapnav a .dir{font-size:12px;color:var(--c-text-faint);font-weight:700}
+.chapnav a .tt{font-weight:700;margin-top:2px}
+.chapnav a.disabled{opacity:.4;pointer-events:none}
+
+#totop{position:fixed;right:22px;bottom:22px;z-index:80;width:46px;height:46px;border-radius:50%;border:none;
+  background:var(--c-primary);color:#fff;font-size:20px;cursor:pointer;box-shadow:var(--shadow-lg);opacity:0;visibility:hidden;transition:.25s}
+#totop.show{opacity:1;visibility:visible}
+
+/* search no-result */
+.nores{display:none;text-align:center;color:var(--c-text-faint);padding:40px;font-size:15px}
+
+/* ---------- responsive ---------- */
+@media (max-width:1024px){
+  :root{--sidebar-w:280px}
+  .wrap{padding:40px 26px 100px}
+}
+@media (max-width:860px){
+  body{font-size:16px}
+  #topbar{display:flex}
+  #sidebar{transform:translateX(-100%);box-shadow:var(--shadow-lg);width:300px}
+  #sidebar.open{transform:none}
+  main{margin-left:0;padding-top:56px}
+  .wrap{padding:26px 18px 90px}
+  .grid.g2,.grid.g3,.grid.g4{grid-template-columns:1fr}
+  .vs{grid-template-columns:1fr}
+  .vs .col,.vs .col:first-child,.vs .col:last-child{border-radius:var(--radius-sm);margin-bottom:0}
+  .vs .mid{padding:8px;border-radius:var(--radius-sm)}
+  h1{font-size:27px}.chap-hero h1{font-size:24px}h2{font-size:21px}
+  .step .scontent{padding-left:20px}
+  .chapnav{flex-direction:column}
+}
+@media print{
+  #sidebar,#topbar,#totop,#progress,#backdrop{display:none!important}
+  main{margin:0}
+  section.chapter{display:block!important;page-break-after:always}
+  .step .scontent{display:block!important}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="backdrop"></div>
+<!-- ===== TOP BAR (mobile) ===== -->
+<header id="topbar">
+  <button class="iconbtn" id="menuBtn" aria-label="Buka menu">☰</button>
+  <div class="brand">Content Development</div>
+  <button class="iconbtn" id="themeBtnM" aria-label="Ganti tema" style="margin-left:auto">◐</button>
+</header>
+
+<!-- ===== SIDEBAR ===== -->
+<aside id="sidebar" aria-label="Navigasi modul">
+  <div class="sb-head">
+    <div class="sb-logo">
+      <div class="mark">CD</div>
+      <div>
+        <div class="t1">Content Development</div>
+        <div class="t2">Modul Praktikum · D3</div>
+      </div>
+    </div>
+    <div class="sb-search">
+      <span class="ic">⌕</span>
+      <input type="search" id="search" placeholder="Cari materi, istilah, langkah…" aria-label="Cari">
+    </div>
+  </div>
+  <nav class="sb-nav" id="nav">
+    <div class="sb-group">Pendahuluan</div>
+    <a class="sb-link" data-target="ch-cover"><span class="num">★</span> Sampul &amp; Identitas</a>
+    <a class="sb-link" data-target="ch-guide"><span class="num">i</span> Panduan, CPL &amp; CPMK</a>
+
+    <div class="sb-group">Modul Praktikum</div>
+    <a class="sb-link" data-target="ch-m1"><span class="num">1</span> Strategi Konten &amp; Persona</a>
+    <a class="sb-link" data-target="ch-m2"><span class="num">2</span> Perencanaan &amp; UX Writing</a>
+    <a class="sb-link" data-target="ch-m3"><span class="num">3</span> Aset Visual &amp; Brand</a>
+    <a class="sb-link" data-target="ch-m4"><span class="num">4</span> Etika, Lisensi &amp; AI</a>
+    <a class="sb-link" data-target="ch-m5"><span class="num">5</span> Integrasi (WordPress)</a>
+    <a class="sb-link" data-target="ch-m6"><span class="num">6</span> Accessibility</a>
+    <a class="sb-link" data-target="ch-m7"><span class="num">7</span> SEO &amp; Performa</a>
+    <a class="sb-link" data-target="ch-m8"><span class="num">8</span> Analytics &amp; Launching</a>
+
+    <div class="sb-group">Penutup</div>
+    <a class="sb-link" data-target="ch-rubrik"><span class="num">R</span> Rubrik &amp; Kalkulator Nilai</a>
+    <a class="sb-link" data-target="ch-glosarium"><span class="num">G</span> Glosarium</a>
+    <a class="sb-link" data-target="ch-pustaka"><span class="num">P</span> Daftar Pustaka</a>
+    <div class="nores" id="nores">Tidak ada hasil untuk pencarian ini.</div>
+  </nav>
+  <div class="sb-foot">
+    <span>Edisi 2026 · v2.0</span>
+    <button class="toggle" id="themeBtn"><span id="themeIco">☀</span> <span id="themeTxt">Terang</span></button>
+  </div>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<main id="main">
+<div class="wrap">
+<!-- ============================ COVER ============================ -->
+<section class="chapter" id="ch-cover">
+  <div class="chap-hero">
+    <div class="eyebrow">Modul Praktikum · Edisi Interaktif 2026</div>
+    <h1>Content Development</h1>
+    <p>Panduan praktik berbasis proyek (Project-Based Learning) untuk merancang, memproduksi, dan meluncurkan sebuah <strong>Landing Page kampanye produk yang live, etis, dapat diakses semua orang, dan teroptimasi</strong> — dari nol hingga terukur.</p>
+    <div class="meta">
+      <span>🎓 Program D3 Vokasi</span>
+      <span>⚙ 4 SKS Praktikum</span>
+      <span>📦 8 Modul · 16 Pertemuan</span>
+      <span>🚀 Luaran: Landing Page Live</span>
+    </div>
+  </div>
+
+  <div class="grid g4">
+    <div class="card statcard"><div class="big">8</div><div class="lbl">Modul terstruktur</div></div>
+    <div class="card statcard"><div class="big">40+</div><div class="lbl">Langkah praktik terpandu</div></div>
+    <div class="card statcard"><div class="big">9</div><div class="lbl">Infografis interaktif</div></div>
+    <div class="card statcard"><div class="big">1</div><div class="lbl">Portofolio nyata</div></div>
+  </div>
+
+  <h2>Kata Pengantar</h2>
+  <p class="lead">Di era digital, konten bukan sekadar teks dan gambar — ia adalah <strong>aset strategis</strong> untuk mengomunikasikan nilai, membangun kepercayaan, dan mendorong konversi.</p>
+  <p>Modul ini dirancang khusus untuk mahasiswa Diploma 3 (Vokasi) dengan menitikberatkan pada penguasaan keterampilan praktis yang dibutuhkan industri digital. Melalui pendekatan <span class="term" data-def="Project-Based Learning: model belajar yang berpusat pada pengerjaan satu proyek nyata dari awal sampai akhir.">Project-Based Learning</span>, Anda tidak hanya mempelajari teori, tetapi langsung membangun produk nyata yang dapat dimasukkan ke dalam portofolio Anda.</p>
+  <p>Dibanding edisi sebelumnya, edisi ini diperluas dari 4 menjadi <strong>8 modul</strong> dengan tambahan materi yang sebelumnya hilang namun krusial di dunia kerja: <strong>strategi konten &amp; persona, etika &amp; hak cipta, pemanfaatan AI, aksesibilitas (accessibility), dan analitik konversi</strong>. Setiap langkah kini dilengkapi penjelasan mendalam, infografis, boks tips &amp; penanganan masalah, serta latihan interaktif.</p>
+
+  <div class="callout info"><span class="ic">📘</span><div class="body"><span class="t">Tentang edisi ini</span>Ebook ini adalah satu berkas HTML mandiri — dapat dibuka di komputer atau ponsel mana pun <strong>tanpa koneksi internet</strong>. Semua fitur (pencarian, mode gelap, checklist, kuis, kalkulator nilai) berjalan langsung di peramban Anda.</div></div>
+
+  <p style="margin-top:1.6em"><strong>Penyusun,</strong><br><span class="muted">Tim Pengajar Mata Kuliah Content Development</span></p>
+
+  <div class="chapnav">
+    <a class="prev disabled"><span class="dir">←</span></a>
+    <a class="next" data-target="ch-guide"><span class="dir">Selanjutnya →</span><div class="tt">Panduan, CPL &amp; CPMK</div></a>
+  </div>
+</section>
+
+<!-- ============================ GUIDE ============================ -->
+<section class="chapter" id="ch-guide">
+  <div class="chap-hero"><div class="eyebrow">Pendahuluan</div><h1>Panduan Penggunaan, CPL &amp; CPMK</h1><p>Pahami cara kerja ebook ini, capaian pembelajaran yang dituju, dan peta perjalanan praktikum Anda selama satu semester.</p></div>
+
+  <h2>Cara Menggunakan Ebook Ini</h2>
+  <div class="grid g2">
+    <div class="card"><span class="ic">🔎</span><h4>Pencarian cepat</h4><p>Gunakan kotak cari di sidebar untuk melompat ke modul atau istilah tertentu.</p></div>
+    <div class="card"><span class="ic">◐</span><h4>Mode gelap/terang</h4><p>Tombol tema di pojok bawah sidebar. Pilihan Anda tersimpan otomatis.</p></div>
+    <div class="card"><span class="ic">✓</span><h4>Checklist tersimpan</h4><p>Centang kemajuan Anda; status tersimpan di peramban walau ebook ditutup.</p></div>
+    <div class="card"><span class="ic">🧮</span><h4>Kalkulator nilai</h4><p>Simulasikan skor proyek akhir Anda dengan rubrik interaktif di bab Penutup.</p></div>
+  </div>
+  <div class="callout tip"><span class="ic">💡</span><div class="body"><span class="t">Kenali ikon boks</span>
+    <strong style="color:var(--c-accent)">Tips</strong> = trik mempercepat kerja · <strong style="color:var(--c-info)">Info</strong> = konteks tambahan · <strong style="color:var(--c-warn)">Perhatian</strong> = hal yang sering keliru · <strong style="color:var(--c-danger)">Penanganan Masalah</strong> = solusi saat macet. Kata <span class="term" data-def="Istilah ber-garis putus-putus: arahkan kursor untuk melihat definisinya.">ber-garis putus-putus</span> menampilkan definisi saat disentuh kursor.</div></div>
+
+  <h2>Capaian Pembelajaran Lulusan (CPL) yang Didukung</h2>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th style="width:90px">Kode</th><th>Rumusan Capaian Pembelajaran Lulusan</th></tr></thead>
+    <tbody>
+      <tr><td><strong>CPL-1</strong></td><td>Mampu menerapkan pemikiran logis, kritis, dan inovatif dalam merancang solusi konten digital yang berorientasi pada kebutuhan pengguna dan tujuan bisnis.</td></tr>
+      <tr><td><strong>CPL-2</strong></td><td>Mampu memproduksi aset konten (teks, visual) yang komunikatif, estetis, dan teroptimasi secara teknis untuk media web.</td></tr>
+      <tr><td><strong>CPL-3</strong></td><td>Mampu mengoperasikan perkakas (tools) pengembangan konten dan web builder secara profesional sesuai standar industri.</td></tr>
+      <tr><td><strong>CPL-4</strong></td><td>Mampu menjunjung etika profesi, menghargai hak cipta, dan menerapkan prinsip inklusivitas (accessibility) dalam berkarya.</td></tr>
+      <tr><td><strong>CPL-5</strong></td><td>Mampu mengevaluasi performa konten berbasis data dan mengambil keputusan perbaikan secara terukur.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Capaian Pembelajaran Mata Kuliah (CPMK)</h2>
+  <p>Setiap modul memetakan satu atau lebih CPMK berikut, yang merupakan turunan dari CPL di atas:</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th style="width:100px">Kode</th><th>Capaian Mata Kuliah</th><th style="width:120px">CPL · Modul</th></tr></thead>
+    <tbody>
+      <tr><td><strong>CPMK-1</strong></td><td>Merumuskan strategi konten, persona audiens, dan proposisi nilai (USP) sebuah produk.</td><td>CPL-1 · M1–M2</td></tr>
+      <tr><td><strong>CPMK-2</strong></td><td>Menyusun naskah persuasif (copywriting) dan teks antarmuka (UX writing) yang berorientasi konversi.</td><td>CPL-1,2 · M2</td></tr>
+      <tr><td><strong>CPMK-3</strong></td><td>Memproduksi dan mengoptimasi aset visual sesuai identitas merek &amp; standar performa web.</td><td>CPL-2 · M3</td></tr>
+      <tr><td><strong>CPMK-4</strong></td><td>Menerapkan etika konten, lisensi hak cipta yang benar, dan memanfaatkan AI secara bertanggung jawab.</td><td>CPL-4 · M4</td></tr>
+      <tr><td><strong>CPMK-5</strong></td><td>Membangun halaman web fungsional menggunakan CMS &amp; page builder (no-code).</td><td>CPL-3 · M5</td></tr>
+      <tr><td><strong>CPMK-6</strong></td><td>Menerapkan prinsip aksesibilitas (WCAG) agar konten dapat dinikmati semua pengguna.</td><td>CPL-4 · M6</td></tr>
+      <tr><td><strong>CPMK-7</strong></td><td>Mengoptimasi SEO on-page dan performa teknis (Core Web Vitals) sebuah halaman.</td><td>CPL-3 · M7</td></tr>
+      <tr><td><strong>CPMK-8</strong></td><td>Mengukur performa konten dengan analitik dan merumuskan rekomendasi perbaikan berbasis data.</td><td>CPL-5 · M8</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Peta Perjalanan Praktikum (16 Pertemuan)</h2>
+  <p>Mata kuliah 4 SKS ini berlangsung selama satu semester. Setiap modul dialokasikan <strong>±2 pertemuan</strong> (1 pertemuan praktikum = 170 menit), termasuk waktu pengerjaan proyek mandiri.</p>
+  <div class="roadmap">
+    <div class="rm"><div class="dot">1</div><h4>Modul 1–2 · Fondasi &amp; Naskah <span class="muted">(Pert. 1–4)</span></h4><p>Strategi konten, persona, USP, lalu copywriting &amp; UX writing + wireframe.</p></div>
+    <div class="rm"><div class="dot">2</div><h4>Modul 3–4 · Produksi &amp; Etika <span class="muted">(Pert. 5–8)</span></h4><p>Aset visual &amp; brand identity, lalu etika, hak cipta/lisensi, dan AI tools.</p></div>
+    <div class="rm"><div class="dot">3</div><h4>Modul 5–6 · Bangun &amp; Inklusif <span class="muted">(Pert. 9–12)</span></h4><p>Integrasi konten di WordPress+Elementor, lalu accessibility (WCAG).</p></div>
+    <div class="rm"><div class="dot">4</div><h4>Modul 7–8 · Optimasi &amp; Ukur <span class="muted">(Pert. 13–16)</span></h4><p>SEO on-page &amp; performa, lalu analytics, konversi, dan launching final.</p></div>
+  </div>
+
+  <h2>Skema Penilaian</h2>
+  <div class="grid g2">
+    <div class="card"><h4 style="text-transform:none;letter-spacing:0;font-size:15px;color:var(--c-text)">Komponen Nilai</h4>
+      <div class="meter"><div class="mh"><span>Proyek Akhir (Landing Page)</span><span>40%</span></div><div class="track"><div class="fill" style="width:40%;background:var(--c-primary)"></div></div></div>
+      <div class="meter"><div class="mh"><span>Tugas per Modul</span><span>35%</span></div><div class="track"><div class="fill" style="width:35%;background:var(--c-accent)"></div></div></div>
+      <div class="meter"><div class="mh"><span>Kuis &amp; Partisipasi</span><span>15%</span></div><div class="track"><div class="fill" style="width:15%;background:var(--c-info)"></div></div></div>
+      <div class="meter"><div class="mh"><span>Ujian/Refleksi</span><span>10%</span></div><div class="track"><div class="fill" style="width:10%;background:var(--c-warn)"></div></div></div>
+    </div>
+    <div class="card"><h4 style="text-transform:none;letter-spacing:0;font-size:15px;color:var(--c-text)">Luaran Proyek Akhir</h4>
+      <ul class="obj-list">
+        <li>Landing Page kampanye produk yang <strong>live</strong> &amp; dapat diakses publik.</li>
+        <li>Konsisten secara visual dengan brand guideline buatan sendiri.</li>
+        <li>Responsif di perangkat seluler &amp; lolos standar aksesibilitas dasar.</li>
+        <li>Skor Lighthouse (SEO &amp; Best Practices) di atas 85.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="chapnav">
+    <a class="prev" data-target="ch-cover"><span class="dir">← Sebelumnya</span><div class="tt">Sampul &amp; Identitas</div></a>
+    <a class="next" data-target="ch-m1"><span class="dir">Selanjutnya →</span><div class="tt">Modul 1 · Strategi Konten</div></a>
+  </div>
+</section>
+<!-- ============================ MODULE 1 ============================ -->
+<section class="chapter" id="ch-m1">
+  <div class="chap-hero"><div class="eyebrow">Modul 1 · Pertemuan 1–2</div><h1>Strategi Konten, Riset Audiens &amp; Persona</h1><p>Sebelum menulis satu kata pun, kita rancang fondasinya: untuk siapa konten dibuat, apa yang membuatnya unik, dan bagaimana memandu audiens dari "tidak kenal" menjadi "membeli".</p>
+  <div class="meta"><span>⏱ 2 × 170 menit</span><span>🎯 CPMK-1</span><span>📤 Luaran: Content Strategy Brief</span></div></div>
+
+  <div class="objbox">
+    <div class="objttl">🎯 Tujuan Praktikum</div>
+    <p class="muted" style="margin:.2em 0 .6em">Setelah menyelesaikan modul ini, Anda mampu:</p>
+    <ul class="obj-list">
+      <li>Menjelaskan posisi <span class="term" data-def="Landing page: halaman web tunggal dengan satu tujuan konversi spesifik.">landing page</span> dalam keseluruhan strategi konten (content funnel).</li>
+      <li>Menyusun <strong>persona audiens</strong> berbasis riset, bukan asumsi.</li>
+      <li>Merumuskan <span class="term" data-def="Unique Selling Proposition: keunggulan utama yang membedakan produk dari pesaing.">Unique Selling Proposition (USP)</span> dan proposisi nilai yang tajam.</li>
+      <li>Mengisi <strong>Content Strategy Brief</strong> sebagai pondasi seluruh proyek.</li>
+    </ul>
+  </div>
+
+  <h2>1.1 Mengapa Strategi Dulu, Baru Eksekusi?</h2>
+  <p>Kesalahan pemula paling umum adalah langsung membuka web builder dan mendesain. Akibatnya konten cantik tapi tidak menjual, karena tidak menjawab kebutuhan audiens yang tepat. Analogikan konten seperti membangun rumah: <strong>strategi adalah fondasi &amp; denah</strong>, desain adalah cat dan perabot. Tidak ada yang mengecat tembok sebelum fondasinya berdiri.</p>
+
+  <h2>1.2 Content Marketing Funnel (TOFU – MOFU – BOFU)</h2>
+  <p>Audiens tidak langsung membeli saat pertama kali bertemu merek Anda. Mereka bergerak melalui sebuah corong (funnel). Memahami posisi audiens membantu Anda memilih pesan yang tepat. Landing page kampanye umumnya menyasar tahap <strong>BOFU</strong> (siap mengambil keputusan), namun sering juga menangkap audiens MOFU.</p>
+  <div class="infographic">
+    <div class="funnel">
+      <div class="fl" style="width:100%;background:#6366f1"><b>TOFU — Top of Funnel · Kesadaran (Awareness)</b><small>Audiens baru sadar punya masalah. Konten: artikel, video edukasi, post media sosial. Tujuan: menarik perhatian.</small></div>
+      <div class="fl" style="width:74%;background:#0ea5a4"><b>MOFU — Middle · Pertimbangan (Consideration)</b><small>Audiens membandingkan solusi. Konten: studi kasus, webinar, perbandingan, lead magnet. Tujuan: membangun kepercayaan.</small></div>
+      <div class="fl" style="width:48%;background:#f59e0b"><b>BOFU — Bottom · Keputusan (Decision)</b><small>Audiens siap membeli. Konten: <strong>landing page</strong>, demo, penawaran, testimoni. Tujuan: konversi.</small></div>
+    </div>
+    <div class="figcap">Gambar 1.1 — Corong pemasaran konten. Lebar corong menggambarkan jumlah audiens yang menyusut di tiap tahap.</div>
+  </div>
+  <div class="callout info"><span class="ic">🎯</span><div class="body"><span class="t">Posisikan landing page Anda</span>Karena landing page berada di tahap BOFU, pesannya harus <strong>spesifik, meyakinkan, dan minim distraksi</strong>. Hanya ada satu tujuan dan satu tombol aksi utama (CTA).</div></div>
+
+  <h2>1.3 Riset Audiens &amp; Persona</h2>
+  <p>Persona adalah representasi semi-fiktif dari pelanggan ideal Anda, dibangun dari data nyata (wawancara, survei, kolom komentar, ulasan kompetitor). Persona mengubah "audiens" yang abstrak menjadi sosok konkret yang bisa Anda ajak bicara lewat tulisan.</p>
+  <div class="infographic">
+    <div class="card" style="box-shadow:none;border:2px dashed var(--c-border-strong)">
+      <div style="display:flex;gap:16px;align-items:center;margin-bottom:14px">
+        <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--c-primary),var(--c-accent));flex:0 0 auto"></div>
+        <div><strong style="font-size:18px">"Rina si Pejuang UMKM"</strong><br><span class="muted">Pemilik toko kue rumahan · 32 th · Bandung</span></div>
+      </div>
+      <div class="grid g2" style="margin:0;gap:12px">
+        <div><h4 style="margin:.2em 0">😟 Pain Point (Masalah)</h4><p style="font-size:14px;margin:.2em 0">Penjualan stagnan; bingung promosi online; tidak punya waktu &amp; budget besar.</p></div>
+        <div><h4 style="margin:.2em 0">🎯 Goal (Tujuan)</h4><p style="font-size:14px;margin:.2em 0">Pesanan naik tanpa harus jadi ahli teknologi.</p></div>
+        <div><h4 style="margin:.2em 0">🔍 Perilaku</h4><p style="font-size:14px;margin:.2em 0">Aktif di Instagram &amp; WhatsApp, scroll lewat HP, mudah ragu pada hal "ribet".</p></div>
+        <div><h4 style="margin:.2em 0">💬 Keberatan (Objection)</h4><p style="font-size:14px;margin:.2em 0">"Apa ini susah dipakai?", "Mahal nggak ya?", "Beneran works?"</p></div>
+      </div>
+    </div>
+    <div class="figcap">Gambar 1.2 — Contoh kartu persona. Setiap elemen kelak menjadi bahan baku copywriting Anda.</div>
+  </div>
+
+  <h2>1.4 Merumuskan USP &amp; Proposisi Nilai</h2>
+  <p>USP menjawab satu pertanyaan maut dari pelanggan: <em>"Kenapa saya harus pilih kamu, bukan yang lain (atau tidak sama sekali)?"</em> USP yang kuat itu spesifik dan sulit ditiru pesaing.</p>
+  <div class="vs">
+    <div class="col"><h4>❌ USP Lemah</h4><ul><li>"Kualitas terbaik"</li><li>"Harga terjangkau"</li><li>"Pelayanan ramah"</li></ul><p class="muted" style="font-size:13px;margin:.4em 0 0">Klise, semua orang mengklaim hal yang sama.</p></div>
+    <div class="mid">VS</div>
+    <div class="col"><h4>✅ USP Kuat</h4><ul><li>"Kue ulang tahun custom, sampai dalam 3 jam di Bandung."</li><li>"Garansi uang kembali jika telat."</li></ul><p class="muted" style="font-size:13px;margin:.4em 0 0">Spesifik, terukur, dan menjawab pain point.</p></div>
+  </div>
+
+  <h2>1.5 Alat &amp; Bahan</h2>
+  <div class="grid g4">
+    <div class="card"><span class="ic">📄</span><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Google Docs</h4><p style="font-size:13.5px">Menyusun brief &amp; persona.</p></div>
+    <div class="card"><span class="ic">🔍</span><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Google Trends</h4><p style="font-size:13.5px">Validasi minat &amp; tren topik.</p></div>
+    <div class="card"><span class="ic">⭐</span><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Ulasan/Marketplace</h4><p style="font-size:13.5px">Sumber pain point asli pelanggan.</p></div>
+    <div class="card"><span class="ic">🗂</span><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Whimsical/Figma</h4><p style="font-size:13.5px">(Dipakai di Modul 2 untuk wireframe.)</p></div>
+  </div>
+
+  <h2>1.6 Tutorial Praktis</h2>
+  <div class="steps">
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Pilih produk &amp; lakukan riset cepat</span><span class="estimate">25 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent">
+        <p>Pilih satu produk/jasa nyata (boleh UMKM lokal, brand favorit, atau ide sendiri). Lalu kumpulkan bahan riset:</p>
+        <ol>
+          <li>Buka <strong>Google Trends</strong>, ketik nama kategori produk. Catat apakah trennya naik/stabil.</li>
+          <li>Cari produk serupa di marketplace/Google Maps. Baca <strong>10 ulasan</strong> (positif &amp; negatif). Catat kata-kata persis yang dipakai pelanggan saat memuji atau mengeluh — ini emas untuk copywriting.</li>
+          <li>Buat dokumen Google Docs baru: <code>NIM_Nama_M1_StrategyBrief</code>.</li>
+        </ol>
+        <div class="callout tip"><span class="ic">💡</span><div class="body"><span class="t">Tips</span>Bahasa pelanggan &gt; bahasa marketing. Kalau pelanggan bilang "adonannya lembut banget", pakai frasa itu, jangan diganti jadi "tekstur premium".</div></div>
+      </div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Bangun kartu persona</span><span class="estimate">30 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent">
+        <p>Berdasarkan riset tadi, isi kartu persona (lihat Gambar 1.2). Minimal cakup: nama &amp; foto stereotip, demografi, pain point, goal, perilaku digital, dan keberatan. Gunakan template di bawah.</p>
+        <div class="tpl"><div class="th"><span>Template Persona</span><button class="copy">Salin</button></div><pre>Nama Persona   : "____ si ____"
+Demografi      : Usia __ · Pekerjaan __ · Lokasi __
+Pain Point     : 1) __  2) __  3) __
+Goal           : __
+Perilaku       : Platform __ · Perangkat __ · Kebiasaan __
+Keberatan      : 1) __  2) __</pre></div>
+      </div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Rumuskan USP &amp; isi Content Strategy Brief</span><span class="estimate">35 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent">
+        <p>Gabungkan semuanya dalam satu tabel brief. Ini akan menjadi "kompas" yang Anda rujuk di setiap modul berikutnya.</p>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Komponen</th><th>Isian Anda</th></tr></thead>
+          <tbody>
+            <tr><td>Nama Produk/Brand</td><td>cth: Sepatu Aerostreet</td></tr>
+            <tr><td>Persona Utama</td><td>(ringkasan dari Langkah 2)</td></tr>
+            <tr><td>USP</td><td>(spesifik &amp; terukur)</td></tr>
+            <tr><td>Tujuan Landing Page</td><td>cth: pengunjung klik "Beli Sekarang"</td></tr>
+            <tr><td>Satu Pesan Utama</td><td>Inti yang ingin diingat audiens dalam 1 kalimat</td></tr>
+            <tr><td>Tahap Funnel</td><td>BOFU (umumnya)</td></tr>
+          </tbody>
+        </table></div>
+        <div class="callout warn"><span class="ic">⚠</span><div class="body"><span class="t">Perhatian</span>Satu landing page = satu tujuan. Jika Anda ingin orang "beli" sekaligus "follow IG" dan "daftar newsletter", fokus akan pecah dan konversi turun.</div></div>
+      </div>
+    </details>
+  </div>
+
+  <h2>1.7 Tugas Modul 1</h2>
+  <div class="callout info"><span class="ic">📤</span><div class="body"><span class="t">Yang dikumpulkan</span>Satu file PDF (<code>NIM_Nama_M1</code>) berisi: (1) ringkasan riset audiens, (2) kartu persona lengkap, dan (3) Content Strategy Brief. Unggah ke LMS.</div></div>
+
+  <h2>1.8 Evaluasi Diri</h2>
+  <div class="checklist" data-ck="m1">
+    <div class="ci"><input type="checkbox" id="m1c1"><label for="m1c1">Saya memilih produk nyata dan membaca minimal 10 ulasan pelanggan.</label></div>
+    <div class="ci"><input type="checkbox" id="m1c2"><label for="m1c2">Persona saya berisi pain point dan keberatan yang spesifik, bukan asumsi.</label></div>
+    <div class="ci"><input type="checkbox" id="m1c3"><label for="m1c3">USP saya spesifik dan sulit diklaim pesaing.</label></div>
+    <div class="ci"><input type="checkbox" id="m1c4"><label for="m1c4">Content Strategy Brief saya hanya memuat SATU tujuan landing page.</label></div>
+    <div class="ck-progress"></div>
+  </div>
+
+  <h2>1.9 Uji Pemahaman</h2>
+  <div class="quiz" data-quiz>
+    <div class="q"><span class="qn">1.</span><span>Sebuah landing page kampanye penjualan paling tepat menyasar tahap funnel yang mana?</span></div>
+    <div class="opt" data-correct="false">TOFU (Awareness)</div>
+    <div class="opt" data-correct="false">MOFU (Consideration)</div>
+    <div class="opt" data-correct="true">BOFU (Decision)</div>
+    <div class="opt" data-correct="false">Tidak terkait funnel sama sekali</div>
+    <div class="fb good">Tepat! BOFU adalah tahap keputusan, sehingga pesan harus fokus pada konversi.</div>
+    <div class="fb bad">Belum tepat. Landing page penjualan menyasar BOFU — audiens yang sudah siap mengambil keputusan.</div>
+  </div>
+  <div class="quiz" data-quiz>
+    <div class="q"><span class="qn">2.</span><span>Manakah contoh USP yang paling kuat?</span></div>
+    <div class="opt" data-correct="false">"Produk berkualitas dengan harga terjangkau."</div>
+    <div class="opt" data-correct="true">"Kue custom diantar dalam 3 jam se-Bandung, atau gratis."</div>
+    <div class="opt" data-correct="false">"Kami melayani dengan sepenuh hati."</div>
+    <div class="fb good">Benar! Spesifik, terukur (3 jam), dan ada jaminan — sulit ditiru.</div>
+    <div class="fb bad">Kurang tepat. USP kuat itu spesifik &amp; terukur, bukan klaim umum yang dipakai semua orang.</div>
+  </div>
+
+  <div class="chapnav">
+    <a class="prev" data-target="ch-guide"><span class="dir">← Sebelumnya</span><div class="tt">Panduan, CPL &amp; CPMK</div></a>
+    <a class="next" data-target="ch-m2"><span class="dir">Selanjutnya →</span><div class="tt">Modul 2 · Perencanaan &amp; UX Writing</div></a>
+  </div>
+</section>
+<!-- ============================ MODULE 2 ============================ -->
+<section class="chapter" id="ch-m2">
+  <div class="chap-hero"><div class="eyebrow">Modul 2 · Pertemuan 3–4</div><h1>Perencanaan Konten &amp; UX Writing</h1><p>Menerjemahkan strategi menjadi kata-kata yang menjual dan struktur halaman yang memandu. Di sinilah copywriting bertemu UX writing, lalu dituangkan ke wireframe.</p>
+  <div class="meta"><span>⏱ 2 × 170 menit</span><span>🎯 CPMK-2</span><span>📤 Luaran: Naskah + Wireframe</span></div></div>
+
+  <div class="objbox"><div class="objttl">🎯 Tujuan Praktikum</div>
+    <ul class="obj-list">
+      <li>Membedakan dan menerapkan <strong>copywriting</strong> (persuasif) vs <strong>UX writing</strong> (fungsional).</li>
+      <li>Menggunakan kerangka copywriting (AIDA, PAS, FAB) untuk menyusun naskah.</li>
+      <li>Merancang struktur konten menjadi <span class="term" data-def="Wireframe: sketsa kerangka tata letak halaman tanpa warna/gambar final, fokus pada penempatan elemen.">wireframe</span> landing page berkonversi tinggi.</li>
+    </ul>
+  </div>
+
+  <h2>2.1 Anatomi Landing Page yang Mengonversi</h2>
+  <p>Landing page yang baik mengikuti alur psikologis: menarik perhatian → menyentuh masalah → menawarkan solusi → membuktikan → mengajak bertindak. Berikut anatominya dari atas ke bawah:</p>
+  <div class="infographic">
+    <div class="anatomy">
+      <div class="band" style="background:#4f46e5"><b>1. Hero Section</b><span>Headline + sub-headline + CTA utama + visual. Kesan 3 detik pertama.</span><span class="tag">Perhatian</span></div>
+      <div class="band" style="background:#db5d8a"><b>2. Problem / Agitation</b><span>Menyentuh "rasa sakit" (pain point) audiens agar merasa dimengerti.</span><span class="tag">Empati</span></div>
+      <div class="band" style="background:#0ea5a4"><b>3. Solution / Benefits</b><span>Produk sebagai solusi. Fokus pada <em>manfaat</em>, bukan sekadar fitur.</span><span class="tag">Solusi</span></div>
+      <div class="band" style="background:#f59e0b"><b>4. Social Proof</b><span>Testimoni, logo klien, rating, jumlah pengguna — membangun kepercayaan.</span><span class="tag">Bukti</span></div>
+      <div class="band" style="background:#16a34a"><b>5. Final CTA</b><span>Dorongan terakhir + penegasan tawaran/garansi untuk menutup keraguan.</span><span class="tag">Aksi</span></div>
+    </div>
+    <div class="figcap">Gambar 2.1 — Anatomi standar landing page berkonversi. Urutan ini mengikuti alur emosi pengunjung.</div>
+  </div>
+
+  <h2>2.2 Copywriting vs UX Writing</h2>
+  <div class="vs">
+    <div class="col"><h4>✍️ Copywriting</h4><p style="font-size:14px;margin:.3em 0">Tujuan: <strong>menjual &amp; membujuk</strong>.</p><ul><li>Headline, sub-headline, deskripsi benefit.</li><li>Emosional, persuasif.</li><li>Cth: "Tingkatkan penjualan 200% dalam 30 hari!"</li></ul></div>
+    <div class="mid">≠</div>
+    <div class="col"><h4>🧭 UX Writing</h4><p style="font-size:14px;margin:.3em 0">Tujuan: <strong>memandu agar tidak bingung</strong>.</p><ul><li>Teks tombol, label form, pesan error.</li><li>Jelas, ringkas, bermanfaat (<em>Clear, Concise, Useful</em>).</li><li>Cth: "Daftar Sekarang", "Email salah formatnya".</li></ul></div>
+  </div>
+
+  <h2>2.3 Tiga Kerangka Copywriting Andalan</h2>
+  <div class="grid g3">
+    <div class="card"><h4 style="text-transform:none;letter-spacing:0;color:var(--c-primary-ink);font-size:16px">AIDA</h4>
+      <p style="font-size:14px"><strong>A</strong>ttention → <strong>I</strong>nterest → <strong>D</strong>esire → <strong>A</strong>ction.<br>Cocok untuk struktur halaman secara keseluruhan.</p></div>
+    <div class="card"><h4 style="text-transform:none;letter-spacing:0;color:var(--c-primary-ink);font-size:16px">PAS</h4>
+      <p style="font-size:14px"><strong>P</strong>roblem → <strong>A</strong>gitate → <strong>S</strong>olution.<br>Ampuh untuk bagian Problem/Solution.</p></div>
+    <div class="card"><h4 style="text-transform:none;letter-spacing:0;color:var(--c-primary-ink);font-size:16px">FAB</h4>
+      <p style="font-size:14px"><strong>F</strong>eature → <strong>A</strong>dvantage → <strong>B</strong>enefit.<br>Mengubah fitur menjadi manfaat di bagian benefit.</p></div>
+  </div>
+  <div class="callout tip"><span class="ic">💡</span><div class="body"><span class="t">Rumus Headline yang manjur</span><strong>[Hasil yang diinginkan] + [Waktu/cara spesifik] + [Tanpa risiko/masalah]</strong>.<br>❌ "Aplikasi pembukuan kami bagus." → ✅ "Kelola keuangan bisnis lebih rapi dalam 5 menit, tanpa perlu paham akuntansi."</div></div>
+
+  <h2>2.4 Dari Fitur ke Manfaat (FAB in Action)</h2>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Feature (Fitur)</th><th>Advantage (Keunggulan)</th><th>Benefit (Manfaat yang dirasa)</th></tr></thead>
+    <tbody>
+      <tr><td>Baterai 5000 mAh</td><td>Tahan lebih lama</td><td><strong>Tahan 2 hari — bebas cemas saat bepergian.</strong></td></tr>
+      <tr><td>Bahan katun combed 30s</td><td>Adem &amp; menyerap keringat</td><td><strong>Nyaman dipakai seharian walau cuaca panas.</strong></td></tr>
+      <tr><td>Garansi 30 hari uang kembali</td><td>Mengurangi risiko beli</td><td><strong>Coba dulu tanpa rugi — tidak cocok, uang balik.</strong></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>2.5 Prinsip Teks Tombol (CTA)</h2>
+  <div class="callout warn"><span class="ic">⚠</span><div class="body"><span class="t">Hindari kata generik</span>Kata seperti <code>Submit</code>, <code>Kirim</code>, atau <code>Klik di sini</code> tidak memberi tahu apa yang akan terjadi. Gunakan <strong>kata kerja aktif + nilai</strong>: "Coba Gratis 7 Hari", "Ambil Diskon 50%", "Pesan Sekarang".</div></div>
+
+  <h2>2.6 Alat &amp; Bahan</h2>
+  <div class="grid g3">
+    <div class="card"><span class="ic">📄</span><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Google Docs</h4><p style="font-size:13.5px">Menyusun naskah.</p></div>
+    <div class="card"><span class="ic">🧩</span><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Whimsical / Figma</h4><p style="font-size:13.5px">Membuat wireframe.</p></div>
+    <div class="card"><span class="ic">🧭</span><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Brief Modul 1</h4><p style="font-size:13.5px">Rujukan persona &amp; USP.</p></div>
+  </div>
+
+  <h2>2.7 Tutorial Praktis</h2>
+  <div class="steps">
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Tulis Hero Section dengan rumus headline</span><span class="estimate">30 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent">
+        <p>Buka Google Docs <code>NIM_Nama_M2_Naskah</code>. Tulis <strong>3 alternatif headline</strong> memakai rumus di 2.3, lalu pilih satu yang terkuat. Tambahkan sub-headline 2–3 kalimat yang memperjelas manfaat.</p>
+        <div class="tpl"><div class="th"><span>Template Hero</span><button class="copy">Salin</button></div><pre>HEADLINE (pilih 1 dari 3):
+1) __
+2) __
+3) __ ✅
+
+SUB-HEADLINE: __ (2-3 kalimat)
+CTA UTAMA   : __ (kata kerja aktif + nilai)</pre></div>
+      </div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Susun bagian Problem → Solution (PAS)</span><span class="estimate">25 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><p>Ambil pain point dari persona Modul 1. Tulis paragraf <strong>Problem</strong> (sebutkan masalahnya), <strong>Agitate</strong> (perparah/bayangkan akibatnya), lalu <strong>Solution</strong> (kenalkan produk Anda sebagai jalan keluar).</p></div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Ubah 3 fitur menjadi manfaat (FAB)</span><span class="estimate">20 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><p>Buat tabel seperti 2.4 untuk produk Anda. Hasil kolom "Benefit" inilah yang akan ditampilkan sebagai 3 keunggulan di landing page.</p></div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Buat wireframe di Whimsical</span><span class="estimate">45 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent">
+        <ol>
+          <li>Akses <code>whimsical.com</code> → Sign Up → <strong>New → Wireframe</strong>.</li>
+          <li>Tarik elemen <strong>Window</strong> (web desktop) ke kanvas.</li>
+          <li>Susun mengikuti anatomi (Gambar 2.1): Hero → Problem/Solution → Grid 3 benefit → Social Proof → Final CTA.</li>
+          <li>Copy-paste naskah dari Google Docs ke wireframe.</li>
+          <li>Klik <strong>Share → Get Shareable Link → Copy Link</strong>.</li>
+        </ol>
+        <div class="callout trouble"><span class="ic">🛠</span><div class="body"><span class="t">Penanganan Masalah</span>Link share tidak bisa dibuka teman? Pastikan akses diset ke <em>"Anyone with the link"</em>, bukan "Only invited".</div></div>
+      </div>
+    </details>
+  </div>
+
+  <h2>2.8 Tugas Modul 2</h2>
+  <div class="callout info"><span class="ic">📤</span><div class="body"><span class="t">Yang dikumpulkan</span>PDF (<code>NIM_Nama_M2</code>) berisi naskah lengkap (Hero, PAS, 3 benefit FAB, teks CTA) + tautan wireframe Whimsical di bagian bawah dokumen. Unggah ke LMS.</div></div>
+
+  <h2>2.9 Evaluasi Diri</h2>
+  <div class="checklist" data-ck="m2">
+    <div class="ci"><input type="checkbox" id="m2c1"><label for="m2c1">Headline saya menonjolkan manfaat (benefit-driven), bukan sekadar fitur.</label></div>
+    <div class="ci"><input type="checkbox" id="m2c2"><label for="m2c2">Saya menggunakan kerangka PAS pada bagian masalah-solusi.</label></div>
+    <div class="ci"><input type="checkbox" id="m2c3"><label for="m2c3">Teks CTA saya memakai kata kerja aktif + nilai (bukan "Submit/Kirim").</label></div>
+    <div class="ci"><input type="checkbox" id="m2c4"><label for="m2c4">Wireframe memiliki alur logis atas→bawah sesuai anatomi landing page.</label></div>
+    <div class="ck-progress"></div>
+  </div>
+
+  <h2>2.10 Uji Pemahaman</h2>
+  <div class="quiz" data-quiz>
+    <div class="q"><span class="qn">1.</span><span>Teks "Password minimal 8 karakter" pada form pendaftaran termasuk…</span></div>
+    <div class="opt" data-correct="false">Copywriting</div>
+    <div class="opt" data-correct="true">UX writing</div>
+    <div class="opt" data-correct="false">Headline</div>
+    <div class="fb good">Tepat! Itu teks fungsional yang memandu pengguna — ranah UX writing.</div>
+    <div class="fb bad">Belum tepat. Teks yang memandu pengguna (label/aturan form) adalah UX writing, bukan copywriting persuasif.</div>
+  </div>
+  <div class="quiz" data-quiz>
+    <div class="q"><span class="qn">2.</span><span>Kerangka mana yang paling pas untuk bagian "masalah → solusi"?</span></div>
+    <div class="opt" data-correct="false">FAB</div>
+    <div class="opt" data-correct="true">PAS</div>
+    <div class="opt" data-correct="false">SEO</div>
+    <div class="fb good">Benar! PAS (Problem–Agitate–Solution) dirancang persis untuk alur ini.</div>
+    <div class="fb bad">Kurang tepat. PAS (Problem–Agitate–Solution) adalah kerangka untuk bagian masalah–solusi.</div>
+  </div>
+
+  <div class="chapnav">
+    <a class="prev" data-target="ch-m1"><span class="dir">← Sebelumnya</span><div class="tt">Modul 1 · Strategi Konten</div></a>
+    <a class="next" data-target="ch-m3"><span class="dir">Selanjutnya →</span><div class="tt">Modul 3 · Aset Visual &amp; Brand</div></a>
+  </div>
+</section>
+<!-- ============================ MODULE 3 ============================ -->
+<section class="chapter" id="ch-m3">
+  <div class="chap-hero"><div class="eyebrow">Modul 3 · Pertemuan 5–6</div><h1>Produksi Aset Visual &amp; Brand Identity</h1><p>Tampilan membangun kredibilitas dalam sekejap. Kita rancang palet warna &amp; tipografi, produksi aset di Canva, lalu optimasi agar web tetap ngebut.</p>
+  <div class="meta"><span>⏱ 2 × 170 menit</span><span>🎯 CPMK-3</span><span>📤 Luaran: Brand Kit + Aset Terkompres</span></div></div>
+
+  <div class="objbox"><div class="objttl">🎯 Tujuan Praktikum</div>
+    <ul class="obj-list">
+      <li>Menentukan brand identity sederhana (palet warna &amp; tipografi) yang sesuai produk.</li>
+      <li>Memahami <span class="term" data-def="Rasio kontras: perbandingan kecerahan teks vs latar. WCAG mensyaratkan minimal 4.5:1 untuk teks normal.">rasio kontras</span> agar teks terbaca semua orang.</li>
+      <li>Memproduksi aset (hero image, ikon) dan mengoptimasinya di bawah ambang ukuran.</li>
+    </ul>
+  </div>
+
+  <h2>3.1 Psikologi Warna</h2>
+  <p>Warna memicu asosiasi emosional. Pilih warna yang selaras dengan pesan merek Anda. Pakai <strong>maksimal 3 warna</strong>: <em>primary</em> (dominan), <em>secondary</em> (aksen), dan <em>action</em> (khusus tombol CTA, harus mencolok).</p>
+  <div class="infographic">
+    <div class="grid g4" style="margin:0">
+      <div style="text-align:center"><div style="height:64px;border-radius:10px;background:#2563eb"></div><strong style="font-size:14px">Biru</strong><br><span class="muted" style="font-size:12.5px">Percaya, profesional, tenang (finansial, teknologi)</span></div>
+      <div style="text-align:center"><div style="height:64px;border-radius:10px;background:#16a34a"></div><strong style="font-size:14px">Hijau</strong><br><span class="muted" style="font-size:12.5px">Sehat, alami, tumbuh (organik, keuangan)</span></div>
+      <div style="text-align:center"><div style="height:64px;border-radius:10px;background:#dc2626"></div><strong style="font-size:14px">Merah</strong><br><span class="muted" style="font-size:12.5px">Energi, urgensi, berani (diskon, F&amp;B)</span></div>
+      <div style="text-align:center"><div style="height:64px;border-radius:10px;background:#f59e0b"></div><strong style="font-size:14px">Oranye/Kuning</strong><br><span class="muted" style="font-size:12.5px">Ramah, optimis, hemat (CTA, ritel)</span></div>
+      <div style="text-align:center"><div style="height:64px;border-radius:10px;background:#7c3aed"></div><strong style="font-size:14px">Ungu</strong><br><span class="muted" style="font-size:12.5px">Mewah, kreatif, premium (beauty, edukasi)</span></div>
+      <div style="text-align:center"><div style="height:64px;border-radius:10px;background:#db2777"></div><strong style="font-size:14px">Merah Muda</strong><br><span class="muted" style="font-size:12.5px">Lembut, playful, feminin (fashion, anak)</span></div>
+      <div style="text-align:center"><div style="height:64px;border-radius:10px;background:#0f172a"></div><strong style="font-size:14px">Hitam</strong><br><span class="muted" style="font-size:12.5px">Elegan, eksklusif (luxury, gadget)</span></div>
+      <div style="text-align:center"><div style="height:64px;border-radius:10px;background:#64748b"></div><strong style="font-size:14px">Abu/Netral</strong><br><span class="muted" style="font-size:12.5px">Seimbang, modern (background, teks)</span></div>
+    </div>
+    <div class="figcap">Gambar 3.1 — Asosiasi emosi warna. Konteks budaya dapat memengaruhi makna.</div>
+  </div>
+
+  <h2>3.2 Kontras &amp; Keterbacaan (WCAG)</h2>
+  <p>Warna cantik percuma jika teks tak terbaca. Standar <span class="term" data-def="Web Content Accessibility Guidelines: pedoman internasional agar web dapat diakses penyandang disabilitas.">WCAG</span> mensyaratkan rasio kontras minimal <strong>4.5:1</strong> (teks normal) dan <strong>3:1</strong> (teks besar/judul).</p>
+  <div class="grid g3">
+    <div class="card" style="background:#1e3a8a"><span style="color:#fff;font-weight:700">Teks putih di biru tua</span><br><span style="color:#dbeafe;font-size:13px">Kontras ±8:1 ✓ Lolos</span></div>
+    <div class="card" style="background:#fde047"><span style="color:#fff;font-weight:700">Putih di kuning</span><br><span style="color:#854d0e;font-size:13px">Kontras ±1.2:1 ✗ Gagal</span></div>
+    <div class="card" style="background:#f1f5f9"><span style="color:#0f172a;font-weight:700">Hitam di abu muda</span><br><span style="color:#475569;font-size:13px">Kontras ±15:1 ✓ Lolos</span></div>
+  </div>
+  <div class="callout tip"><span class="ic">💡</span><div class="body"><span class="t">Cek cepat</span>Gunakan <em>WebAIM Contrast Checker</em> atau panel "Contrast" di Coolors untuk memvalidasi pasangan warna teks &amp; latar sebelum dipakai.</div></div>
+
+  <h2>3.3 Tipografi Web</h2>
+  <p>Gunakan <strong>maksimal 2 font</strong>: satu untuk heading, satu untuk body. <span class="term" data-def="Google Fonts: pustaka font gratis yang dioptimasi untuk web.">Google Fonts</span> seperti <em>Inter, Poppins, Montserrat, Roboto, Open Sans, Lora</em> sangat terbaca di layar.</p>
+  <div class="vs">
+    <div class="col"><h4>Pasangan aman</h4><ul><li>Poppins (judul) + Inter (teks)</li><li>Montserrat + Open Sans</li><li>Lora (judul serif) + Roboto</li></ul></div>
+    <div class="mid">+</div>
+    <div class="col"><h4>Aturan ukuran</h4><ul><li>Body ≥ 16px agar nyaman di HP.</li><li>Hierarki jelas: judul jelas lebih besar dari teks.</li><li>Line-height 1.5–1.7 untuk paragraf.</li></ul></div>
+  </div>
+
+  <h2>3.4 Format &amp; Ukuran Gambar untuk Web</h2>
+  <p>Pemula sering mengunggah foto 5 MB ke web — akibatnya halaman lambat dan SEO anjlok. Pahami format yang tepat lewat alur keputusan ini:</p>
+  <div class="infographic">
+    <div class="roadmap" style="padding-left:0">
+      <div class="rm"><div class="dot">?</div><h4>Apakah gambar berupa foto nyata (banyak warna)?</h4><p>→ Ya: pakai <strong>JPG</strong> atau (lebih baik) <strong>WebP</strong>.</p></div>
+      <div class="rm"><div class="dot">?</div><h4>Butuh latar transparan / grafis tajam?</h4><p>→ Ya: pakai <strong>PNG</strong> atau <strong>WebP</strong>.</p></div>
+      <div class="rm"><div class="dot">?</div><h4>Ikon/logo berbasis garis &amp; bidang?</h4><p>→ Ya: pakai <strong>SVG</strong> (vektor, tajam di ukuran apa pun, ukuran file kecil).</p></div>
+      <div class="rm"><div class="dot">★</div><h4>Standar modern</h4><p><strong>WebP</strong> adalah format web masa kini — kompresi superior tanpa mengorbankan kualitas.</p></div>
+    </div>
+    <div class="figcap">Gambar 3.2 — Pohon keputusan memilih format gambar.</div>
+  </div>
+  <div class="grid g3">
+    <div class="card statcard"><div class="big">&lt;200<span style="font-size:18px">KB</span></div><div class="lbl">Ukuran maks. tiap gambar besar (hero)</div></div>
+    <div class="card statcard"><div class="big">&lt;100<span style="font-size:18px">KB</span></div><div class="lbl">Ukuran maks. tiap ikon</div></div>
+    <div class="card statcard"><div class="big">1200×675</div><div class="lbl">Dimensi hero image (rasio 16:9)</div></div>
+  </div>
+  <div class="callout info"><span class="ic">📐</span><div class="body"><span class="t">Catatan dimensi</span>Untuk <strong>gambar di samping teks</strong> (hero side-by-side) cukup <strong>1200×675 px</strong>. Untuk <strong>background full-lebar</strong> yang memenuhi layar, boleh hingga <strong>1920×1080 px</strong> — tetapi tetap kompres &lt;200 KB. Pilih sesuai peran gambar di wireframe Anda.</div></div>
+
+  <h2>3.5 Alat &amp; Bahan</h2>
+  <div class="grid g4">
+    <div class="card"><span class="ic">🎨</span><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Coolors</h4><p style="font-size:13px">Palet warna + cek kontras.</p></div>
+    <div class="card"><span class="ic">🖌</span><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Canva</h4><p style="font-size:13px">Desain hero &amp; ikon.</p></div>
+    <div class="card"><span class="ic">🗜</span><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Squoosh / TinyPNG</h4><p style="font-size:13px">Kompresi gambar.</p></div>
+    <div class="card"><span class="ic">☁️</span><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Google Drive</h4><p style="font-size:13px">Penyimpanan aset.</p></div>
+  </div>
+
+  <h2>3.6 Tutorial Praktis</h2>
+  <div class="steps">
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Rumuskan brand guideline di Coolors</span><span class="estimate">25 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><ol>
+        <li>Buka <code>coolors.co/generate</code>, tekan <span class="kbd">Spasi</span> berulang hingga menemukan 3–4 warna yang merepresentasikan produk.</li>
+        <li>Catat kode HEX (cth: <code>#FF5733</code> tombol, <code>#FFFFFF</code> latar, <code>#333333</code> teks).</li>
+        <li>Cek kontras teks vs latar (fitur Contrast Coolors). Pastikan ≥ 4.5:1.</li>
+        <li>Tentukan pasangan font (cth: Poppins + Inter).</li>
+      </ol></div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Desain Hero Image di Canva</span><span class="estimate">35 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><ol>
+        <li>Canva → <strong>Create a design → Custom Size → 1200×675 px</strong>.</li>
+        <li>Pilih elemen relevan (foto orang tersenyum/mockup produk) dari tab Elements.</li>
+        <li>Download sebagai <strong>JPG</strong> (atau PNG bila ada area transparan).</li>
+      </ol>
+      <div class="callout tip"><span class="ic">💡</span><div class="body"><span class="t">Tips</span>Jangan tumpuk banyak teks di dalam gambar — teks utama (headline) dibuat di web builder agar tetap tajam &amp; terbaca SEO/screen reader.</div></div></div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Buat 3 ikon benefit</span><span class="estimate">25 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><p>Canva → desain 500×500 px. Cari ikon di tab Elements (cth: ⚡ kecepatan, 🛡 keamanan), warnai sesuai brand, download <strong>PNG transparan</strong>. (Tanpa Canva Pro, hapus latar lewat <code>remove.bg</code>.)</p></div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Kompresi aset (WAJIB)</span><span class="estimate">20 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><ol>
+        <li>Buka <code>squoosh.app</code>, drag &amp; drop hero image.</li>
+        <li>Panel kanan: ubah format ke <strong>WebP</strong>, atur <em>Quality</em> hingga <em>Estimated size</em> &lt; 200 KB tanpa penurunan kualitas kasat mata.</li>
+        <li>Klik Download. Ulangi untuk semua gambar &amp; ikon (&lt; 100 KB).</li>
+      </ol>
+      <div class="callout trouble"><span class="ic">🛠</span><div class="body"><span class="t">Penanganan Masalah</span>WebP tidak diterima web builder? Sebagian besar mendukungnya kini. Jika tetap gagal, ekspor ulang sebagai JPG berkualitas 70–80% — biasanya tetap &lt; 200 KB.</div></div></div>
+    </details>
+  </div>
+
+  <h2>3.7 Tugas Modul 3</h2>
+  <div class="callout info"><span class="ic">📤</span><div class="body"><span class="t">Yang dikumpulkan</span>Folder Google Drive <code>NIM_Nama_AsetWeb</code> (akses: <em>Anyone with the link can view</em>) berisi: dokumen brand guideline (HEX + font), 1 hero image (&lt;200 KB), 3 ikon (&lt;100 KB), dan 1–2 gambar pendukung. Kumpulkan link ke LMS.</div></div>
+
+  <h2>3.8 Evaluasi Diri</h2>
+  <div class="checklist" data-ck="m3">
+    <div class="ci"><input type="checkbox" id="m3c1"><label for="m3c1">Saya mencatat kode HEX (maks. 3 warna) &amp; pasangan font (maks. 2).</label></div>
+    <div class="ci"><input type="checkbox" id="m3c2"><label for="m3c2">Pasangan warna teks vs latar saya lolos kontras ≥ 4.5:1.</label></div>
+    <div class="ci"><input type="checkbox" id="m3c3"><label for="m3c3">Semua gambar &lt; 200 KB dan semua ikon &lt; 100 KB (sudah dikompres).</label></div>
+    <div class="ci"><input type="checkbox" id="m3c4"><label for="m3c4">Warna ikon konsisten dengan identitas merek.</label></div>
+    <div class="ck-progress"></div>
+  </div>
+
+  <h2>3.9 Uji Pemahaman</h2>
+  <div class="quiz" data-quiz>
+    <div class="q"><span class="qn">1.</span><span>Format paling tepat untuk logo/ikon berbasis garis agar tajam di segala ukuran?</span></div>
+    <div class="opt" data-correct="false">JPG</div>
+    <div class="opt" data-correct="true">SVG</div>
+    <div class="opt" data-correct="false">BMP</div>
+    <div class="fb good">Benar! SVG berbasis vektor, tajam di ukuran apa pun &amp; berukuran kecil.</div>
+    <div class="fb bad">Kurang tepat. Untuk garis/ikon vektor, SVG paling ideal.</div>
+  </div>
+  <div class="quiz" data-quiz>
+    <div class="q"><span class="qn">2.</span><span>Rasio kontras minimal WCAG untuk teks normal adalah…</span></div>
+    <div class="opt" data-correct="false">1:1</div>
+    <div class="opt" data-correct="true">4.5:1</div>
+    <div class="opt" data-correct="false">100:1</div>
+    <div class="fb good">Tepat! 4.5:1 untuk teks normal, 3:1 untuk teks besar.</div>
+    <div class="fb bad">Belum tepat. Standarnya 4.5:1 untuk teks normal.</div>
+  </div>
+
+  <div class="chapnav">
+    <a class="prev" data-target="ch-m2"><span class="dir">← Sebelumnya</span><div class="tt">Modul 2 · UX Writing</div></a>
+    <a class="next" data-target="ch-m4"><span class="dir">Selanjutnya →</span><div class="tt">Modul 4 · Etika, Lisensi &amp; AI</div></a>
+  </div>
+</section>
+<!-- ============================ MODULE 4 ============================ -->
+<section class="chapter" id="ch-m4">
+  <div class="chap-hero"><div class="eyebrow">Modul 4 · Pertemuan 7–8</div><h1>Etika Konten, Hak Cipta, Lisensi &amp; AI Tools</h1><p>Konten profesional bukan hanya yang menarik, tapi juga yang legal dan jujur. Modul ini membekali Anda agar tidak terjerat masalah hak cipta dan mampu memanfaatkan AI secara bertanggung jawab.</p>
+  <div class="meta"><span>⏱ 2 × 170 menit</span><span>🎯 CPMK-4</span><span>📤 Luaran: Aset Berlisensi + Log AI</span></div></div>
+
+  <div class="objbox"><div class="objttl">🎯 Tujuan Praktikum</div>
+    <ul class="obj-list">
+      <li>Membedakan jenis-jenis lisensi konten (hak cipta, Creative Commons, public domain).</li>
+      <li>Mendapatkan gambar &amp; font yang aman dipakai secara komersial dan memberi atribusi yang benar.</li>
+      <li>Memanfaatkan AI (teks &amp; gambar) untuk mempercepat kerja tanpa melanggar etika.</li>
+    </ul>
+  </div>
+
+  <h2>4.1 Mengapa Etika Konten Penting?</h2>
+  <p>Mengunduh gambar dari Google lalu memasangnya di web komersial adalah pelanggaran hak cipta yang umum namun berisiko: teguran (takedown), denda, hingga tuntutan hukum. Sebagai Content Developer profesional, Anda wajib memastikan setiap aset <strong>boleh digunakan</strong>.</p>
+  <div class="callout danger"><span class="ic">🚫</span><div class="body"><span class="t">Mitos berbahaya</span>"Kalau saya cantumkan sumbernya, berarti boleh dipakai." <strong>Salah.</strong> Atribusi tidak otomatis memberi izin. Anda tetap butuh lisensi yang mengizinkan penggunaan tersebut.</div></div>
+
+  <h2>4.2 Spektrum Lisensi Konten</h2>
+  <div class="infographic">
+    <div class="anatomy">
+      <div class="band" style="background:#dc2626"><b>© Hak Cipta Penuh (All Rights Reserved)</b><span>Tidak boleh dipakai tanpa izin/membeli lisensi. Default semua karya.</span><span class="tag">Hindari</span></div>
+      <div class="band" style="background:#f59e0b"><b>CC BY / CC BY-SA</b><span>Boleh dipakai &amp; komersial, WAJIB mencantumkan atribusi pembuat.</span><span class="tag">Beri kredit</span></div>
+      <div class="band" style="background:#0ea5a4"><b>CC0 / Public Domain</b><span>Bebas dipakai untuk apa pun, tanpa atribusi. Paling aman.</span><span class="tag">Bebas</span></div>
+      <div class="band" style="background:#4f46e5"><b>Royalty-Free / Berbayar (lisensi dibeli)</b><span>Bayar sekali, pakai sesuai ketentuan lisensi (cth: stok premium).</span><span class="tag">Berlisensi</span></div>
+    </div>
+    <div class="figcap">Gambar 4.1 — Spektrum lisensi dari paling ketat (atas) ke paling bebas.</div>
+  </div>
+  <div class="callout warn"><span class="ic">⚠</span><div class="body"><span class="t">Perhatikan klausul</span><strong>NC</strong> (Non-Commercial) = tidak boleh untuk komersial. <strong>ND</strong> (No-Derivatives) = tidak boleh diubah. Untuk proyek landing page (komersial), hindari aset ber-NC.</div></div>
+
+  <h2>4.3 Sumber Aset Aman &amp; Gratis</h2>
+  <div class="grid g3">
+    <div class="card"><span class="ic">🖼</span><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Foto</h4><p style="font-size:13.5px">Unsplash, Pexels, Pixabay — gratis &amp; komersial. Cek lisensi tiap foto.</p></div>
+    <div class="card"><span class="ic">🔤</span><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Font</h4><p style="font-size:13.5px">Google Fonts (open source, aman komersial).</p></div>
+    <div class="card"><span class="ic">⭐</span><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Ikon</h4><p style="font-size:13.5px">Lucide, Heroicons, Flaticon (cek atribusi), Font Awesome Free.</p></div>
+  </div>
+
+  <h2>4.4 Cara Memberi Atribusi yang Benar</h2>
+  <p>Untuk aset yang mensyaratkan kredit, format umum <strong>"TASL"</strong>: <em>Title, Author, Source, License</em>.</p>
+  <div class="tpl"><div class="th"><span>Format atribusi (TASL)</span><button class="copy">Salin</button></div><pre>Foto "Sunrise Coffee" oleh Jane Doe
+via Unsplash, Lisensi Unsplash.
+(tautan: unsplash.com/photos/xxxx)</pre></div>
+
+  <h2>4.5 Memanfaatkan AI Secara Bertanggung Jawab</h2>
+  <p>AI adalah asisten, bukan pengganti penilaian Anda. AI bisa mempercepat brainstorming headline, variasi copy, alt text, atau membuat gambar ilustrasi. Tapi hasilnya wajib <strong>diverifikasi, disunting, dan diberi sentuhan manusia</strong>.</p>
+  <div class="vs">
+    <div class="col"><h4>✅ Pemanfaatan etis</h4><ul><li>Brainstorm 10 alternatif headline lalu pilih &amp; poles.</li><li>Membuat draf alt text, lalu diperiksa akurasinya.</li><li>Membuat ilustrasi/ikon dengan AI image generator berlisensi.</li><li>Mengecek tata bahasa &amp; ringkasan.</li></ul></div>
+    <div class="mid">VS</div>
+    <div class="col"><h4>❌ Penyalahgunaan</h4><ul><li>Copy-paste mentah tanpa verifikasi fakta.</li><li>Mengklaim testimoni/angka palsu buatan AI.</li><li>Meniru gaya/karya berhak cipta milik orang lain.</li><li>Membuat klaim menyesatkan tentang produk.</li></ul></div>
+  </div>
+  <div class="callout tip"><span class="ic">💡</span><div class="body"><span class="t">Anatomi prompt yang baik</span><strong>Peran + Konteks + Tugas + Batasan + Format.</strong><br>Cth: <em>"Bertindak sebagai copywriter. Produk: sepatu lari lokal untuk pemula. Buat 5 headline benefit-driven, maks 12 kata, gaya santai, dalam bahasa Indonesia."</em></div></div>
+  <div class="callout warn"><span class="ic">⚖️</span><div class="body"><span class="t">Transparansi &amp; akurasi</span>AI dapat "berhalusinasi" (mengarang fakta). Jangan pernah memuat statistik/klaim dari AI tanpa sumber valid. Untuk tugas, dokumentasikan bagian mana yang dibantu AI (AI usage log).</div></div>
+
+  <h2>4.6 Tutorial Praktis</h2>
+  <div class="steps">
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Audit ulang aset Modul 3</span><span class="estimate">20 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><p>Periksa setiap gambar/ikon/font dari Modul 3. Untuk masing-masing, catat: sumber, jenis lisensi, dan apakah butuh atribusi. Ganti aset yang lisensinya tidak jelas/komersial dilarang dengan alternatif dari sumber aman (4.3).</p></div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Buat tabel lisensi &amp; atribusi</span><span class="estimate">25 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent">
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Aset</th><th>Sumber</th><th>Lisensi</th><th>Atribusi?</th></tr></thead>
+          <tbody>
+            <tr><td>hero.webp</td><td>Unsplash</td><td>Unsplash License</td><td>Opsional</td></tr>
+            <tr><td>icon-speed.svg</td><td>Lucide</td><td>ISC (bebas)</td><td>Tidak</td></tr>
+            <tr><td>font Poppins</td><td>Google Fonts</td><td>OFL</td><td>Tidak</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Eksperimen AI untuk copy &amp; alt text</span><span class="estimate">30 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><p>Gunakan AI untuk menghasilkan 5 alternatif headline &amp; draf alt text gambar. Pilih, sunting, dan poles. Catat prompt yang Anda pakai dan perubahan yang Anda lakukan di <strong>AI Usage Log</strong>.</p>
+      <div class="tpl"><div class="th"><span>AI Usage Log</span><button class="copy">Salin</button></div><pre>Tugas dibantu : Headline / Alt text / Ilustrasi
+Tool          : __
+Prompt        : __
+Output mentah : __
+Editan saya   : __ (apa yang diubah & alasan)</pre></div></div>
+    </details>
+  </div>
+
+  <h2>4.7 Tugas Modul 4</h2>
+  <div class="callout info"><span class="ic">📤</span><div class="body"><span class="t">Yang dikumpulkan</span>PDF berisi (1) tabel lisensi &amp; atribusi seluruh aset, dan (2) AI Usage Log. Aset yang melanggar harus sudah diganti. Unggah ke LMS.</div></div>
+
+  <h2>4.8 Evaluasi Diri</h2>
+  <div class="checklist" data-ck="m4">
+    <div class="ci"><input type="checkbox" id="m4c1"><label for="m4c1">Setiap aset saya punya lisensi yang jelas &amp; mengizinkan penggunaan komersial.</label></div>
+    <div class="ci"><input type="checkbox" id="m4c2"><label for="m4c2">Aset yang butuh atribusi sudah saya catat formatnya (TASL).</label></div>
+    <div class="ci"><input type="checkbox" id="m4c3"><label for="m4c3">Saya memverifikasi &amp; menyunting setiap output AI, tidak menyalin mentah.</label></div>
+    <div class="ci"><input type="checkbox" id="m4c4"><label for="m4c4">Tidak ada klaim/angka/testimoni palsu di konten saya.</label></div>
+    <div class="ck-progress"></div>
+  </div>
+
+  <h2>4.9 Uji Pemahaman</h2>
+  <div class="quiz" data-quiz>
+    <div class="q"><span class="qn">1.</span><span>Lisensi mana yang paling bebas (boleh dipakai tanpa atribusi, termasuk komersial)?</span></div>
+    <div class="opt" data-correct="false">CC BY-NC</div>
+    <div class="opt" data-correct="true">CC0 / Public Domain</div>
+    <div class="opt" data-correct="false">All Rights Reserved</div>
+    <div class="fb good">Benar! CC0/Public Domain bebas untuk apa pun tanpa kewajiban atribusi.</div>
+    <div class="fb bad">Kurang tepat. CC0/Public Domain adalah yang paling bebas; CC BY-NC melarang komersial.</div>
+  </div>
+  <div class="quiz" data-quiz>
+    <div class="q"><span class="qn">2.</span><span>Sikap yang benar terhadap output teks dari AI adalah…</span></div>
+    <div class="opt" data-correct="false">Menyalin mentah karena pasti akurat</div>
+    <div class="opt" data-correct="true">Memverifikasi fakta lalu menyunting &amp; mempolesnya</div>
+    <div class="opt" data-correct="false">Menambahkan statistik karangan AI agar meyakinkan</div>
+    <div class="fb good">Tepat! AI itu asisten — output wajib diverifikasi &amp; disunting manusia.</div>
+    <div class="fb bad">Belum tepat. Output AI bisa salah/berhalusinasi; selalu verifikasi &amp; sunting.</div>
+  </div>
+
+  <div class="chapnav">
+    <a class="prev" data-target="ch-m3"><span class="dir">← Sebelumnya</span><div class="tt">Modul 3 · Aset Visual</div></a>
+    <a class="next" data-target="ch-m5"><span class="dir">Selanjutnya →</span><div class="tt">Modul 5 · Integrasi (WordPress)</div></a>
+  </div>
+</section>
+<!-- ============================ MODULE 5 ============================ -->
+<section class="chapter" id="ch-m5">
+  <div class="chap-hero"><div class="eyebrow">Modul 5 · Pertemuan 9–10</div><h1>Integrasi Konten (Web Builder)</h1><p>Saatnya merakit. Semua naskah &amp; aset kita susun menjadi halaman web nyata menggunakan WordPress + Elementor dengan pendekatan no-code (drag-and-drop).</p>
+  <div class="meta"><span>⏱ 2 × 170 menit</span><span>🎯 CPMK-5</span><span>📤 Luaran: Landing Page (draf live)</span></div></div>
+
+  <div class="objbox"><div class="objttl">🎯 Tujuan Praktikum</div>
+    <ul class="obj-list">
+      <li>Memahami arsitektur dasar <span class="term" data-def="Content Management System: perangkat lunak untuk membuat & mengelola konten web tanpa coding langsung. Contoh: WordPress.">CMS WordPress</span>.</li>
+      <li>Menggunakan Elementor untuk menerjemahkan wireframe menjadi halaman visual.</li>
+      <li>Menata teks &amp; gambar sesuai prinsip hierarki visual.</li>
+    </ul>
+  </div>
+
+  <h2>5.1 Konsep No-Code &amp; Web Builder</h2>
+  <p>Tidak semua Content Developer harus menguasai HTML/CSS mendalam. Pendekatan <strong>no-code</strong> memungkinkan kita membangun web fungsional lewat antarmuka visual drag-and-drop. Elementor adalah plugin page builder WordPress terpopuler di dunia.</p>
+
+  <h2>5.2 Anatomi Elementor: Section → Column → Widget</h2>
+  <div class="infographic">
+    <svg viewBox="0 0 600 300" role="img" aria-label="Diagram hierarki Elementor: Section berisi Column, Column berisi Widget">
+      <rect x="10" y="10" width="580" height="280" rx="12" fill="none" stroke="#4f46e5" stroke-width="2" stroke-dasharray="6 4"/>
+      <text x="24" y="34" font-size="15" font-weight="700" fill="#4f46e5">SECTION (Bagian) — wadah terbesar, selebar layar</text>
+      <rect x="30" y="52" width="265" height="220" rx="9" fill="none" stroke="#0ea5a4" stroke-width="2"/>
+      <rect x="305" y="52" width="265" height="220" rx="9" fill="none" stroke="#0ea5a4" stroke-width="2"/>
+      <text x="44" y="74" font-size="13" font-weight="700" fill="#0ea5a4">COLUMN 1</text>
+      <text x="319" y="74" font-size="13" font-weight="700" fill="#0ea5a4">COLUMN 2</text>
+      <rect x="48" y="86" width="230" height="40" rx="7" fill="#eef0fe" stroke="#c7c9f7"/><text x="60" y="111" font-size="12.5" fill="#3a32c0" font-weight="600">Widget: Heading</text>
+      <rect x="48" y="134" width="230" height="40" rx="7" fill="#eef0fe" stroke="#c7c9f7"/><text x="60" y="159" font-size="12.5" fill="#3a32c0" font-weight="600">Widget: Text Editor</text>
+      <rect x="48" y="182" width="230" height="40" rx="7" fill="#eef0fe" stroke="#c7c9f7"/><text x="60" y="207" font-size="12.5" fill="#3a32c0" font-weight="600">Widget: Button (CTA)</text>
+      <rect x="323" y="86" width="230" height="136" rx="7" fill="#e2f7f6" stroke="#9fe3e1"/><text x="380" y="158" font-size="12.5" fill="#0a6f6e" font-weight="600">Widget: Image</text>
+    </svg>
+    <div class="figcap">Gambar 5.1 — Hierarki Elementor. Satu landing page = beberapa Section bertumpuk.</div>
+  </div>
+
+  <h2>5.3 Alat &amp; Bahan + Pilihan Platform</h2>
+  <p>Praktikum butuh instalasi WordPress. Ada dua jalur — pilih sesuai kondisi lab Anda:</p>
+  <div class="callout danger"><span class="ic">⏳</span><div class="body"><span class="t">Penting soal TasteWP</span>Instans gratis <strong>TasteWP hanya hidup ±2 hari</strong> lalu terhapus. Cocok untuk demo cepat di kelas, tetapi <strong>berisiko untuk proyek yang dikerjakan berhari-hari</strong>. Untuk proyek akhir, gunakan <strong>LocalWP</strong> (jalur utama yang direkomendasikan) agar pekerjaan Anda aman.</div></div>
+  <div class="vs">
+    <div class="col"><h4>🟢 Jalur Utama: LocalWP (offline, permanen)</h4><ul><li>Aplikasi gratis (Windows/Mac/Linux) dari localwp.com.</li><li>WordPress berjalan di komputer Anda — tidak hilang.</li><li>Cocok dikerjakan berhari-hari tanpa internet.</li><li>Alternatif setara: XAMPP (lebih manual).</li></ul></div>
+    <div class="mid">atau</div>
+    <div class="col"><h4>🟡 Jalur Cepat: TasteWP (online, sementara)</h4><ul><li>Tanpa instalasi, jadi dalam hitungan detik.</li><li>Baik untuk latihan/demo singkat di kelas.</li><li>⚠ Hidup ±2 hari → backup berkala.</li><li>Perpanjang/registrasi untuk umur lebih panjang.</li></ul></div>
+  </div>
+  <div class="callout tip"><span class="ic">💾</span><div class="body"><span class="t">Strategi anti-kehilangan kerja</span>Apa pun platformnya, pasang plugin <strong>"All-in-One WP Migration"</strong> lalu ekspor file backup berkala ke Google Drive. Jika instans hilang, Anda tinggal impor kembali.</div></div>
+
+  <h2>5.4 Tutorial Praktis</h2>
+  <div class="steps">
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Siapkan WordPress &amp; pasang Elementor</span><span class="estimate">30 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent">
+        <p><strong>Jalur LocalWP:</strong> Unduh &amp; pasang LocalWP → <em>Create a new site</em> → ikuti wizard → klik <em>WP Admin</em>. <br><strong>Jalur TasteWP:</strong> buka <code>tastewp.com</code> → <em>"Set it up!"</em> → <em>"Access it now!"</em>.</p>
+        <p>Setelah masuk Dashboard (wp-admin):</p>
+        <ol>
+          <li>Menu kiri → <strong>Plugins → Add New</strong>.</li>
+          <li>Cari "<strong>Elementor</strong>", klik <strong>Install Now</strong> → <strong>Activate</strong>.</li>
+        </ol>
+        <div class="callout trouble"><span class="ic">🛠</span><div class="body"><span class="t">Penanganan Masalah</span>Editor Elementor lambat/blank? Pakai Chrome terbaru, nonaktifkan ekstensi pemblokir, dan pastikan RAM cukup. Di LocalWP, naikkan PHP memory limit bila perlu.</div></div>
+      </div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Buat halaman kosong (Canvas)</span><span class="estimate">15 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><ol>
+        <li><strong>Pages → Add New</strong>, beri judul "[Produk] Landing Page".</li>
+        <li>Panel kanan → <strong>Template → Elementor Canvas</strong> (menghilangkan header/footer bawaan agar layar bersih).</li>
+        <li>Klik <strong>Publish</strong>, lalu <strong>Edit with Elementor</strong>.</li>
+      </ol></div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Bangun Hero Section (2 kolom)</span><span class="estimate">40 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent">
+        <p>Klik ikon <strong>[+]</strong> → pilih struktur <strong>2 kolom</strong>.</p>
+        <ul>
+          <li><strong>Kolom kiri (teks):</strong> seret widget <em>Heading</em> (paste headline Modul 2), <em>Text Editor</em> (sub-headline), <em>Button</em> (teks CTA + warnai sesuai brand Modul 3).</li>
+          <li><strong>Kolom kanan (gambar):</strong> seret widget <em>Image</em> → Upload → unggah hero image (WebP/JPG) dari Drive.</li>
+        </ul>
+      </div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Bangun Benefit Section (3 kolom)</span><span class="estimate">35 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><ol>
+        <li>Section baru → struktur <strong>1 kolom</strong>, tambahkan <em>Heading</em> "Mengapa Memilih Kami?".</li>
+        <li>Seret <strong>Inner Section</strong>, ubah jadi <strong>3 kolom</strong>.</li>
+        <li>Di tiap kolom: <em>Icon Box</em> / <em>Image Box</em> → masukkan 3 ikon (Modul 3) + judul benefit + deskripsi.</li>
+        <li>Klik <strong>Update</strong> (tombol hijau) setiap selesai perubahan penting.</li>
+      </ol></div>
+    </details>
+  </div>
+
+  <h2>5.5 Tugas Modul 5</h2>
+  <div class="callout info"><span class="ic">📤</span><div class="body"><span class="t">Yang dikumpulkan</span>Lanjutkan membangun hingga Final CTA sesuai wireframe. Terapkan font &amp; warna brand (tab Style). Kumpulkan URL halaman + screenshot full-page + file backup (.wpress) ke LMS.</div></div>
+
+  <h2>5.6 Evaluasi Diri</h2>
+  <div class="checklist" data-ck="m5">
+    <div class="ci"><input type="checkbox" id="m5c1"><label for="m5c1">Saya memilih platform yang aman untuk proyek berhari-hari (LocalWP) atau rutin backup.</label></div>
+    <div class="ci"><input type="checkbox" id="m5c2"><label for="m5c2">Landing page punya Hero (headline + gambar + CTA).</label></div>
+    <div class="ci"><input type="checkbox" id="m5c3"><label for="m5c3">Ada bagian Benefit dengan ikon/grafis.</label></div>
+    <div class="ci"><input type="checkbox" id="m5c4"><label for="m5c4">Warna &amp; tipografi konsisten dengan brand guideline, tanpa layout "pecah".</label></div>
+    <div class="ck-progress"></div>
+  </div>
+
+  <h2>5.7 Uji Pemahaman</h2>
+  <div class="quiz" data-quiz>
+    <div class="q"><span class="qn">1.</span><span>Urutan hierarki Elementor dari terbesar ke terkecil adalah…</span></div>
+    <div class="opt" data-correct="true">Section → Column → Widget</div>
+    <div class="opt" data-correct="false">Widget → Section → Column</div>
+    <div class="opt" data-correct="false">Column → Widget → Section</div>
+    <div class="fb good">Benar! Section memuat Column, Column memuat Widget.</div>
+    <div class="fb bad">Kurang tepat. Urutannya Section → Column → Widget.</div>
+  </div>
+  <div class="quiz" data-quiz>
+    <div class="q"><span class="qn">2.</span><span>Untuk proyek yang dikerjakan seminggu, platform paling aman dari risiko kehilangan data adalah…</span></div>
+    <div class="opt" data-correct="false">TasteWP tanpa backup</div>
+    <div class="opt" data-correct="true">LocalWP (atau TasteWP + backup rutin)</div>
+    <div class="opt" data-correct="false">Mengetik langsung di Notepad</div>
+    <div class="fb good">Tepat! LocalWP permanen di komputer Anda; jika pakai TasteWP, wajib backup.</div>
+    <div class="fb bad">Belum tepat. TasteWP hidup ±2 hari; gunakan LocalWP atau backup rutin.</div>
+  </div>
+
+  <div class="chapnav">
+    <a class="prev" data-target="ch-m4"><span class="dir">← Sebelumnya</span><div class="tt">Modul 4 · Etika &amp; AI</div></a>
+    <a class="next" data-target="ch-m6"><span class="dir">Selanjutnya →</span><div class="tt">Modul 6 · Accessibility</div></a>
+  </div>
+</section>
+<!-- ============================ MODULE 6 ============================ -->
+<section class="chapter" id="ch-m6">
+  <div class="chap-hero"><div class="eyebrow">Modul 6 · Pertemuan 11–12</div><h1>Accessibility &amp; Desain Inklusif</h1><p>Konten terbaik adalah yang bisa dinikmati semua orang — termasuk penyandang disabilitas. Aksesibilitas bukan sekadar kewajiban etis, tapi juga memperluas jangkauan &amp; menguatkan SEO.</p>
+  <div class="meta"><span>⏱ 2 × 170 menit</span><span>🎯 CPMK-6</span><span>📤 Luaran: Laporan Audit A11y</span></div></div>
+
+  <div class="objbox"><div class="objttl">🎯 Tujuan Praktikum</div>
+    <ul class="obj-list">
+      <li>Menjelaskan empat prinsip WCAG (POUR) dan relevansinya bagi landing page.</li>
+      <li>Menerapkan alt text, kontras, struktur heading, &amp; target sentuh yang inklusif.</li>
+      <li>Mengaudit halaman dengan alat otomatis &amp; uji keyboard.</li>
+    </ul>
+  </div>
+
+  <h2>6.1 Mengapa Aksesibilitas?</h2>
+  <div class="grid g3">
+    <div class="card statcard"><div class="big">~15%</div><div class="lbl">populasi dunia hidup dengan disabilitas</div></div>
+    <div class="card statcard"><div class="big">SEO</div><div class="lbl">praktik a11y memperkuat peringkat pencarian</div></div>
+    <div class="card statcard"><div class="big">UX</div><div class="lbl">desain inklusif lebih nyaman untuk semua</div></div>
+  </div>
+  <p>Web yang aksesibel membantu pengguna tunanetra (pembaca layar), tuna-motorik (navigasi keyboard), buta warna (kontras), hingga orang dengan koneksi/perangkat terbatas. <span class="term" data-def="Web Content Accessibility Guidelines: standar internasional aksesibilitas web dari W3C.">WCAG</span> adalah standar acuannya.</p>
+
+  <h2>6.2 Empat Prinsip WCAG: POUR</h2>
+  <div class="infographic">
+    <div class="grid g2" style="margin:0">
+      <div class="card"><h4 style="text-transform:none;letter-spacing:0;color:var(--c-primary-ink);font-size:16px">👁 Perceivable (Dapat Dipersepsi)</h4><p style="font-size:14px">Informasi harus bisa ditangkap indra: alt text untuk gambar, kontras cukup, teks bisa diperbesar.</p></div>
+      <div class="card"><h4 style="text-transform:none;letter-spacing:0;color:var(--c-primary-ink);font-size:16px">🖐 Operable (Dapat Dioperasikan)</h4><p style="font-size:14px">Semua fungsi bisa diakses keyboard; tombol cukup besar untuk jempol; tak ada jebakan fokus.</p></div>
+      <div class="card"><h4 style="text-transform:none;letter-spacing:0;color:var(--c-primary-ink);font-size:16px">🧠 Understandable (Dapat Dipahami)</h4><p style="font-size:14px">Bahasa jelas, navigasi konsisten, pesan error membantu (bukan "Error 401").</p></div>
+      <div class="card"><h4 style="text-transform:none;letter-spacing:0;color:var(--c-primary-ink);font-size:16px">🛡 Robust (Tangguh)</h4><p style="font-size:14px">Kode valid agar bisa dibaca beragam teknologi bantu (assistive technology).</p></div>
+    </div>
+    <div class="figcap">Gambar 6.1 — Empat pilar WCAG: <strong>P</strong>erceivable, <strong>O</strong>perable, <strong>U</strong>nderstandable, <strong>R</strong>obust.</div>
+  </div>
+
+  <h2>6.3 Checklist Aksesibilitas untuk Landing Page</h2>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Aspek</th><th>Yang harus dilakukan</th><th>Prinsip</th></tr></thead>
+    <tbody>
+      <tr><td>Gambar</td><td>Semua gambar bermakna punya <strong>alt text</strong> deskriptif; gambar dekoratif diberi alt kosong.</td><td>Perceivable</td></tr>
+      <tr><td>Kontras</td><td>Teks vs latar ≥ 4.5:1 (lihat Modul 3).</td><td>Perceivable</td></tr>
+      <tr><td>Heading</td><td>Struktur runtut: satu H1, lalu H2/H3 berurutan (tak melompat).</td><td>Understandable</td></tr>
+      <tr><td>Tautan/Tombol</td><td>Teks jelas ("Beli Sekarang"), bukan "klik di sini". Target ≥ 44×44 px.</td><td>Operable</td></tr>
+      <tr><td>Keyboard</td><td>Semua tombol/link bisa dijangkau &amp; ditekan dengan <span class="kbd">Tab</span> + <span class="kbd">Enter</span>.</td><td>Operable</td></tr>
+      <tr><td>Form</td><td>Setiap input punya label; pesan error jelas &amp; menunjukkan cara perbaiki.</td><td>Understandable</td></tr>
+      <tr><td>Warna</td><td>Jangan mengandalkan warna saja untuk menyampaikan makna (mis. wajib + ikon/teks).</td><td>Perceivable</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>6.4 Menulis Alt Text yang Baik</h2>
+  <div class="vs">
+    <div class="col"><h4>❌ Buruk</h4><ul><li>(kosong padahal bermakna)</li><li>"IMG_2043.jpg"</li><li>"gambar"</li><li>"foto sepatu sepatu sepatu lari murah" (keyword stuffing)</li></ul></div>
+    <div class="mid">VS</div>
+    <div class="col"><h4>✅ Baik</h4><ul><li>"Sepatu lari Aerostreet merah dipakai pelari di trek pagi hari."</li><li>Deskriptif, ringkas, natural, memuat konteks.</li></ul></div>
+  </div>
+
+  <h2>6.5 Tutorial Praktis</h2>
+  <div class="steps">
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Audit otomatis dengan Lighthouse (Accessibility)</span><span class="estimate">20 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><p>Buka landing page Anda di Chrome → klik kanan → <strong>Inspect</strong> → tab <strong>Lighthouse</strong> → centang <em>Accessibility</em> → <em>Analyze</em>. Catat skor &amp; daftar masalah yang ditemukan.</p>
+      <div class="callout tip"><span class="ic">💡</span><div class="body"><span class="t">Alat tambahan</span>Ekstensi <strong>axe DevTools</strong> atau <strong>WAVE</strong> memberi detail masalah a11y yang lebih spesifik beserta cara perbaikannya.</div></div></div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Uji navigasi keyboard</span><span class="estimate">15 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><p>Tanpa menyentuh mouse, tekan <span class="kbd">Tab</span> berulang. Pastikan: setiap link/tombol tersorot jelas (focus ring), urutannya logis, dan tombol CTA bisa diaktifkan dengan <span class="kbd">Enter</span>.</p></div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Perbaiki temuan &amp; lengkapi alt text</span><span class="estimate">35 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><p>Di WordPress → <strong>Media → Library</strong>, isi <em>Alternative Text</em> tiap gambar bermakna (lihat 6.4). Perbaiki kontras &amp; struktur heading di Elementor. Ulangi audit hingga skor Accessibility ≥ 90.</p></div>
+    </details>
+  </div>
+
+  <h2>6.6 Tugas Modul 6</h2>
+  <div class="callout info"><span class="ic">📤</span><div class="body"><span class="t">Yang dikumpulkan</span>Laporan audit aksesibilitas: skor Lighthouse <em>sebelum</em> &amp; <em>sesudah</em> perbaikan, daftar masalah yang diperbaiki, dan bukti hasil uji keyboard. Unggah ke LMS.</div></div>
+
+  <h2>6.7 Evaluasi Diri</h2>
+  <div class="checklist" data-ck="m6">
+    <div class="ci"><input type="checkbox" id="m6c1"><label for="m6c1">Semua gambar bermakna memiliki alt text deskriptif &amp; natural.</label></div>
+    <div class="ci"><input type="checkbox" id="m6c2"><label for="m6c2">Struktur heading runtut (satu H1, H2/H3 tidak melompat).</label></div>
+    <div class="ci"><input type="checkbox" id="m6c3"><label for="m6c3">Seluruh tombol/link bisa diakses &amp; ditekan via keyboard.</label></div>
+    <div class="ci"><input type="checkbox" id="m6c4"><label for="m6c4">Skor Accessibility Lighthouse ≥ 90.</label></div>
+    <div class="ck-progress"></div>
+  </div>
+
+  <h2>6.8 Uji Pemahaman</h2>
+  <div class="quiz" data-quiz>
+    <div class="q"><span class="qn">1.</span><span>Singkatan POUR pada WCAG adalah…</span></div>
+    <div class="opt" data-correct="true">Perceivable, Operable, Understandable, Robust</div>
+    <div class="opt" data-correct="false">Popular, Online, Useful, Responsive</div>
+    <div class="opt" data-correct="false">Performance, Optimization, UX, Ranking</div>
+    <div class="fb good">Benar! Empat prinsip inti WCAG.</div>
+    <div class="fb bad">Kurang tepat. POUR = Perceivable, Operable, Understandable, Robust.</div>
+  </div>
+  <div class="quiz" data-quiz>
+    <div class="q"><span class="qn">2.</span><span>Alt text yang baik untuk gambar produk sebaiknya…</span></div>
+    <div class="opt" data-correct="false">Dikosongkan saja</div>
+    <div class="opt" data-correct="false">Diisi nama file seperti "IMG_2043.jpg"</div>
+    <div class="opt" data-correct="true">Deskriptif, ringkas, &amp; natural sesuai isi gambar</div>
+    <div class="fb good">Tepat! Deskripsi natural membantu pembaca layar &amp; SEO.</div>
+    <div class="fb bad">Belum tepat. Alt text harus deskriptif &amp; natural, bukan kosong/nama file.</div>
+  </div>
+
+  <div class="chapnav">
+    <a class="prev" data-target="ch-m5"><span class="dir">← Sebelumnya</span><div class="tt">Modul 5 · Integrasi</div></a>
+    <a class="next" data-target="ch-m7"><span class="dir">Selanjutnya →</span><div class="tt">Modul 7 · SEO &amp; Performa</div></a>
+  </div>
+</section>
+<!-- ============================ MODULE 7 ============================ -->
+<section class="chapter" id="ch-m7">
+  <div class="chap-hero"><div class="eyebrow">Modul 7 · Pertemuan 13–14</div><h1>SEO On-Page &amp; Performa Web</h1><p>Konten sebagus apa pun tak berguna bila tak ditemukan. Kita optimasi halaman agar disukai mesin pencari sekaligus ngebut diakses pengguna.</p>
+  <div class="meta"><span>⏱ 2 × 170 menit</span><span>🎯 CPMK-7</span><span>📤 Luaran: Halaman teroptimasi + Skor</span></div></div>
+
+  <div class="objbox"><div class="objttl">🎯 Tujuan Praktikum</div>
+    <ul class="obj-list">
+      <li>Melakukan riset kata kunci sederhana &amp; memahami <span class="term" data-def="Search intent: maksud di balik pencarian pengguna — informasi, navigasi, transaksi, atau komersial.">search intent</span>.</li>
+      <li>Menerapkan SEO on-page: meta title, meta description, heading, alt text.</li>
+      <li>Mengukur &amp; memperbaiki performa via <span class="term" data-def="Core Web Vitals: tiga metrik performa inti Google — LCP, CLS, dan INP.">Core Web Vitals</span> &amp; Lighthouse.</li>
+    </ul>
+  </div>
+
+  <h2>7.1 Cara Kerja Mesin Pencari (Singkat)</h2>
+  <div class="infographic">
+    <div class="roadmap" style="padding-left:0">
+      <div class="rm"><div class="dot">1</div><h4>Crawling</h4><p>Robot Google menjelajah &amp; menemukan halaman lewat tautan.</p></div>
+      <div class="rm"><div class="dot">2</div><h4>Indexing</h4><p>Halaman disimpan &amp; dipahami isinya (judul, heading, konten, gambar).</p></div>
+      <div class="rm"><div class="dot">3</div><h4>Ranking</h4><p>Saat ada pencarian, Google mengurutkan halaman paling relevan &amp; berkualitas.</p></div>
+    </div>
+    <div class="figcap">Gambar 7.1 — Tiga tahap mesin pencari. SEO on-page memengaruhi tahap Indexing &amp; Ranking.</div>
+  </div>
+
+  <h2>7.2 Riset Kata Kunci &amp; Search Intent</h2>
+  <p>Pilih <strong>satu kata kunci utama (focus keyphrase)</strong> yang sesuai produk &amp; cara audiens mencari. Pahami intent-nya agar konten cocok:</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Jenis Intent</th><th>Contoh Query</th><th>Cocok untuk</th></tr></thead>
+    <tbody>
+      <tr><td>Informasional</td><td>"cara memilih sepatu lari"</td><td>Artikel/blog (TOFU)</td></tr>
+      <tr><td>Komersial</td><td>"sepatu lari terbaik 2026"</td><td>Perbandingan (MOFU)</td></tr>
+      <tr><td><strong>Transaksional</strong></td><td>"beli sepatu lari aerostreet"</td><td><strong>Landing page (BOFU)</strong></td></tr>
+      <tr><td>Navigasional</td><td>"aerostreet official store"</td><td>Homepage/brand</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout tip"><span class="ic">💡</span><div class="body"><span class="t">Riset gratis</span>Manfaatkan <em>Google Autocomplete</em>, bagian <em>"Orang juga bertanya"</em>, &amp; <em>"Penelusuran terkait"</em> di bawah hasil pencarian untuk menemukan kata kunci nyata yang dicari orang.</div></div>
+
+  <h2>7.3 Elemen SEO On-Page</h2>
+  <div class="infographic">
+    <div style="border:1px solid var(--c-border);border-radius:10px;padding:16px;background:var(--c-surface-2)">
+      <div style="font-size:12px;color:var(--c-text-faint)">www.tokoanda.com › sepatu-lari</div>
+      <div style="color:#1a0dab;font-size:19px;font-weight:600;line-height:1.3" class="seo-title-demo">Sepatu Lari Pria Aerostreet — Diskon 50% Hari Ini!</div>
+      <div style="font-size:13.5px;color:var(--c-text-soft);margin-top:2px">Ringan, empuk, &amp; tahan lama untuk pelari pemula. Garansi 30 hari. Pesan sekarang &amp; rasakan bedanya di lari pagi pertamamu. ★★★★★</div>
+    </div>
+    <div class="figcap">Gambar 7.2 — Tampilan hasil pencarian (SERP). Biru = <strong>Meta Title</strong>, abu = <strong>Meta Description</strong>.</div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Meta Title</h4><p style="font-size:14px">Judul biru di hasil Google. Maks ±60 karakter, mengandung kata kunci utama di awal.</p></div>
+    <div class="card"><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Meta Description</h4><p style="font-size:14px">Deskripsi pemancing klik. Maks ±160 karakter, persuasif + kata kunci.</p></div>
+    <div class="card"><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Heading (H1–H3)</h4><p style="font-size:14px">Satu H1 berisi kata kunci; subjudul terstruktur membantu Google memahami isi.</p></div>
+    <div class="card"><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Alt Text &amp; URL</h4><p style="font-size:14px">Alt deskriptif (Modul 6) &amp; URL pendek bermakna (cth: /sepatu-lari).</p></div>
+  </div>
+
+  <h2>7.4 Performa: Core Web Vitals</h2>
+  <p>Google menilai pengalaman pengguna lewat tiga metrik inti. Halaman cepat = peringkat &amp; konversi lebih baik.</p>
+  <div class="infographic">
+    <div class="meter"><div class="mh"><span><strong>LCP</strong> — Largest Contentful Paint (kecepatan muat elemen terbesar)</span><span class="pill ok">Baik ≤ 2.5s</span></div><div class="track"><div class="fill" style="width:30%;background:var(--c-ok)"></div></div></div>
+    <div class="meter"><div class="mh"><span><strong>CLS</strong> — Cumulative Layout Shift (kestabilan tata letak)</span><span class="pill ok">Baik ≤ 0.1</span></div><div class="track"><div class="fill" style="width:18%;background:var(--c-ok)"></div></div></div>
+    <div class="meter"><div class="mh"><span><strong>INP</strong> — Interaction to Next Paint (respons saat diklik)</span><span class="pill ok">Baik ≤ 200ms</span></div><div class="track"><div class="fill" style="width:24%;background:var(--c-ok)"></div></div></div>
+    <div class="figcap">Gambar 7.3 — Ambang "Baik" Core Web Vitals. Gambar terkompres (Modul 3) sangat membantu LCP.</div>
+  </div>
+  <div class="callout warn"><span class="ic">⚠</span><div class="body"><span class="t">Penyebab umum skor jelek</span>Gambar tidak dikompres (LCP buruk), gambar/iklan tanpa dimensi tetap (CLS buruk), terlalu banyak plugin/script (INP buruk). Optimasi di Modul 3 sudah mencegah sebagian besar ini.</div></div>
+
+  <h2>7.5 Tutorial Praktis</h2>
+  <div class="steps">
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Riset &amp; tetapkan focus keyphrase</span><span class="estimate">20 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><p>Gunakan Google Autocomplete &amp; "Penelusuran terkait" untuk menemukan kata kunci transaksional yang relevan. Pilih satu sebagai focus keyphrase.</p></div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Pasang Yoast SEO &amp; isi meta data</span><span class="estimate">30 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><ol>
+        <li>WordPress → Plugins → Add New → cari "<strong>Yoast SEO</strong>" → Install → Activate.</li>
+        <li>Edit halaman (mode standar/Block Editor) → scroll ke kotak Yoast.</li>
+        <li>Isi <strong>Focus keyphrase</strong>, <strong>SEO title</strong> (catchy + kata kunci), <strong>Meta description</strong> (≤160 kar, persuasif). Kejar indikator <span class="pill ok">Hijau</span>.</li>
+        <li>Update.</li>
+      </ol>
+      <div class="callout trouble"><span class="ic">🛠</span><div class="body"><span class="t">Penanganan Masalah</span>Indikator Yoast tetap merah? Pastikan kata kunci muncul di: judul SEO, meta description, H1, dan paling tidak satu kali di paragraf awal.</div></div></div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Lengkapi alt text &amp; struktur heading</span><span class="estimate">20 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><p>Pastikan alt text (Modul 6) memuat konteks kata kunci secara natural, dan hanya ada satu H1 (headline hero).</p></div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Uji performa dengan Lighthouse</span><span class="estimate">25 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><ol>
+        <li>Buka URL di tab baru (sebagai pengunjung, bukan editor).</li>
+        <li>Klik kanan → <strong>Inspect</strong> → tab <strong>Lighthouse</strong>.</li>
+        <li>Centang <em>Performance, Accessibility, Best Practices, SEO</em>; pilih Mobile/Desktop.</li>
+        <li>Klik <strong>Analyze page load</strong>. Tunggu 15–30 detik, baca skor &amp; saran perbaikan.</li>
+      </ol></div>
+    </details>
+  </div>
+
+  <h2>7.6 Tugas Modul 7</h2>
+  <div class="callout info"><span class="ic">📤</span><div class="body"><span class="t">Yang dikumpulkan</span>Screenshot hasil Lighthouse (4 skor), bukti meta data terisi (Yoast hijau), dan catatan perbaikan yang dilakukan. Unggah ke LMS.</div></div>
+
+  <h2>7.7 Evaluasi Diri</h2>
+  <div class="checklist" data-ck="m7">
+    <div class="ci"><input type="checkbox" id="m7c1"><label for="m7c1">Saya menetapkan focus keyphrase transaksional yang relevan.</label></div>
+    <div class="ci"><input type="checkbox" id="m7c2"><label for="m7c2">Meta title &amp; description terisi, indikator Yoast hijau.</label></div>
+    <div class="ci"><input type="checkbox" id="m7c3"><label for="m7c3">Semua gambar punya alt text &amp; hanya ada satu H1.</label></div>
+    <div class="ci"><input type="checkbox" id="m7c4"><label for="m7c4">Skor SEO &amp; Best Practices Lighthouse &gt; 85.</label></div>
+    <div class="ck-progress"></div>
+  </div>
+
+  <h2>7.8 Uji Pemahaman</h2>
+  <div class="quiz" data-quiz>
+    <div class="q"><span class="qn">1.</span><span>Metrik Core Web Vitals yang mengukur kecepatan muat elemen terbesar adalah…</span></div>
+    <div class="opt" data-correct="true">LCP</div>
+    <div class="opt" data-correct="false">CLS</div>
+    <div class="opt" data-correct="false">SEO</div>
+    <div class="fb good">Benar! LCP = Largest Contentful Paint (ideal ≤ 2.5 detik).</div>
+    <div class="fb bad">Kurang tepat. LCP mengukur kecepatan muat elemen terbesar; CLS mengukur kestabilan tata letak.</div>
+  </div>
+  <div class="quiz" data-quiz>
+    <div class="q"><span class="qn">2.</span><span>Untuk landing page penjualan, search intent yang paling pas dibidik adalah…</span></div>
+    <div class="opt" data-correct="false">Informasional</div>
+    <div class="opt" data-correct="true">Transaksional</div>
+    <div class="opt" data-correct="false">Navigasional</div>
+    <div class="fb good">Tepat! Intent transaksional = audiens siap membeli.</div>
+    <div class="fb bad">Belum tepat. Landing page penjualan membidik intent transaksional.</div>
+  </div>
+
+  <div class="chapnav">
+    <a class="prev" data-target="ch-m6"><span class="dir">← Sebelumnya</span><div class="tt">Modul 6 · Accessibility</div></a>
+    <a class="next" data-target="ch-m8"><span class="dir">Selanjutnya →</span><div class="tt">Modul 8 · Analytics &amp; Launching</div></a>
+  </div>
+</section>
+<!-- ============================ MODULE 8 ============================ -->
+<section class="chapter" id="ch-m8">
+  <div class="chap-hero"><div class="eyebrow">Modul 8 · Pertemuan 15–16</div><h1>Analytics, Konversi &amp; Launching</h1><p>Peluncuran bukan akhir, tapi awal. Modul penutup ini mengajarkan cara meluncurkan, mengukur perilaku pengunjung, dan memperbaiki halaman berbasis data — keterampilan pembeda Content Developer profesional.</p>
+  <div class="meta"><span>⏱ 2 × 170 menit</span><span>🎯 CPMK-8</span><span>📤 Luaran: Landing Page Final + Laporan</span></div></div>
+
+  <div class="objbox"><div class="objttl">🎯 Tujuan Praktikum</div>
+    <ul class="obj-list">
+      <li>Memastikan responsivitas mobile &amp; meluncurkan landing page ke publik.</li>
+      <li>Memahami metrik kunci konversi &amp; cara membacanya.</li>
+      <li>Merumuskan rekomendasi perbaikan berbasis data (termasuk konsep A/B testing).</li>
+    </ul>
+  </div>
+
+  <h2>8.1 Finalisasi: Responsivitas Mobile</h2>
+  <p>Lebih dari 70% kunjungan web berasal dari ponsel — prinsip <span class="term" data-def="Mobile-First: merancang/mengoptimasi tampilan untuk layar kecil lebih dulu.">Mobile-First</span> wajib. Periksa &amp; rapikan tampilan HP di Elementor.</p>
+  <div class="steps">
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Rapikan tampilan mobile di Elementor</span><span class="estimate">30 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><ol>
+        <li>Edit with Elementor → klik ikon <strong>Responsive Mode</strong> → pilih <strong>Mobile</strong>.</li>
+        <li>Kecilkan ukuran font heading khusus mobile (ada ikon HP di samping pengaturan ukuran).</li>
+        <li>Jika urutan elemen terbalik, buka Section → <strong>Advanced → Responsive → Reverse Columns (Mobile)</strong>.</li>
+        <li>Pastikan tombol CTA mudah ditekan jempol &amp; tak ada elemen terpotong. Update.</li>
+      </ol></div>
+    </details>
+  </div>
+
+  <h2>8.2 Launching ke Publik</h2>
+  <div class="callout warn"><span class="ic">🚀</span><div class="body"><span class="t">Dari lokal ke live</span>Halaman di <strong>LocalWP bersifat offline</strong> (hanya di komputer Anda). Untuk membuatnya benar-benar <em>live</em>, pilih salah satu: gunakan instans online (TasteWP/hosting gratis), atau migrasikan via plugin <strong>All-in-One WP Migration</strong> ke hosting. Untuk keperluan penilaian, sepakati dengan dosen apakah URL TasteWP/staging sudah memadai.</div></div>
+
+  <h2>8.3 Metrik Konversi yang Wajib Dipahami</h2>
+  <div class="grid g2">
+    <div class="card"><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">📈 Conversion Rate</h4><p style="font-size:14px">% pengunjung yang melakukan aksi tujuan (klik CTA/isi form). <strong>Metrik utama landing page.</strong></p></div>
+    <div class="card"><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">👀 Sessions / Users</h4><p style="font-size:14px">Jumlah kunjungan &amp; pengunjung unik — ukuran trafik.</p></div>
+    <div class="card"><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">⏱ Engagement / Bounce</h4><p style="font-size:14px">Seberapa lama &amp; dalam interaksi; bounce tinggi = halaman kurang relevan.</p></div>
+    <div class="card"><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">🖱 CTR Tombol</h4><p style="font-size:14px">% klik pada CTA — mengukur daya tarik ajakan bertindak.</p></div>
+  </div>
+  <div class="infographic">
+    <div style="text-align:center;padding:10px">
+      <div style="font-size:14px;color:var(--c-text-soft)">Contoh perhitungan</div>
+      <div style="font-size:22px;font-weight:700;margin:8px 0">1.000 pengunjung → 50 klik "Beli"</div>
+      <div style="font-size:15px">Conversion Rate = (50 ÷ 1.000) × 100% = <span class="pill ok" style="font-size:18px">5%</span></div>
+    </div>
+    <div class="figcap">Gambar 8.1 — Cara menghitung conversion rate.</div>
+  </div>
+
+  <h2>8.4 Tools Analitik</h2>
+  <div class="grid g3">
+    <div class="card"><span class="ic">📊</span><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Google Analytics 4</h4><p style="font-size:13.5px">Trafik, sumber pengunjung, event &amp; konversi.</p></div>
+    <div class="card"><span class="ic">🗺</span><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Heatmap (Microsoft Clarity)</h4><p style="font-size:13.5px">Gratis. Lihat di mana orang klik &amp; sejauh mana scroll.</p></div>
+    <div class="card"><span class="ic">🔎</span><h4 style="text-transform:none;letter-spacing:0;color:var(--c-text)">Search Console</h4><p style="font-size:13.5px">Performa di pencarian Google (kata kunci, klik, posisi).</p></div>
+  </div>
+
+  <h2>8.5 Perbaikan Berbasis Data &amp; A/B Testing</h2>
+  <p>Keputusan desain sebaiknya dipandu data, bukan selera. <span class="term" data-def="A/B testing: membandingkan dua versi halaman (A vs B) untuk melihat mana yang berkonversi lebih baik.">A/B testing</span> menguji satu perubahan (mis. warna/teks CTA) pada dua versi untuk melihat mana yang menang.</p>
+  <div class="infographic">
+    <div class="vs" style="margin:0">
+      <div class="col"><h4>Versi A</h4><p style="font-size:14px">Tombol: <span style="background:#64748b;color:#fff;padding:3px 10px;border-radius:6px">Kirim</span></p><p class="pill warn">Konversi 3%</p></div>
+      <div class="mid">VS</div>
+      <div class="col"><h4>Versi B</h4><p style="font-size:14px">Tombol: <span style="background:#16a34a;color:#fff;padding:3px 10px;border-radius:6px">Coba Gratis 7 Hari</span></p><p class="pill ok">Konversi 5% ✓ Menang</p></div>
+    </div>
+    <div class="figcap">Gambar 8.2 — Konsep A/B testing: uji satu variabel, ukur dampaknya pada konversi.</div>
+  </div>
+  <div class="callout tip"><span class="ic">💡</span><div class="body"><span class="t">Aturan emas A/B test</span>Ubah <strong>satu variabel</strong> per percobaan. Kalau Anda ganti headline + warna + gambar sekaligus, Anda tak tahu mana yang berpengaruh.</div></div>
+
+  <h2>8.6 Tutorial Praktis</h2>
+  <div class="steps">
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Pasang analytics &amp; heatmap</span><span class="estimate">30 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><p>Pasang Microsoft Clarity (gratis, mudah) atau GA4 lewat plugin di WordPress. Biarkan merekam beberapa kunjungan (mintalah 5 teman membuka halaman Anda).</p></div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Baca data &amp; rumuskan 3 rekomendasi</span><span class="estimate">35 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><p>Dari heatmap/analytics, identifikasi: sampai mana orang scroll? Bagian mana diabaikan? Apakah CTA diklik? Tulis <strong>3 rekomendasi perbaikan</strong> beserta alasan berbasis data.</p>
+      <div class="tpl"><div class="th"><span>Template rekomendasi</span><button class="copy">Salin</button></div><pre>Temuan   : (cth: 70% pengunjung tidak scroll sampai Final CTA)
+Hipotesis: (cth: halaman terlalu panjang / hero kurang menarik)
+Aksi     : (cth: pindahkan CTA lebih ke atas)
+Ukuran   : (metrik yang akan dipantau setelah perubahan)</pre></div></div>
+    </details>
+    <details class="step"><summary><span class="sidx"></span><span class="stitle">Finalisasi &amp; rekam demo</span><span class="estimate">25 mnt</span><span class="chev">▶</span></summary>
+      <div class="scontent"><p>Pastikan halaman responsif &amp; lolos checklist seluruh modul. Rekam layar singkat (≤1 menit) menampilkan tampilan mobile di-scroll atas→bawah.</p></div>
+    </details>
+  </div>
+
+  <h2>8.7 Tugas Akhir (Proyek)</h2>
+  <div class="callout info"><span class="ic">🏁</span><div class="body"><span class="t">Yang dikumpulkan</span>Dalam satu assignment akhir: (1) URL landing page final, (2) screenshot skor Lighthouse (4 kategori), (3) screenshot heatmap/analytics, (4) laporan 3 rekomendasi berbasis data, (5) video demo mobile (≤1 menit). Unggah ke LMS.</div></div>
+
+  <h2>8.8 Evaluasi Diri (Final)</h2>
+  <div class="checklist" data-ck="m8">
+    <div class="ci"><input type="checkbox" id="m8c1"><label for="m8c1">Halaman rapi &amp; tombol mudah ditekan di layar HP.</label></div>
+    <div class="ci"><input type="checkbox" id="m8c2"><label for="m8c2">Analytics/heatmap terpasang &amp; merekam data.</label></div>
+    <div class="ci"><input type="checkbox" id="m8c3"><label for="m8c3">Saya menulis 3 rekomendasi perbaikan berbasis data, bukan selera.</label></div>
+    <div class="ci"><input type="checkbox" id="m8c4"><label for="m8c4">Seluruh berkas tugas akhir lengkap &amp; URL bisa diakses publik.</label></div>
+    <div class="ck-progress"></div>
+  </div>
+
+  <h2>8.9 Uji Pemahaman</h2>
+  <div class="quiz" data-quiz>
+    <div class="q"><span class="qn">1.</span><span>Dari 2.000 pengunjung, 120 mengisi form. Conversion rate-nya?</span></div>
+    <div class="opt" data-correct="false">12%</div>
+    <div class="opt" data-correct="true">6%</div>
+    <div class="opt" data-correct="false">60%</div>
+    <div class="fb good">Benar! (120 ÷ 2.000) × 100% = 6%.</div>
+    <div class="fb bad">Kurang tepat. (120 ÷ 2.000) × 100% = 6%.</div>
+  </div>
+  <div class="quiz" data-quiz>
+    <div class="q"><span class="qn">2.</span><span>Prinsip paling penting saat menjalankan A/B testing adalah…</span></div>
+    <div class="opt" data-correct="true">Mengubah satu variabel per percobaan</div>
+    <div class="opt" data-correct="false">Mengubah sebanyak mungkin elemen sekaligus</div>
+    <div class="opt" data-correct="false">Memilih versi favorit tanpa data</div>
+    <div class="fb good">Tepat! Satu variabel agar dampaknya terukur jelas.</div>
+    <div class="fb bad">Belum tepat. Ubah satu variabel saja agar tahu mana yang berpengaruh.</div>
+  </div>
+
+  <div class="chapnav">
+    <a class="prev" data-target="ch-m7"><span class="dir">← Sebelumnya</span><div class="tt">Modul 7 · SEO &amp; Performa</div></a>
+    <a class="next" data-target="ch-rubrik"><span class="dir">Selanjutnya →</span><div class="tt">Rubrik &amp; Kalkulator Nilai</div></a>
+  </div>
+</section>
+<!-- ============================ RUBRIK ============================ -->
+<section class="chapter" id="ch-rubrik">
+  <div class="chap-hero"><div class="eyebrow">Penutup</div><h1>Rubrik Penilaian &amp; Kalkulator Nilai</h1><p>Panduan evaluasi proyek akhir (landing page) sekaligus kalkulator interaktif untuk menyimulasikan skor Anda.</p></div>
+
+  <h2>Kalkulator Nilai Interaktif</h2>
+  <p>Geser tiap kriteria sesuai estimasi pencapaian Anda. Nilai akhir terhitung otomatis sesuai bobot.</p>
+  <div class="calc" id="rubricCalc">
+    <div class="row" data-w="0.20"><div class="nm">1. Perencanaan &amp; UX Writing <span class="wt">(20%)</span></div><input type="range" min="0" max="100" value="80"><span class="sc">80</span></div>
+    <div class="row" data-w="0.20"><div class="nm">2. Kualitas Aset Visual &amp; Etika Lisensi <span class="wt">(20%)</span></div><input type="range" min="0" max="100" value="80"><span class="sc">80</span></div>
+    <div class="row" data-w="0.30"><div class="nm">3. Integrasi &amp; Layout (Elementor) <span class="wt">(30%)</span></div><input type="range" min="0" max="100" value="80"><span class="sc">80</span></div>
+    <div class="row" data-w="0.30"><div class="nm">4. Responsivitas, Accessibility &amp; SEO <span class="wt">(30%)</span></div><input type="range" min="0" max="100" value="80"><span class="sc">80</span></div>
+    <div class="total"><span class="lbl">Nilai Akhir <span id="gradeBadge" class="grade"></span></span><span class="val" id="calcTotal">80</span></div>
+  </div>
+
+  <h2>Detail Rubrik</h2>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Kriteria</th><th class="center" style="width:70px">Bobot</th><th>Sangat Baik (85–100)</th><th>Cukup (70–84)</th><th>Kurang (&lt;70)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1. Perencanaan &amp; UX Writing</strong></td><td class="center">20%</td><td>Persona &amp; USP tajam; headline benefit-driven; fitur diubah jadi manfaat; CTA kata kerja aktif.</td><td>Teks ada, masih fokus fitur; CTA generik ("Kirim").</td><td>Tanpa persona/strategi; copy lemah &amp; membingungkan.</td></tr>
+      <tr><td><strong>2. Aset Visual &amp; Etika</strong></td><td class="center">20%</td><td>Desain profesional, warna konsisten &amp; kontras lolos, gambar &lt;200KB, semua aset berlisensi jelas.</td><td>Warna/kontras kurang; ada gambar &gt;500KB; lisensi sebagian belum jelas.</td><td>Berantakan; aset melanggar hak cipta.</td></tr>
+      <tr><td><strong>3. Integrasi &amp; Layout</strong></td><td class="center">30%</td><td>Struktur lengkap Hero→Final CTA; layout rapi, tanpa overlap; brand konsisten.</td><td>Struktur cukup; spacing tidak proporsional.</td><td>Tidak selesai; layout pecah.</td></tr>
+      <tr><td><strong>4. Responsif, A11y &amp; SEO</strong></td><td class="center">30%</td><td>Mobile sempurna; a11y ≥90; meta data terisi; Lighthouse SEO/BP &gt;85.</td><td>Mobile agak berantakan; meta/alt sebagian kosong; skor 70–84.</td><td>Tidak responsif; meta kosong; skor &lt;70.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="chapnav">
+    <a class="prev" data-target="ch-m8"><span class="dir">← Sebelumnya</span><div class="tt">Modul 8 · Analytics</div></a>
+    <a class="next" data-target="ch-glosarium"><span class="dir">Selanjutnya →</span><div class="tt">Glosarium</div></a>
+  </div>
+</section>
+
+<!-- ============================ GLOSARIUM ============================ -->
+<section class="chapter" id="ch-glosarium">
+  <div class="chap-hero"><div class="eyebrow">Penutup</div><h1>Glosarium</h1><p>Kumpulan istilah penting dalam modul ini.</p></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th style="width:200px">Istilah</th><th>Definisi</th></tr></thead>
+    <tbody>
+      <tr><td><strong>A/B Testing</strong></td><td>Membandingkan dua versi halaman (A &amp; B) yang berbeda satu variabel untuk melihat mana yang berkonversi lebih baik.</td></tr>
+      <tr><td><strong>AIDA</strong></td><td>Kerangka copywriting: Attention, Interest, Desire, Action.</td></tr>
+      <tr><td><strong>Alt Text</strong></td><td>Teks deskriptif pada gambar; membantu mesin pencari &amp; pembaca layar bagi tunanetra.</td></tr>
+      <tr><td><strong>BOFU/MOFU/TOFU</strong></td><td>Tahapan funnel pemasaran: Bottom/Middle/Top of Funnel — dari awareness hingga keputusan beli.</td></tr>
+      <tr><td><strong>Bounce Rate</strong></td><td>Persentase pengunjung yang pergi tanpa berinteraksi lebih jauh.</td></tr>
+      <tr><td><strong>Core Web Vitals</strong></td><td>Tiga metrik performa inti Google: LCP, CLS, INP.</td></tr>
+      <tr><td><strong>CMS</strong></td><td>Content Management System — perangkat lunak pengelola konten web (cth: WordPress).</td></tr>
+      <tr><td><strong>Conversion Rate</strong></td><td>Persentase pengunjung yang melakukan aksi tujuan (klik CTA/isi form).</td></tr>
+      <tr><td><strong>Copywriting</strong></td><td>Penulisan teks pemasaran yang persuasif untuk mendorong tindakan.</td></tr>
+      <tr><td><strong>CTA (Call-to-Action)</strong></td><td>Elemen yang mendorong pengunjung melakukan tindakan langsung.</td></tr>
+      <tr><td><strong>Creative Commons</strong></td><td>Sistem lisensi yang mengatur cara karya boleh dipakai/diubah/dikomersialkan.</td></tr>
+      <tr><td><strong>FAB</strong></td><td>Feature–Advantage–Benefit: kerangka mengubah fitur menjadi manfaat.</td></tr>
+      <tr><td><strong>Hero Section</strong></td><td>Bagian teratas landing page; kesan pertama berisi headline + CTA.</td></tr>
+      <tr><td><strong>Mobile-First</strong></td><td>Merancang/mengoptimasi tampilan untuk layar kecil lebih dulu.</td></tr>
+      <tr><td><strong>No-Code</strong></td><td>Membangun web fungsional via antarmuka visual tanpa menulis kode.</td></tr>
+      <tr><td><strong>PAS</strong></td><td>Problem–Agitate–Solution: kerangka copywriting untuk bagian masalah-solusi.</td></tr>
+      <tr><td><strong>Persona</strong></td><td>Representasi semi-fiktif pelanggan ideal berbasis data riset.</td></tr>
+      <tr><td><strong>SEO</strong></td><td>Search Engine Optimization — praktik meningkatkan visibilitas di mesin pencari.</td></tr>
+      <tr><td><strong>Search Intent</strong></td><td>Maksud di balik pencarian: informasional, komersial, transaksional, navigasional.</td></tr>
+      <tr><td><strong>USP</strong></td><td>Unique Selling Proposition — keunggulan unik pembeda dari pesaing.</td></tr>
+      <tr><td><strong>UX Writing</strong></td><td>Penulisan teks antarmuka yang memandu pengguna (jelas, ringkas, bermanfaat).</td></tr>
+      <tr><td><strong>WCAG</strong></td><td>Web Content Accessibility Guidelines — standar aksesibilitas web (prinsip POUR).</td></tr>
+      <tr><td><strong>WebP</strong></td><td>Format gambar modern Google dengan kompresi superior tanpa kehilangan kualitas berarti.</td></tr>
+      <tr><td><strong>Wireframe</strong></td><td>Sketsa kerangka tata letak halaman sebelum desain visual final.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="chapnav">
+    <a class="prev" data-target="ch-rubrik"><span class="dir">← Sebelumnya</span><div class="tt">Rubrik &amp; Kalkulator</div></a>
+    <a class="next" data-target="ch-pustaka"><span class="dir">Selanjutnya →</span><div class="tt">Daftar Pustaka</div></a>
+  </div>
+</section>
+
+<!-- ============================ PUSTAKA ============================ -->
+<section class="chapter" id="ch-pustaka">
+  <div class="chap-hero"><div class="eyebrow">Penutup</div><h1>Daftar Pustaka &amp; Sumber Belajar</h1><p>Rujukan untuk memperdalam materi di luar modul ini.</p></div>
+  <h2>Buku &amp; Referensi Akademik</h2>
+  <ul>
+    <li>Bly, R. W. (2020). <em>The Copywriter's Handbook: A Step-by-Step Guide to Writing Copy That Sells</em> (4th ed.). Holt Paperbacks.</li>
+    <li>Podmajersky, T. (2019). <em>Strategic Writing for UX: Drive Engagement, Conversion, and Retention with Every Word</em>. O'Reilly Media.</li>
+    <li>Krug, S. (2014). <em>Don't Make Me Think, Revisited: A Common Sense Approach to Web Usability</em>. New Riders.</li>
+    <li>Handley, A. (2022). <em>Everybody Writes: Your Go-To Guide to Creating Ridiculously Good Content</em> (2nd ed.). Wiley.</li>
+  </ul>
+  <h2>Sumber Daring (Online)</h2>
+  <ul>
+    <li>Google Developers. <em>Web Vitals: Essential metrics for a healthy site</em>. web.dev/vitals/</li>
+    <li>W3C. <em>Web Content Accessibility Guidelines (WCAG) Overview</em>. w3.org/WAI/standards-guidelines/wcag/</li>
+    <li>Elementor Academy. <em>Web Design &amp; WordPress Tutorials</em>. elementor.com/academy/</li>
+    <li>Google. <em>Search Engine Optimization (SEO) Starter Guide</em>. developers.google.com/search/docs</li>
+    <li>Nielsen Norman Group. <em>UX &amp; Usability Articles</em>. nngroup.com/articles/</li>
+    <li>Squoosh by Google. <em>Image Compression Application</em>. squoosh.app/</li>
+  </ul>
+  <div class="callout tip" style="margin-top:2em"><span class="ic">🎓</span><div class="body"><span class="t">Selamat!</span>Anda telah menuntaskan seluruh modul. Kini Anda memiliki kerangka kerja lengkap seorang Content Developer: dari strategi, produksi, etika, hingga pengukuran. Teruslah berlatih dengan proyek nyata untuk membangun portofolio Anda.</div></div>
+  <div class="chapnav">
+    <a class="prev" data-target="ch-glosarium"><span class="dir">← Sebelumnya</span><div class="tt">Glosarium</div></a>
+    <a class="next disabled"><span class="dir">Selesai 🎉</span></a>
+  </div>
+</section>
+
+</div><!-- /.wrap -->
+</main>
+<button id="totop" aria-label="Kembali ke atas">↑</button>
+<script>
+(function(){
+  "use strict";
+  var LS = {
+    get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:JSON.parse(v);}catch(e){return d;}},
+    set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+  };
+  var KEY_THEME="cd_theme", KEY_LAST="cd_last_chapter", KEY_CK="cd_checks";
+
+  /* ---------- THEME ---------- */
+  var root=document.documentElement;
+  function applyTheme(t){
+    root.setAttribute("data-theme",t);
+    var dark=t==="dark";
+    setTxt("themeIco",dark?"🌙":"☀");
+    setTxt("themeTxt",dark?"Gelap":"Terang");
+  }
+  function setTxt(id,t){var e=document.getElementById(id);if(e)e.textContent=t;}
+  function toggleTheme(){
+    var t=root.getAttribute("data-theme")==="dark"?"light":"dark";
+    applyTheme(t);LS.set(KEY_THEME,t);
+  }
+  applyTheme(LS.get(KEY_THEME, (window.matchMedia&&matchMedia("(prefers-color-scheme:dark)").matches)?"dark":"light"));
+  byId("themeBtn").addEventListener("click",toggleTheme);
+  byId("themeBtnM").addEventListener("click",toggleTheme);
+  function byId(i){return document.getElementById(i);}
+
+  /* ---------- NAVIGATION ---------- */
+  var chapters=Array.prototype.slice.call(document.querySelectorAll("section.chapter"));
+  var links=Array.prototype.slice.call(document.querySelectorAll(".sb-link"));
+  var main=byId("main");
+
+  function showChapter(id,push){
+    var found=false;
+    chapters.forEach(function(c){
+      var on=c.id===id;
+      c.classList.toggle("active",on);
+      if(on)found=true;
+    });
+    if(!found){ // fallback to first
+      chapters[0].classList.add("active");id=chapters[0].id;
+    }
+    links.forEach(function(l){l.classList.toggle("active",l.getAttribute("data-target")===id);});
+    LS.set(KEY_LAST,id);
+    closeSidebar();
+    // scroll to top of reading pane
+    window.scrollTo({top:0,behavior:"auto"});
+    if(push&&location.hash!=="#"+id){history.replaceState(null,"","#"+id);}
+    updateProgress();
+  }
+  // sidebar links
+  links.forEach(function(l){
+    l.addEventListener("click",function(e){e.preventDefault();showChapter(l.getAttribute("data-target"),true);});
+  });
+  // delegated: chapnav + any [data-target]
+  document.addEventListener("click",function(e){
+    var t=e.target.closest("[data-target]");
+    if(t&&!t.classList.contains("sb-link")){
+      e.preventDefault();
+      if(!t.classList.contains("disabled"))showChapter(t.getAttribute("data-target"),true);
+    }
+  });
+
+  /* ---------- SIDEBAR (mobile) ---------- */
+  var sidebar=byId("sidebar"),backdrop=byId("backdrop");
+  function openSidebar(){sidebar.classList.add("open");backdrop.classList.add("show");}
+  function closeSidebar(){sidebar.classList.remove("open");backdrop.classList.remove("show");}
+  byId("menuBtn").addEventListener("click",openSidebar);
+  backdrop.addEventListener("click",closeSidebar);
+
+  /* ---------- SEARCH ---------- */
+  var search=byId("search"),nores=byId("nores");
+  search.addEventListener("input",function(){
+    var q=search.value.trim().toLowerCase();
+    var anyVisible=false;
+    // hide group headers handled by counting
+    links.forEach(function(l){
+      var txt=l.textContent.toLowerCase();
+      var show=q===""||txt.indexOf(q)>-1;
+      l.style.display=show?"":"none";
+      if(show)anyVisible=true;
+    });
+    // group labels: show only if a following link is visible (simple: hide all if query active)
+    document.querySelectorAll(".sb-group").forEach(function(g){
+      g.style.display=q===""?"":"none";
+    });
+    nores.style.display=anyVisible?"none":"block";
+  });
+
+  /* ---------- STEP accordion (visual open state) ---------- */
+  document.querySelectorAll("details.step").forEach(function(d){
+    d.addEventListener("toggle",function(){d.classList.toggle("open",d.open);});
+  });
+
+  /* ---------- CHECKLIST persist ---------- */
+  var checks=LS.get(KEY_CK,{});
+  document.querySelectorAll(".checklist input[type=checkbox]").forEach(function(cb){
+    if(checks[cb.id])cb.checked=true;
+    cb.addEventListener("change",function(){
+      checks[cb.id]=cb.checked;LS.set(KEY_CK,checks);updateCkProgress(cb.closest(".checklist"));
+    });
+  });
+  function updateCkProgress(box){
+    if(!box)return;
+    var all=box.querySelectorAll("input[type=checkbox]");
+    var done=box.querySelectorAll("input[type=checkbox]:checked").length;
+    var p=box.querySelector(".ck-progress");
+    if(p){
+      p.textContent="Kemajuan: "+done+"/"+all.length+(done===all.length&&all.length>0?" ✓ Lengkap!":"");
+      p.style.color=done===all.length&&all.length>0?"var(--c-ok)":"var(--c-text-soft)";
+    }
+  }
+  document.querySelectorAll(".checklist").forEach(updateCkProgress);
+
+  /* ---------- QUIZ ---------- */
+  document.querySelectorAll(".quiz[data-quiz]").forEach(function(q){
+    var opts=q.querySelectorAll(".opt");
+    var fbGood=q.querySelector(".fb.good"),fbBad=q.querySelector(".fb.bad");
+    var answered=false;
+    opts.forEach(function(o){
+      o.addEventListener("click",function(){
+        if(answered)return;answered=true;
+        var correct=o.getAttribute("data-correct")==="true";
+        opts.forEach(function(x){
+          var xc=x.getAttribute("data-correct")==="true";
+          if(xc)x.classList.add("correct");
+          else x.classList.add("dim");
+        });
+        if(!correct){o.classList.remove("dim");o.classList.add("wrong");}
+        if(correct){if(fbGood)fbGood.classList.add("show");}
+        else{if(fbBad)fbBad.classList.add("show");}
+      });
+    });
+  });
+
+  /* ---------- COPY buttons ---------- */
+  document.querySelectorAll(".tpl .copy").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      var pre=btn.closest(".tpl").querySelector("pre");
+      var txt=pre?pre.innerText:"";
+      var done=function(){var o=btn.textContent;btn.textContent="✓ Tersalin";setTimeout(function(){btn.textContent=o;},1500);};
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,fallback);}
+      else fallback();
+      function fallback(){
+        var ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();
+        try{document.execCommand("copy");}catch(e){}document.body.removeChild(ta);done();
+      }
+    });
+  });
+
+  /* ---------- RUBRIC CALCULATOR ---------- */
+  var calc=byId("rubricCalc");
+  if(calc){
+    var rows=calc.querySelectorAll(".row");
+    var totalEl=byId("calcTotal"),badge=byId("gradeBadge");
+    function recalc(){
+      var total=0;
+      rows.forEach(function(r){
+        var inp=r.querySelector("input"),sc=r.querySelector(".sc");
+        var v=parseInt(inp.value,10);sc.textContent=v;
+        total+=v*parseFloat(r.getAttribute("data-w"));
+      });
+      var t=Math.round(total);
+      totalEl.textContent=t;
+      var g,col,bg;
+      if(t>=85){g="A — Sangat Baik";col="var(--c-ok)";bg="var(--c-ok-soft)";}
+      else if(t>=70){g="B — Cukup";col="var(--c-info)";bg="var(--c-info-soft)";}
+      else if(t>=60){g="C — Kurang";col="var(--c-warn)";bg="var(--c-warn-soft)";}
+      else{g="D — Perlu Perbaikan";col="var(--c-danger)";bg="var(--c-danger-soft)";}
+      badge.textContent=g;badge.style.color=col;badge.style.background=bg;
+      totalEl.style.color=col;
+    }
+    rows.forEach(function(r){r.querySelector("input").addEventListener("input",recalc);});
+    recalc();
+  }
+
+  /* ---------- READING PROGRESS ---------- */
+  var bar=byId("progress"),totop=byId("totop");
+  function updateProgress(){
+    var h=document.documentElement;
+    var scrolled=h.scrollTop;
+    var height=h.scrollHeight-h.clientHeight;
+    var pct=height>0?(scrolled/height)*100:0;
+    bar.style.width=pct+"%";
+    totop.classList.toggle("show",scrolled>400);
+  }
+  window.addEventListener("scroll",updateProgress,{passive:true});
+  window.addEventListener("resize",updateProgress);
+  totop.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});});
+
+  /* ---------- INIT ---------- */
+  var start=(location.hash||"").replace("#","")||LS.get(KEY_LAST,"ch-cover");
+  showChapter(start,false);
+
+  // keyboard: left/right arrows for prev/next chapter (when not typing)
+  document.addEventListener("keydown",function(e){
+    if(/input|textarea|select/i.test((e.target.tagName||"")))return;
+    if(e.key==="ArrowRight"||e.key==="ArrowLeft"){
+      var cur=chapters.findIndex(function(c){return c.classList.contains("active");});
+      var nx=e.key==="ArrowRight"?cur+1:cur-1;
+      if(nx>=0&&nx<chapters.length)showChapter(chapters[nx].id,true);
+    }
+  });
+})();
+</script>
+</body>
+</html>
