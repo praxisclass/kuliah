@@ -1,7 +1,7 @@
 ## DAFTAR MATA KULIAH:
 **Bambang Pujiarto, S.Kom., M.Kom**
 
-### CONTENT DEVELOPMENT
+# [CONTENT DEVELOPMENT](contentdev.html)
 
 **MODUL PRAKTEK:**
 - [Modul 1](url)
