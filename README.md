@@ -3,9 +3,9 @@
 
 # [CONTENT DEVELOPMENT](contentdev.html)
 
-# [KEAMANAN JARINGAN](netdef.html)
+# [KEAMANAN JARINGAN]
 
-**MODUL PRAKTEK:**
+**MODUL NETWORK DEFENSE:**
 
 - [Modul-01 Network Security Fundamentals](modul-01-network-security-fundamentals.html)
 - [Modul-02 Identification Authentication Authorization](modul-02-identification-authentication-authorization.html)
