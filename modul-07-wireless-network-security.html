@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modul 07: Wireless Network Security — Network Defense Essentials</title>
+<meta name="description" content="Ebook &amp; Modul Praktikum Wireless Network Security - Network Defense Essentials">
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --bg-2:#0d1320;
+    --bg-elevated:#131a2a;
+    --bg-card:#161d2e;
+    --bg-card-hover:#1b2438;
+    --border:#242c40;
+    --border-strong:#344057;
+    --text:#e6edf3;
+    --text-2:#a8b3cf;
+    --text-muted:#6b7591;
+    --accent:#22d3ee;
+    --accent-2:#06b6d4;
+    --accent-glow:rgba(34,211,238,.15);
+    --accent-dim:rgba(34,211,238,.08);
+    --warn:#fbbf24;
+    --warn-bg:rgba(251,191,36,.08);
+    --danger:#f87171;
+    --danger-bg:rgba(248,113,113,.08);
+    --success:#34d399;
+    --success-bg:rgba(52,211,153,.08);
+    --purple:#a78bfa;
+    --purple-bg:rgba(167,139,250,.08);
+    --pink:#f472b6;
+    --shadow:0 4px 24px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:24px}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.7;
+    font-size:15px;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% 0%,rgba(34,211,238,.08),transparent),
+      radial-gradient(ellipse 60% 40% at 80% 100%,rgba(167,139,250,.06),transparent);
+    background-attachment:fixed;
+  }
+  h1,h2,h3,h4{font-family:'Space Grotesk','Inter',sans-serif;font-weight:700;line-height:1.3;letter-spacing:-.01em}
+  code,pre,.mono{font-family:'JetBrains Mono','Consolas','Monaco',monospace}
+  a{color:var(--accent);text-decoration:none}
+
+  /* Layout */
+  .layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+  .sidebar{
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+    background:var(--bg-2);
+    border-right:1px solid var(--border);
+    padding:24px 20px;
+    z-index:10;
+  }
+  .sidebar-brand{
+    display:flex;align-items:center;gap:12px;padding-bottom:20px;
+    border-bottom:1px solid var(--border);margin-bottom:20px;
+  }
+  .brand-logo{
+    width:40px;height:40px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;color:#0a0e1a;font-size:18px;
+    box-shadow:0 0 24px var(--accent-glow);
+  }
+  .brand-text{font-size:13px;color:var(--text-2);line-height:1.4}
+  .brand-text strong{display:block;color:var(--text);font-size:14px;font-weight:600}
+  .toc-title{
+    font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--text-muted);margin:16px 0 12px;font-weight:600;
+  }
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:2px}
+  .toc-list a{
+    display:block;padding:8px 12px;color:var(--text-2);
+    font-size:13.5px;border-radius:6px;border-left:2px solid transparent;
+    transition:all .15s ease;line-height:1.4;
+  }
+  .toc-list a:hover{background:var(--bg-card);color:var(--text)}
+  .toc-list a.active{
+    background:var(--accent-dim);color:var(--accent);
+    border-left-color:var(--accent);font-weight:500;
+  }
+  .toc-list a .num{
+    display:inline-block;width:24px;color:var(--text-muted);font-size:12px;
+  }
+  .toc-list a.active .num{color:var(--accent)}
+  .toc-sub{padding-left:14px;font-size:12.5px;color:var(--text-muted)}
+  .toc-sub a{padding:6px 12px;font-size:12.5px}
+
+  /* Content */
+  .content{max-width:980px;padding:0 56px 80px;min-width:0}
+  @media (max-width:1024px){
+    .layout{grid-template-columns:1fr}
+    .sidebar{position:fixed;left:-300px;width:280px;transition:left .25s ease}
+    .sidebar.open{left:0}
+    .content{padding:0 24px 60px}
+    .menu-toggle{display:flex!important}
+  }
+  .menu-toggle{
+    display:none;position:fixed;top:16px;right:16px;z-index:50;
+    width:44px;height:44px;border-radius:10px;
+    background:var(--bg-elevated);border:1px solid var(--border);
+    color:var(--text);align-items:center;justify-content:center;
+    cursor:pointer;font-size:20px;
+  }
+
+  /* Hero / Cover */
+  .hero{
+    position:relative;padding:80px 0 60px;
+    border-bottom:1px solid var(--border);margin-bottom:48px;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+    background-image:
+      linear-gradient(rgba(34,211,238,.04) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(34,211,238,.04) 1px,transparent 1px);
+    background-size:48px 48px;
+    mask-image:radial-gradient(ellipse 60% 70% at 50% 40%,#000 30%,transparent 75%);
+    -webkit-mask-image:radial-gradient(ellipse 60% 70% at 50% 40%,#000 30%,transparent 75%);
+    pointer-events:none;
+  }
+  .hero-content{position:relative;z-index:1}
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 14px;border-radius:999px;
+    background:var(--accent-dim);border:1px solid rgba(34,211,238,.3);
+    color:var(--accent);font-size:12px;font-weight:600;
+    letter-spacing:.08em;text-transform:uppercase;margin-bottom:24px;
+  }
+  .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+  .hero h1{
+    font-size:clamp(36px,5vw,56px);margin-bottom:16px;
+    background:linear-gradient(135deg,#fff 30%,var(--accent) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero-sub{
+    font-size:18px;color:var(--text-2);max-width:680px;margin-bottom:32px;
+  }
+  .hero-meta{
+    display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;
+  }
+  .meta-chip{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:10px 16px;background:var(--bg-card);
+    border:1px solid var(--border);border-radius:8px;
+    font-size:13px;color:var(--text-2);
+  }
+  .meta-chip strong{color:var(--text);font-weight:600}
+  .meta-chip svg{width:16px;height:16px;color:var(--accent)}
+
+  /* Section base */
+  section{margin-bottom:64px;scroll-margin-top:24px}
+  .section-header{margin-bottom:28px}
+  .section-tag{
+    display:inline-block;font-size:11px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.12em;
+    color:var(--accent);margin-bottom:8px;
+  }
+  .section-header h2{
+    font-size:30px;margin-bottom:8px;color:var(--text);
+  }
+  .section-header p{color:var(--text-2);font-size:15px;max-width:720px}
+  h3.sub-title{
+    font-size:20px;color:var(--text);margin:32px 0 14px;
+    padding-left:12px;border-left:3px solid var(--accent);
+  }
+  h4.mini-title{
+    font-size:15px;color:var(--accent);margin:20px 0 10px;
+    font-weight:600;text-transform:uppercase;letter-spacing:.05em;
+  }
+  p{margin-bottom:14px;color:var(--text-2)}
+  p strong{color:var(--text);font-weight:600}
+  ul,ol{margin:12px 0 20px;padding-left:24px;color:var(--text-2)}
+  ul li,ol li{margin-bottom:6px}
+  ul li::marker{color:var(--accent)}
+  ol li::marker{color:var(--accent);font-weight:600}
+
+  /* Card grid */
+  .card-grid{display:grid;gap:16px;margin:20px 0}
+  .grid-2{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:768px){
+    .grid-2,.grid-3{grid-template-columns:1fr}
+  }
+  .card{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:12px;padding:20px;transition:all .2s ease;
+  }
+  .card:hover{
+    border-color:var(--border-strong);background:var(--bg-card-hover);
+    transform:translateY(-2px);
+  }
+  .card-title{
+    display:flex;align-items:center;gap:10px;
+    font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px;
+  }
+  .card-icon{
+    width:32px;height:32px;border-radius:8px;
+    background:var(--accent-dim);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;flex-shrink:0;
+  }
+  .card p{font-size:13.5px;color:var(--text-2);margin:0}
+  .card .meta{
+    margin-top:10px;padding-top:10px;border-top:1px solid var(--border);
+    font-size:12px;color:var(--text-muted);display:flex;gap:12px;flex-wrap:wrap;
+  }
+  .card .meta span{display:inline-flex;align-items:center;gap:4px}
+
+  /* Info boxes */
+  .info-box{
+    border-left:3px solid;padding:14px 18px;border-radius:8px;
+    margin:16px 0;font-size:14px;
+  }
+  .info-tip{background:var(--accent-dim);border-color:var(--accent);color:var(--text)}
+  .info-tip strong{color:var(--accent)}
+  .info-warn{background:var(--warn-bg);border-color:var(--warn);color:var(--text)}
+  .info-warn strong{color:var(--warn)}
+  .info-danger{background:var(--danger-bg);border-color:var(--danger);color:var(--text)}
+  .info-danger strong{color:var(--danger)}
+  .info-success{background:var(--success-bg);border-color:var(--success);color:var(--text)}
+  .info-success strong{color:var(--success)}
+
+  /* Definition list */
+  .def-list{display:flex;flex-direction:column;gap:14px;margin:16px 0}
+  .def-item{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:10px;padding:16px 20px;
+  }
+  .def-item dt{
+    font-weight:600;color:var(--accent);font-size:14.5px;
+    margin-bottom:6px;display:flex;align-items:center;gap:8px;
+  }
+  .def-item dt::before{
+    content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);
+  }
+  .def-item dd{color:var(--text-2);font-size:14px;margin-left:14px}
+
+  /* Comparison table */
+  .table-wrap{overflow-x:auto;margin:20px 0;border-radius:12px;border:1px solid var(--border)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--bg-card)}
+  th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--border)}
+  th{background:var(--bg-elevated);color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+  td{color:var(--text-2)}
+  td strong{color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--bg-card-hover)}
+
+  /* Checklist */
+  .checklist{list-style:none;padding:0;margin:16px 0;display:flex;flex-direction:column;gap:8px}
+  .checklist li{
+    display:flex;gap:12px;padding:10px 14px;
+    background:var(--bg-card);border:1px solid var(--border);border-radius:8px;
+    font-size:14px;color:var(--text-2);line-height:1.5;
+  }
+  .checklist li::before{
+    content:'✓';flex-shrink:0;width:20px;height:20px;border-radius:50%;
+    background:var(--success-bg);color:var(--success);
+    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+  }
+  .checklist.warn li::before{background:var(--warn-bg);color:var(--warn)}
+  .checklist.danger li::before{content:'!';background:var(--danger-bg);color:var(--danger)}
+
+  /* Pill / badge */
+  .pill{
+    display:inline-block;padding:2px 10px;border-radius:999px;
+    font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-2);
+  }
+  .pill.accent{background:var(--accent-dim);color:var(--accent);border-color:rgba(34,211,238,.3)}
+  .pill.warn{background:var(--warn-bg);color:var(--warn);border-color:rgba(251,191,36,.3)}
+  .pill.danger{background:var(--danger-bg);color:var(--danger);border-color:rgba(248,113,113,.3)}
+  .pill.success{background:var(--success-bg);color:var(--success);border-color:rgba(52,211,153,.3)}
+  .pill.purple{background:var(--purple-bg);color:var(--purple);border-color:rgba(167,139,250,.3)}
+
+  /* Two column */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
+  @media (max-width:768px){.two-col{grid-template-columns:1fr}}
+  .col-box{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:12px;
+    padding:22px;
+  }
+  .col-box h4{
+    display:flex;align-items:center;gap:10px;
+    font-size:15px;color:var(--text);margin-bottom:14px;
+    padding-bottom:12px;border-bottom:1px solid var(--border);
+  }
+  .col-box h4 .ico{
+    width:28px;height:28px;border-radius:7px;display:flex;
+    align-items:center;justify-content:center;font-size:14px;
+  }
+  .col-box.left h4 .ico{background:var(--accent-dim);color:var(--accent)}
+  .col-box.right h4 .ico{background:var(--purple-bg);color:var(--purple)}
+
+  /* Steps */
+  .steps{position:relative;padding-left:32px;margin:24px 0}
+  .steps::before{
+    content:'';position:absolute;left:11px;top:8px;bottom:8px;
+    width:2px;background:var(--border-strong);
+  }
+  .step{position:relative;margin-bottom:24px}
+  .step-num{
+    position:absolute;left:-32px;top:0;width:24px;height:24px;border-radius:50%;
+    background:var(--bg-elevated);border:2px solid var(--accent);
+    color:var(--accent);font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;z-index:1;
+  }
+  .step-content{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+    padding:16px 20px;
+  }
+  .step-content h5{font-size:14px;color:var(--accent);margin-bottom:6px;font-weight:600}
+  .step-content p{font-size:13.5px;color:var(--text-2);margin:0}
+  .step-content ul{margin:8px 0 0;padding-left:18px;font-size:13px}
+
+  /* Practicum box */
+  .practicum-banner{
+    background:linear-gradient(135deg,var(--purple-bg),var(--accent-dim));
+    border:1px solid var(--border-strong);border-radius:16px;
+    padding:32px;margin:24px 0;text-align:center;
+  }
+  .practicum-banner h2{
+    font-size:28px;background:linear-gradient(135deg,var(--accent),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px;
+  }
+  .practicum-banner p{color:var(--text-2);max-width:600px;margin:0 auto}
+
+  /* Lab tools grid */
+  .tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px 0}
+  @media (max-width:600px){.tools-grid{grid-template-columns:1fr}}
+  .tool-card{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+    padding:14px 16px;display:flex;align-items:flex-start;gap:12px;
+  }
+  .tool-card .ico{
+    width:36px;height:36px;border-radius:8px;flex-shrink:0;
+    background:var(--bg-elevated);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;
+    color:var(--accent);
+  }
+  .tool-card .info{flex:1;min-width:0}
+  .tool-card .name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px}
+  .tool-card .desc{font-size:12.5px;color:var(--text-2);line-height:1.5}
+  .tool-card .url{font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace;margin-top:4px;display:block}
+
+  /* Summary */
+  .summary-box{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:14px;padding:28px;margin-top:24px;
+  }
+  .summary-box h3{
+    font-size:18px;color:var(--accent);margin-bottom:16px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .summary-box ul{margin:0;padding-left:20px}
+
+  /* Footer */
+  footer{
+    border-top:1px solid var(--border);padding:32px 0;
+    text-align:center;color:var(--text-muted);font-size:13px;
+  }
+  footer .next-modul{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:12px 20px;background:var(--bg-card);
+    border:1px solid var(--border);border-radius:10px;
+    color:var(--text-2);margin-top:16px;font-size:13px;
+  }
+  footer .next-modul strong{color:var(--accent)}
+
+  /* ===== INFOGRAPHICS / SVG STYLING ===== */
+  .infographic{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:14px;padding:24px;margin:24px 0;overflow:hidden;
+  }
+  .infographic-caption{
+    text-align:center;font-size:12.5px;color:var(--text-muted);
+    margin-top:12px;font-style:italic;
+  }
+  .infographic svg{display:block;margin:0 auto;max-width:100%;height:auto}
+  .ig-title{
+    font-size:13px;font-weight:600;color:var(--accent);
+    text-transform:uppercase;letter-spacing:.08em;
+    text-align:center;margin-bottom:16px;
+  }
+  .ig-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+  .ig-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:4px 10px;border-radius:6px;
+    font-size:11.5px;font-weight:500;
+    background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-2);
+  }
+  .ig-badge .dot{width:8px;height:8px;border-radius:50%}
+  .ig-badge.cyan{border-color:rgba(34,211,238,.4);color:var(--accent);background:var(--accent-dim)}
+  .ig-badge.cyan .dot{background:var(--accent)}
+  .ig-badge.purple{border-color:rgba(167,139,250,.4);color:var(--purple);background:var(--purple-bg)}
+  .ig-badge.purple .dot{background:var(--purple)}
+  .ig-badge.warn{border-color:rgba(251,191,36,.4);color:var(--warn);background:var(--warn-bg)}
+  .ig-badge.warn .dot{background:var(--warn)}
+  .ig-badge.danger{border-color:rgba(248,113,113,.4);color:var(--danger);background:var(--danger-bg)}
+  .ig-badge.danger .dot{background:var(--danger)}
+  .ig-badge.success{border-color:rgba(52,211,153,.4);color:var(--success);background:var(--success-bg)}
+  .ig-badge.success .dot{background:var(--success)}
+
+  /* Stat block */
+  .stat-row{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:24px 0;
+  }
+  @media (max-width:768px){.stat-row{grid-template-columns:repeat(2,1fr)}}
+  .stat-box{
+    background:linear-gradient(135deg,var(--bg-card),var(--bg-elevated));
+    border:1px solid var(--border);border-radius:12px;
+    padding:20px;text-align:center;position:relative;overflow:hidden;
+  }
+  .stat-box::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,var(--accent),var(--purple));
+  }
+  .stat-num{
+    font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    line-height:1;margin-bottom:6px;
+  }
+  .stat-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+  .stat-desc{font-size:12px;color:var(--text-2);margin-top:8px;line-height:1.4}
+
+  /* SVG text */
+  svg .ig-text{font-family:'Inter',sans-serif;font-size:11px;fill:var(--text-2)}
+  svg .ig-text-strong{font-family:'Inter',sans-serif;font-size:12px;fill:var(--text);font-weight:600}
+  svg .ig-text-title{font-family:'Space Grotesk',sans-serif;font-size:14px;fill:var(--accent);font-weight:700}
+  svg .ig-text-small{font-family:'Inter',sans-serif;font-size:10px;fill:var(--text-muted)}
+  svg .ig-line{stroke:var(--border-strong);fill:none}
+  svg .ig-accent-line{stroke:var(--accent);fill:none}
+  svg .ig-box{fill:var(--bg-elevated);stroke:var(--border-strong);stroke-width:1}
+  svg .ig-accent-box{fill:var(--accent-dim);stroke:var(--accent);stroke-width:1.5}
+  svg .ig-danger-box{fill:var(--danger-bg);stroke:var(--danger);stroke-width:1.5}
+  svg .ig-warn-box{fill:var(--warn-bg);stroke:var(--warn);stroke-width:1.5}
+  svg .ig-success-box{fill:var(--success-bg);stroke:var(--success);stroke-width:1.5}
+  svg .ig-purple-box{fill:var(--purple-bg);stroke:var(--purple);stroke-width:1.5}
+
+  /* Print */
+  @media print{
+    .sidebar,.menu-toggle{display:none}
+    .layout{grid-template-columns:1fr}
+    .content{padding:0 20px}
+    body{background:#fff;color:#000}
+    .hero h1{color:#000!important;-webkit-text-fill-color:#000}
+    .card,.col-box,.step-content,.tool-card,.summary-box,.info-box{
+      background:#f7f7f7;border-color:#ccc;color:#000;break-inside:avoid;
+    }
+  }
+
+  /* Anchor heading offset */
+  section[id],h3[id],h4[id]{scroll-margin-top:80px}
+</style>
+</head>
+<body>
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">☰</button>
+
+<div class="layout">
+
+  <!-- ===== SIDEBAR / TOC ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">M07</div>
+      <div class="brand-text"><strong>Wireless Security</strong> Network Defense Essentials</div>
+    </div>
+    <div class="toc-title">Daftar Isi</div>
+    <ul class="toc-list" id="toc">
+      <li><a href="#cover"><span class="num">00</span>Cover</a></li>
+      <li><a href="#tujuan"><span class="num">01</span>Tujuan Pembelajaran</a></li>
+      <li><a href="#terminology"><span class="num">02</span>Wireless Terminology</a></li>
+      <li><a href="#standards"><span class="num">03</span>802.11 Standards</a></li>
+      <li><a href="#components"><span class="num">04</span>Wireless Components</a></li>
+      <li><a href="#encryption"><span class="num">05</span>Encryption (WEP-WPA3)</a></li>
+      <li><a href="#authentication"><span class="num">06</span>Authentication Methods</a></li>
+      <li><a href="#threats"><span class="num">07</span>Wireless Threats</a></li>
+      <li><a href="#security"><span class="num">08</span>Security Measures</a></li>
+      <li><a href="#tools"><span class="num">09</span>Wireless Security Tools</a></li>
+      <li><a href="#praktikum"><span class="num">10</span>Modul Praktikum</a></li>
+      <li><a href="#ringkasan"><span class="num">11</span>Ringkasan</a></li>
+    </ul>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="content">
+
+    <!-- ============= HERO ============= -->
+    <section id="cover" class="hero">
+      <div class="hero-content">
+        <div class="hero-badge"><span class="dot"></span> Module 07 · Network Defense Essentials</div>
+        <h1>Wireless Network Security</h1>
+        <p class="hero-sub">
+          Ebook &amp; Modul Praktikum — keamanan jaringan nirkabel enterprise: dari wireless terminology
+          (SSID, BSSID, hotspot), 802.11 standards (a/b/g/n/ac/ax), wireless components (AP, router,
+          client), encryption mechanisms (WEP, WPA, WPA2, WPA3, TKIP, AES, CCMP), authentication methods
+          (Open System, Shared Key, 802.1X/EAP), wireless threats (rogue AP, evil twin, deauth, war
+          driving), hingga security measures dan tools.
+        </p>
+        <div class="hero-meta">
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span><strong>Target:</strong> Mahasiswa</span></div>
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span><strong>Durasi:</strong> 4-5 jam</span></div>
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg><span><strong>Level:</strong> Intermediate</span></div>
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span><strong>12</strong> Bagian</span></div>
+        </div>
+
+        <div class="stat-row" style="margin-top:48px">
+          <div class="stat-box"><div class="stat-num">6</div><div class="stat-label">802.11 Standards</div><div class="stat-desc">a · b · g · n · ac · ax (Wi-Fi 6)</div></div>
+          <div class="stat-box"><div class="stat-num">4</div><div class="stat-label">Encryption</div><div class="stat-desc">WEP · WPA · WPA2 · WPA3</div></div>
+          <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">Auth Methods</div><div class="stat-desc">Open System · Shared Key · WPA-Enterprise</div></div>
+          <div class="stat-box"><div class="stat-num">8+</div><div class="stat-label">Wireless Threats</div><div class="stat-desc">Rogue AP · Evil Twin · Deauth · War Driving · Jamming · Sniffing</div></div>
+        </div>
+
+        <div class="infographic" style="margin-top:32px">
+          <div class="ig-title">Alur Pembelajaran Modul 07</div>
+          <svg viewBox="0 0 920 280" width="920" height="280" aria-label="Module flow">
+            <defs><marker id="arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/></marker><linearGradient id="grad-flow" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#22d3ee" stop-opacity="0.2"/><stop offset="100%" stop-color="#a78bfa" stop-opacity="0.2"/></linearGradient></defs>
+            <rect x="20" y="30" width="140" height="60" rx="10" class="ig-accent-box"/><text x="90" y="55" text-anchor="middle" class="ig-text-title">1</text><text x="90" y="75" text-anchor="middle" class="ig-text-strong">Terminology</text><text x="90" y="88" text-anchor="middle" class="ig-text">&amp; Standards</text><path d="M160 60 L205 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="210" y="30" width="140" height="60" rx="10" class="ig-accent-box"/><text x="280" y="55" text-anchor="middle" class="ig-text-title">2</text><text x="280" y="75" text-anchor="middle" class="ig-text-strong">Components</text><text x="280" y="88" text-anchor="middle" class="ig-text">AP, Router, Client</text><path d="M350 60 L395 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="400" y="30" width="140" height="60" rx="10" class="ig-accent-box"/><text x="470" y="55" text-anchor="middle" class="ig-text-title">3</text><text x="470" y="75" text-anchor="middle" class="ig-text-strong">Encryption</text><text x="470" y="88" text-anchor="middle" class="ig-text">WEP→WPA3</text><path d="M540 60 L585 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="590" y="30" width="140" height="60" rx="10" class="ig-warn-box"/><text x="660" y="55" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">4</text><text x="660" y="75" text-anchor="middle" class="ig-text-strong">Auth</text><text x="660" y="88" text-anchor="middle" class="ig-text">Methods</text>
+            <path d="M660 95 L660 145" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="590" y="150" width="140" height="60" rx="10" class="ig-purple-box"/><text x="660" y="175" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">5</text><text x="660" y="195" text-anchor="middle" class="ig-text-strong">Threats</text><text x="660" y="208" text-anchor="middle" class="ig-text">Rogue AP, etc</text><path d="M585 180 L540 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="400" y="150" width="140" height="60" rx="10" class="ig-purple-box"/><text x="470" y="175" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">6</text><text x="470" y="195" text-anchor="middle" class="ig-text-strong">Security</text><text x="470" y="208" text-anchor="middle" class="ig-text">Measures &amp; Tools</text><path d="M395 180 L350 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="210" y="150" width="140" height="60" rx="10" class="ig-success-box"/><text x="280" y="175" text-anchor="middle" class="ig-text-title" style="fill:#34d399">7</text><text x="280" y="195" text-anchor="middle" class="ig-text-strong">Praktikum</text><text x="280" y="208" text-anchor="middle" class="ig-text">Hands-on</text><path d="M205 180 L160 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="20" y="150" width="140" height="60" rx="10" class="ig-success-box"/><text x="90" y="175" text-anchor="middle" class="ig-text-title" style="fill:#34d399">8</text><text x="90" y="195" text-anchor="middle" class="ig-text-strong">Ringkasan</text><text x="90" y="208" text-anchor="middle" class="ig-text">&amp; Penutup</text>
+            <rect x="350" y="230" width="160" height="40" rx="10" fill="url(#grad-flow)" stroke="#22d3ee" stroke-width="1.5"/><text x="430" y="248" text-anchor="middle" class="ig-text-title">LAB</text><text x="430" y="262" text-anchor="middle" class="ig-text-small">4 Sesi Praktikum</text>
+            <path d="M280 215 L280 250 L345 250" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/><path d="M470 215 L470 225" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/><path d="M660 215 L660 245 L515 245" class="ig-accent-line" stroke-width="1.5" stroke-dasharray="3,3" fill="none" opacity="0.5"/>
+          </svg>
+          <div class="infographic-caption">Gambar 1. Alur pembelajaran Modul 07 — dari wireless terminology hingga praktikum hands-on.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= TUJUAN ============= -->
+    <section id="tujuan">
+      <div class="section-header">
+        <span class="section-tag">Bagian 01</span>
+        <h2>Tujuan Pembelajaran</h2>
+        <p>Wireless networks widely used di organisations today dan prone to various attacks.</p>
+      </div>
+      <p>
+        Modul ini membahas <strong>network security untuk wireless networks</strong> di enterprises.
+        Wireless networks digunakan secara luas di organisasi saat ini dan rentan terhadap berbagai
+        serangan. Oleh karena itu, organisasi perlu fokus pada planning untuk securing wireless network
+        di seluruh organisasi.
+      </p>
+      <p>Setelah menyelesaikan modul ini, Anda akan mampu:</p>
+      <div class="card-grid grid-2" style="margin-top:20px">
+        <div class="card"><div class="card-title"><div class="card-icon">1</div>Wireless Fundamentals</div><p>Memahami wireless terminology, wireless networks, dan wireless standards (802.11 a/b/g/n/ac/ax).</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">2</div>Topologies &amp; Components</div><p>Memahami wireless network topologies dan classification — ad-hoc, infrastructure, AP, router, client.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">3</div>Encryption Mechanisms</div><p>Menjelaskan wireless network encryption mechanisms — WEP, WPA, WPA2, WPA3, TKIP, AES, CCMP.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">4</div>Authentication &amp; Security</div><p>Memahami authentication methods (Open System, Shared Key, 802.1X/EAP) dan wireless security measures &amp; tools.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 2: TERMINOLOGY ============= -->
+    <section id="terminology">
+      <div class="section-header">
+        <span class="section-tag">Bagian 02</span>
+        <h2>Wireless Terminology</h2>
+        <p>SSID, BSSID, Hotspot — istilah dasar yang harus dipahami sebelum mendalami wireless security.</p>
+      </div>
+
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">📡</div>SSID — Service Set Identifier</div><p>32-alphanumeric-character unique identifier yang identifies wireless network. SSID mengizinkan connections ke desired network among available networks. Devices connecting ke same WLAN harus use same SSID.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔖</div>BSSID — Basic Service Set Identifier</div><p>MAC address dari access point (AP). Setiap AP di network punya BSSID unik. BSSID = hardware identifier — tidak sama dengan SSID yang adalah logical name.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📶</div>Hotspot</div><p>Places di mana wireless networks available untuk public use. Hotspots = areas with Wi-Fi availability, di mana users dapat enable Wi-Fi di devices mereka dan connect ke internet.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📡</div>Access Point (AP)</div><p>Device yang menghubungkan wireless clients ke wired network. AP bertindak sebagai <strong>central hub</strong> untuk wireless communication. Membroadcast SSID agar clients dapat discover dan connect.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 3: 802.11 STANDARDS ============= -->
+    <section id="standards">
+      <div class="section-header">
+        <span class="section-tag">Bagian 03</span>
+        <h2>802.11 Wireless Standards</h2>
+        <p>6 standar Wi-Fi dari 802.11a (1999) hingga 802.11ax / Wi-Fi 6 (2019).</p>
+      </div>
+      <p>
+        <strong>Wireless Fidelity (Wi-Fi)</strong> menggunakan standard 802.11 dan radio waves untuk
+        communication. Wireless networking merevolusi cara orang bekerja dan bermain. Wireless networking
+        sangat berguna di public places termasuk libraries, coffee shops, hotels, airports.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">802.11 Standards Evolution — dari a (1999) ke ax/Wi-Fi 6 (2019)</div>
+        <svg viewBox="0 0 900 400" width="900" height="400" aria-label="802.11 standards">
+          <defs><linearGradient id="grad-wifi" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#f87171" stop-opacity="0.3"/><stop offset="100%" stop-color="#34d399" stop-opacity="0.3"/></linearGradient></defs>
+          <rect x="40" y="40" width="820" height="30" rx="6" fill="url(#grad-wifi)"/>
+          <text x="60" y="30" class="ig-text-small" style="fill:#f87171">← Older (slower)</text>
+          <text x="860" y="30" text-anchor="end" class="ig-text-small" style="fill:#34d399">Newer (faster) →</text>
+
+          <rect x="40" y="80" width="260" height="90" rx="10" class="ig-danger-box"/>
+          <text x="170" y="102" text-anchor="middle" class="ig-text-title" style="fill:#f87171">802.11a (1999)</text>
+          <text x="170" y="120" text-anchor="middle" class="ig-text-small">5 GHz · 54 Mbps · 30m range</text>
+          <text x="170" y="138" text-anchor="middle" class="ig-text-small" style="font-size:10px">Less interference (5GHz)</text>
+          <text x="170" y="155" text-anchor="middle" class="ig-text-small" style="font-size:10px">Shorter range than 2.4 GHz</text>
+
+          <rect x="320" y="80" width="260" height="90" rx="10" class="ig-warn-box"/>
+          <text x="450" y="102" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">802.11b (1999)</text>
+          <text x="450" y="120" text-anchor="middle" class="ig-text-small">2.4 GHz · 11 Mbps · 100m</text>
+          <text x="450" y="138" text-anchor="middle" class="ig-text-small" style="font-size:10px">First widely adopted</text>
+          <text x="450" y="155" text-anchor="middle" class="ig-text-small" style="font-size:10px">Crowded 2.4 GHz, slow</text>
+
+          <rect x="600" y="80" width="260" height="90" rx="10" class="ig-warn-box"/>
+          <text x="730" y="102" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">802.11g (2003)</text>
+          <text x="730" y="120" text-anchor="middle" class="ig-text-small">2.4 GHz · 54 Mbps · 100m</text>
+          <text x="730" y="138" text-anchor="middle" class="ig-text-small" style="font-size:10px">Backward compatible with b</text>
+          <text x="730" y="155" text-anchor="middle" class="ig-text-small" style="font-size:10px">Still 2.4 GHz crowding</text>
+
+          <rect x="40" y="185" width="390" height="90" rx="10" class="ig-accent-box"/>
+          <text x="235" y="207" text-anchor="middle" class="ig-text-title">802.11n / Wi-Fi 4 (2009)</text>
+          <text x="235" y="225" text-anchor="middle" class="ig-text-small">2.4 + 5 GHz · 600 Mbps · 70m</text>
+          <text x="235" y="243" text-anchor="middle" class="ig-text-small" style="font-size:10px">MIMO (multiple antennas) · Dual band</text>
+          <text x="235" y="260" text-anchor="middle" class="ig-text-small" style="font-size:10px">Most widely deployed today</text>
+
+          <rect x="450" y="185" width="410" height="90" rx="10" class="ig-success-box"/>
+          <text x="655" y="207" text-anchor="middle" class="ig-text-title" style="fill:#34d399">802.11ac / Wi-Fi 5 (2014)</text>
+          <text x="655" y="225" text-anchor="middle" class="ig-text-small">5 GHz · 3.5 Gbps · 35m</text>
+          <text x="655" y="243" text-anchor="middle" class="ig-text-small" style="font-size:10px">MU-MIMO · Wide channels (80/160 MHz)</text>
+          <text x="655" y="260" text-anchor="middle" class="ig-text-small" style="font-size:10px">Fast · 5 GHz only (no 2.4 GHz)</text>
+
+          <rect x="230" y="290" width="440" height="90" rx="10" class="ig-purple-box"/>
+          <text x="450" y="312" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">802.11ax / Wi-Fi 6 (2019)</text>
+          <text x="450" y="330" text-anchor="middle" class="ig-text-small">2.4 + 5 + 6 GHz · 9.6 Gbps · 35m</text>
+          <text x="450" y="348" text-anchor="middle" class="ig-text-small" style="font-size:10px">OFDMA · Better dense environment · WPA3</text>
+          <text x="450" y="365" text-anchor="middle" class="ig-text-small" style="font-size:10px">Latest standard · IoT-friendly · Target wake time</text>
+        </svg>
+        <div class="infographic-caption">Gambar 2. 802.11 standards evolution — dari 11 Mbps (802.11b) hingga 9.6 Gbps (Wi-Fi 6).</div>
+      </div>
+
+      <h3 class="sub-title">3.1 Advantages &amp; Disadvantages</h3>
+      <div class="two-col">
+        <div class="col-box left">
+          <h4><span class="ico">✓</span>Advantages</h4>
+          <ul class="checklist">
+            <li>Mobility — access network dari mana pun dalam range</li>
+            <li>Easy installation — no cabling needed</li>
+            <li>Scalability — easy add new devices</li>
+            <li>Cost-effective — less wiring infrastructure</li>
+            <li>Flexibility — devices can roam</li>
+          </ul>
+        </div>
+        <div class="col-box right">
+          <h4><span class="ico" style="background:var(--danger-bg);color:var(--danger)">−</span>Disadvantages</h4>
+          <ul class="checklist danger">
+            <li>Security risks — RF signal bleeds beyond walls</li>
+            <li>Interference — electronic equipment disrupts</li>
+            <li>Slower than wired (shared medium)</li>
+            <li>Range limitations — signal degrades with distance</li>
+            <li>Wi-Fi upgrades may require new cards/APs</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 4: COMPONENTS ============= -->
+    <section id="components">
+      <div class="section-header">
+        <span class="section-tag">Bagian 04</span>
+        <h2>Wireless Network Components</h2>
+        <p>AP, wireless router, wireless client — building blocks dari wireless network.</p>
+      </div>
+      <div class="card-grid grid-3">
+        <div class="card"><div class="card-title"><div class="card-icon">📡</div>Access Point (AP)</div><p>Device yang connects wireless clients ke wired network. Broadcasts SSID, manages associations, bridges wireless ↔ wired. Can be <strong>autonomous</strong> (standalone config) atau <strong>lightweight</strong> (controller-managed).</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔌</div>Wireless Router</div><p>Combines AP + router + switch + firewall in single device. Common di home/small office. Provides NAT, DHCP, firewall, port forwarding. <strong>Consumer-grade</strong> — enterprise gunakan separate components.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">💻</div>Wireless Client</div><p>Device dengan wireless adapter — laptop, smartphone, tablet, IoT device. Connects ke AP via SSID. Modern devices support multiple standards (a/b/g/n/ac/ax).</p></div>
+      </div>
+      <h3 class="sub-title">4.1 Wireless Topologies</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">🔄</div>Ad-Hoc Mode (IBSS)</div><p>Peer-to-peer — wireless clients connect langsung ke each other <strong>tanpa AP</strong>. Setiap node = router. Use case: file sharing antar laptop, temporary network. <strong>Security risk</strong>: no central control, difficult to secure.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">⭐</div>Infrastructure Mode (BSS/ESS)</div><p>Clients connect ke <strong>central AP</strong> yang bridging ke wired network. BSS = single AP. ESS = multiple APs dengan same SSID (roaming). <strong>Standard enterprise</strong> topology. Easier to secure via AP.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 5: ENCRYPTION ============= -->
+    <section id="encryption">
+      <div class="section-header">
+        <span class="section-tag">Bagian 05</span>
+        <h2>Wireless Encryption Mechanisms</h2>
+        <p>WEP → WPA → WPA2 → WPA3 — evolusi enkripsi Wi-Fi dari broken ke secure.</p>
+      </div>
+
+      <div class="infographic">
+        <div class="ig-title">4 Generations Wi-Fi Encryption — dari WEP (broken) ke WPA3 (secure)</div>
+        <svg viewBox="0 0 900 400" width="900" height="400" aria-label="Encryption evolution">
+          <rect x="40" y="20" width="400" height="160" rx="10" class="ig-danger-box"/>
+          <text x="240" y="42" text-anchor="middle" class="ig-text-title" style="fill:#f87171">WEP (Wired Equivalent Privacy)</text>
+          <text x="60" y="65" class="ig-text-small">1997 · RC4 cipher · 40/104-bit key</text>
+          <text x="60" y="82" class="ig-text-small">Static key shared among all clients</text>
+          <text x="60" y="105" class="ig-text-small" style="fill:#f87171">✗ CRACKED in minutes (FMS attack)</text>
+          <text x="60" y="122" class="ig-text-small" style="fill:#f87171">✗ 24-bit IV → collision → key recovery</text>
+          <text x="60" y="139" class="ig-text-small" style="fill:#f87171">✗ No authentication (only encryption)</text>
+          <text x="60" y="160" class="ig-text-small" style="font-style:italic">DO NOT USE — deprecated since 2004</text>
+
+          <rect x="460" y="20" width="400" height="160" rx="10" class="ig-warn-box"/>
+          <text x="660" y="42" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">WPA (Wi-Fi Protected Access)</text>
+          <text x="480" y="65" class="ig-text-small">2003 · RC4 + TKIP · Temporal Key</text>
+          <text x="480" y="82" class="ig-text-small">Per-packet key mixing · Larger IV (48-bit)</text>
+          <text x="480" y="105" class="ig-text-small" style="fill:#fbbf24">⚠ Interim fix — still RC4 (weak cipher)</text>
+          <text x="480" y="122" class="ig-text-small" style="fill:#fbbf24">⚠ TKIP vulnerable to BECK-Tews attack</text>
+          <text x="480" y="139" class="ig-text-small" style="fill:#34d399">✓ Introduced PSK (Pre-Shared Key) mode</text>
+          <text x="480" y="160" class="ig-text-small" style="font-style:italic">Deprecated 2012 — migrate to WPA2+</text>
+
+          <rect x="40" y="200" width="400" height="160" rx="10" class="ig-accent-box"/>
+          <text x="240" y="222" text-anchor="middle" class="ig-text-title">WPA2 (2004)</text>
+          <text x="60" y="245" class="ig-text-small">AES-CCMP · 128-bit key · Counter Mode</text>
+          <text x="60" y="262" class="ig-text-small">Replaces RC4/TKIP with AES (strong)</text>
+          <text x="60" y="285" class="ig-text-small" style="fill:#34d399">✓ AES = strong, unbroken cipher</text>
+          <text x="60" y="302" class="ig-text-small" style="fill:#34d399">✓ CCMP = authenticated encryption</text>
+          <text x="60" y="319" class="ig-text-small" style="fill:#f87171">✗ KRACK attack (2017) — key reinstallation</text>
+          <text x="60" y="340" class="ig-text-small" style="font-style:italic">Current minimum standard — patch for KRACK</text>
+
+          <rect x="460" y="200" width="400" height="160" rx="10" class="ig-success-box"/>
+          <text x="660" y="222" text-anchor="middle" class="ig-text-title" style="fill:#34d399">WPA3 (2018)</text>
+          <text x="480" y="245" class="ig-text-small">AES-256 + GCMP · SAE (Simultaneous</text>
+          <text x="480" y="262" class="ig-text-small">Authentication of Equals) replaces PSK</text>
+          <text x="480" y="285" class="ig-text-small" style="fill:#34d399">✓ SAE = resistant to offline dictionary attack</text>
+          <text x="480" y="302" class="ig-text-small" style="fill:#34d399">✓ Forward secrecy — can't decrypt old traffic</text>
+          <text x="480" y="319" class="ig-text-small" style="fill:#34d399">✓ WPA3-Enterprise: 192-bit security</text>
+          <text x="480" y="340" class="ig-text-small" style="font-style:italic">Latest standard — mandatory for Wi-Fi 6 (802.11ax)</text>
+        </svg>
+        <div class="infographic-caption">Gambar 3. 4 generations Wi-Fi encryption — WEP (broken) → WPA (interim) → WPA2 (current min) → WPA3 (latest, secure).</div>
+      </div>
+
+      <div class="info-box info-danger">
+        <strong>Warning:</strong> <strong>WEP dapat di-crack dalam 2-5 menit</strong> menggunakan tools
+        seperti Aircrack-ng. <strong>JANGAN PERNAH</strong> menggunakan WEP. WPA (TKIP) juga deprecated.
+        Minimum yang aman: <strong>WPA2 dengan AES-CCMP</strong>. Idealnya: <strong>WPA3</strong>.
+        Jika device tidak support WPA2+, ganti device tersebut.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 6: AUTHENTICATION ============= -->
+    <section id="authentication">
+      <div class="section-header">
+        <span class="section-tag">Bagian 06</span>
+        <h2>Wireless Authentication Methods</h2>
+        <p>3 jenis autentikasi: Open System, Shared Key, dan WPA-Enterprise (802.1X/EAP).</p>
+      </div>
+
+      <div class="card-grid grid-3">
+        <div class="card"><div class="card-title"><div class="card-icon">🔓</div>Open System Authentication</div><p><strong>No authentication</strong> — any client can connect. Hanya identify via SSID. <strong>Zero security</strong>. Use case: public hotspot, guest network (dengan captive portal). <strong>Tidak boleh</strong> untuk corporate network.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔑</div>Shared Key Authentication (WEP)</div><p>Client dan AP share <strong>same WEP key</strong>. AP sends challenge text, client encrypts with key, AP verifies. <strong>VULNERABLE</strong> — challenge-response leaks key bits. Lebih insecure dari Open System! Deprecated.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🏢</div>WPA-Enterprise (802.1X/EAP)</div><p>Enterprise-grade: <strong>RADIUS server</strong> + individual credentials per user. EAP methods: EAP-TLS (certificate), PEAP (MS-CHAPv2 inside TLS), EAP-TTLS. <strong>Most secure</strong> untuk enterprise. Each user = unique credential.</p></div>
+      </div>
+
+      <h3 class="sub-title">6.1 WPA Personal vs Enterprise</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">🏠</div>WPA-Personal (PSK)</div><p><strong>Pre-Shared Key</strong> — same passphrase shared among all users. Simple setup. <strong>Kelemahan:</strong> jika 1 orang leave, semua harus ganti password. Tidak ada individual accountability. Cocok: home, small office.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🏢</div>WPA-Enterprise (802.1X)</div><p><strong>Individual credentials</strong> per user via RADIUS. Setiap user login dengan username/password sendiri (atau certificate). Jika 1 orang leave, revoke 1 account saja. <strong>Audit trail</strong> per user. Cocok: enterprise, campus.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 7: THREATS ============= -->
+    <section id="threats">
+      <div class="section-header">
+        <span class="section-tag">Bagian 07</span>
+        <h2>Wireless Network Threats</h2>
+        <p>8+ ancaman unik wireless: rogue AP, evil twin, deauth, war driving, jamming, sniffing.</p>
+      </div>
+
+      <div class="infographic">
+        <div class="ig-title">8 Wireless Network Threats — dari Rogue AP ke War Driving</div>
+        <svg viewBox="0 0 900 480" width="900" height="480" aria-label="Wireless threats">
+          <rect x="40" y="20" width="400" height="100" rx="10" class="ig-danger-box"/>
+          <text x="60" y="42" class="ig-text-title" style="fill:#f87171">⚠ Rogue Access Point</text>
+          <text x="60" y="62" class="ig-text-small">Unauthorized AP di network — planted by</text>
+          <text x="60" y="78" class="ig-text-small">attacker atau employee (shadow IT).</text>
+          <text x="60" y="100" class="ig-text-small" style="font-style:italic">Mitigasi: WIDS/WIPS,定期 scan, port security</text>
+
+          <rect x="460" y="20" width="400" height="100" rx="10" class="ig-danger-box"/>
+          <text x="480" y="42" class="ig-text-title" style="fill:#f87171">⚠ Evil Twin</text>
+          <text x="480" y="62" class="ig-text-small">Fake AP dengan same SSID as legitimate.</text>
+          <text x="480" y="78" class="ig-text-small">Clients auto-connect → traffic intercepted.</text>
+          <text x="480" y="100" class="ig-text-small" style="font-style:italic">Mitigasi: certificate validation, WPA3-Enterprise</text>
+
+          <rect x="40" y="130" width="400" height="100" rx="10" class="ig-warn-box"/>
+          <text x="60" y="152" class="ig-text-title" style="fill:#fbbf24">⚠ Deauthentication Attack</text>
+          <text x="60" y="172" class="ig-text-small">Attacker sends forged deauth frames →</text>
+          <text x="60" y="188" class="ig-text-small">disconnects legitimate clients.</text>
+          <text x="60" y="210" class="ig-text-small" style="font-style:italic">Used for: evil twin forcing, DoS. WPA3 migitates</text>
+
+          <rect x="460" y="130" width="400" height="100" rx="10" class="ig-warn-box"/>
+          <text x="480" y="152" class="ig-text-title" style="fill:#fbbf24">⚠ War Driving</text>
+          <text x="480" y="172" class="ig-text-small">Driving around dengan antenna untuk</text>
+          <text x="480" y="188" class="ig-text-small">discover &amp; map wireless networks.</text>
+          <text x="480" y="210" class="ig-text-small" style="font-style:italic">Tools: Kismet, NetStumbler. Mitigasi: hide SSID</text>
+
+          <rect x="40" y="240" width="400" height="100" rx="10" class="ig-purple-box"/>
+          <text x="60" y="262" class="ig-text-title" style="fill:#a78bfa">⚠ Wireless Sniffing</text>
+          <text x="60" y="282" class="ig-text-small">Capture wireless traffic menggunakan</text>
+          <text x="60" y="298" class="ig-text-small">monitor mode + packet capture tool.</text>
+          <text x="60" y="320" class="ig-text-small" style="font-style:italic">Tools: Wireshark, Aircrack-ng. Mitigasi: WPA2/3</text>
+
+          <rect x="460" y="240" width="400" height="100" rx="10" class="ig-purple-box"/>
+          <text x="480" y="262" class="ig-text-title" style="fill:#a78bfa">⚠ Jamming</text>
+          <text x="480" y="282" class="ig-text-small">Flood frequency band dengan noise →</text>
+          <text x="480" y="298" class="ig-text-small">denial of service untuk wireless network.</text>
+          <text x="480" y="320" class="ig-text-small" style="font-style:italic">Hard to mitigate — requires physical location</text>
+
+          <rect x="40" y="350" width="400" height="100" rx="10" class="ig-accent-box"/>
+          <text x="60" y="372" class="ig-text-title">⚠ MAC Spoofing</text>
+          <text x="60" y="392" class="ig-text-small">Attacker spoofs MAC address of authorized</text>
+          <text x="60" y="408" class="ig-text-small">client to bypass MAC filtering.</text>
+          <text x="60" y="430" class="ig-text-small" style="font-style:italic">MAC filter = weak security. Use 802.1X instead</text>
+
+          <rect x="460" y="350" width="400" height="100" rx="10" class="ig-accent-box"/>
+          <text x="480" y="372" class="ig-text-title">⚠ KRACK (Key Reinstallation Attack)</text>
+          <text x="480" y="392" class="ig-text-small">Exploits WPA2 4-way handshake vulnerability.</text>
+          <text x="480" y="408" class="ig-text-small">Attacker can decrypt traffic without key.</text>
+          <text x="480" y="430" class="ig-text-small" style="font-style:italic">Mitigasi: patch all devices, upgrade to WPA3</text>
+        </svg>
+        <div class="infographic-caption">Gambar 4. 8 wireless threats — Rogue AP, Evil Twin, Deauth, War Driving, Sniffing, Jamming, MAC Spoofing, KRACK.</div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 8: SECURITY MEASURES ============= -->
+    <section id="security">
+      <div class="section-header">
+        <span class="section-tag">Bagian 08</span>
+        <h2>Wireless Security Measures</h2>
+        <p>Best practices untuk secure wireless network di enterprise.</p>
+      </div>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">🔐</div>Use WPA3 (or WPA2 minimum)</div><p><strong>WPA3 dengan SAE</strong> = latest secure standard. Jika device tidak support WPA3, gunakan WPA2-AES. <strong>JANGAN</strong> WEP atau WPA-TKIP. Disable mixed mode jika memungkinkan.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔑</div>802.1X Enterprise Authentication</div><p>Gunakan <strong>RADIUS + EAP-TLS/PEAP</strong> untuk individual user credentials. Setiap user login dengan account sendiri. Revocation mudah saat employee leave.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🛡</div>WIDS/WIPS</div><p>Wireless Intrusion Detection/Prevention System — detect rogue AP, evil twin, deauth attacks. <strong>Continuous monitoring</strong> wireless spectrum. Examples: AirWave, Cisco WLC, Aruba ClearPass.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📡</div>Disable WPS</div><p>WPS (Wi-Fi Protected Setup) <strong>vulnerable to brute-force</strong> (PIN = 8 digit, dapat di-crack dalam jam). <strong>Disable WPS</strong> di semua AP — termasuk consumer router.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🌐</div>Network Segmentation</div><p>Wireless network di <strong>VLAN terpisah</strong> dari wired network. Guest Wi-Fi di isolated VLAN — internet access only, no access ke corporate network.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔒</div>VPN for Guest Access</div><p>Untuk akses corporate network via wireless, require <strong>VPN tunnel</strong>. Wireless = untrusted network. VPN = encrypted tunnel ke corporate.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 9: TOOLS ============= -->
+    <section id="tools">
+      <div class="section-header">
+        <span class="section-tag">Bagian 09</span>
+        <h2>Wireless Security Tools</h2>
+        <p>Tools untuk audit, monitor, dan test wireless network security.</p>
+      </div>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">📡</div>Aircrack-ng Suite</div><p>Complete toolset untuk wireless security assessment: <strong>airmon-ng</strong> (monitor mode), <strong>airodump-ng</strong> (packet capture), <strong>aireplay-ng</strong> (deauth/injection), <strong>aircrack-ng</strong> (WEP/WPA key crack). <em>De facto standard</em>.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔍</div>Kismet</div><p>Wireless <strong>network detector &amp; sniffer</strong> — passive scan (tidak broadcast). Detect hidden SSID, rogue AP. Supports 802.11 a/b/g/n/ac. GPS integration untuk war driving mapping.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📊</div>Wireshark</div><p>Packet capture &amp; analysis. Dengan monitor mode WiFi adapter, dapat capture wireless management frames (beacons, probes, deauth). Decode WPA handshake. <strong>Essential</strong> untuk wireless forensics.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🛡</div>Wifite / Fluxion</div><p>Automated wireless attack tools. Wifite: automated WEP/WPA crack. Fluxion: evil twin + captive portal untuk credential harvest. <strong>Gunakan hanya di lab/sendiri</strong> — illegal di jaringan orang lain.</p></div>
+      </div>
+    </section>
+    <!-- ============= BAGIAN 10: PRAKTIKUM ============= -->
+    <section id="praktikum">
+      <div class="practicum-banner">
+        <span class="section-tag" style="margin-bottom:8px">Bagian 10 · Hands-on Lab</span>
+        <h2>Modul Praktikum Wireless Security</h2>
+        <p>Empat sesi praktik hands-on: wireless network discovery, WPA2 handshake capture, evil twin simulation, dan wireless security audit dengan hardening.</p>
+      </div>
+
+      <h3 class="sub-title">10.1 Tujuan Praktikum</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">1</div>Network Discovery</div><p>Discover dan map wireless networks di area lab menggunakan Kismet dan airodump-ng — identifikasi SSID, BSSID, encryption, signal strength.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">2</div>WPA2 Handshake Capture</div><p>Capture WPA2 4-way handshake menggunakan aircrack-ng suite — lalu attempt offline crack dengan wordlist.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">3</div>Evil Twin Simulation</div><p>Setup evil twin AP dengan same SSID sebagai lab AP — demonstrate risk dan mitigasi (certificate validation).</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">4</div>Wireless Audit &amp; Hardening</div><p>Audit wireless network security — identify misconfigurations, implement hardening (WPA3, 802.1X, WIDS).</p></div>
+      </div>
+
+      <h3 class="sub-title">10.2 Alat dan Bahan</h3>
+      <div class="two-col">
+        <div class="col-box left">
+          <h4><span class="ico">💻</span>Perangkat Keras</h4>
+          <ul class="checklist">
+            <li>Laptop dengan <strong>WiFi adapter yang support monitor mode</strong> (Alfa AWUS036ACH, TP-Link TL-WN722N v1)</li>
+            <li>Wireless router/AP lab (yang Anda miliki — untuk testing)</li>
+            <li>2 VM: Kali Linux (attacker) + Ubuntu (client)</li>
+            <li>Optional: Raspberry Pi untuk evil twin AP</li>
+          </ul>
+        </div>
+        <div class="col-box right">
+          <h4><span class="ico">🧰</span>Perangkat Lunak</h4>
+          <ul class="checklist">
+            <li><strong>Kali Linux</strong> (pre-installed wireless tools)</li>
+            <li><strong>Aircrack-ng suite</strong> (airmon, airodump, aireplay, aircrack)</li>
+            <li><strong>Kismet</strong> untuk passive wireless discovery</li>
+            <li><strong>Wireshark</strong> untuk packet analysis</li>
+            <li><strong>hostapd</strong> + <strong>dnsmasq</strong> untuk evil twin AP</li>
+            <li><strong>hashcat</strong> untuk GPU-accelerated WPA crack (opsional)</li>
+            <li>Wordlist: rockyou.txt</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-box info-danger">
+        <strong>PERINGATAN LEGAL:</strong> Lakukan praktik HANYA pada wireless network yang Anda miliki
+        atau punya izin tertulis. <strong>Meng-capture traffic, crack password, atau setup evil twin di
+        jaringan orang lain TANPA izin adalah ILEGAL</strong> di hampir semua yurisdiksi (UU ITE Pasal
+        30 &amp; 33 di Indonesia, Computer Fraud and Abuse Act di US). Gunakan AP lab sendiri.
+      </div>
+
+      <h3 class="sub-title">10.3 Workflow Praktikum 4 Sesi</h3>
+      <div class="infographic">
+        <div class="ig-title">Alur Praktikum — 4 Sesi, 20 Langkah, 1 Laporan Akhir</div>
+        <svg viewBox="0 0 900 280" width="900" height="280" aria-label="Practicum workflow">
+          <defs><linearGradient id="grad-lab-m07" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#22d3ee"/><stop offset="33%" stop-color="#34d399"/><stop offset="66%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#fbbf24"/></linearGradient></defs>
+          <path d="M 60 100 L 840 100" stroke="url(#grad-lab-m07)" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="150" cy="100" r="32" fill="#161d2e" stroke="#22d3ee" stroke-width="2.5"/><text x="150" y="98" text-anchor="middle" class="ig-text-title">S1</text><text x="150" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="80" y="150" width="140" height="70" rx="10" class="ig-accent-box"/><text x="150" y="172" text-anchor="middle" class="ig-text-strong">Discovery</text><text x="150" y="188" text-anchor="middle" class="ig-text-small">Kismet +</text><text x="150" y="202" text-anchor="middle" class="ig-text-small">airodump-ng</text>
+          <text x="150" y="65" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">~45 menit</text>
+          <circle cx="380" cy="100" r="32" fill="#161d2e" stroke="#34d399" stroke-width="2.5"/><text x="380" y="98" text-anchor="middle" class="ig-text-title" style="fill:#34d399">S2</text><text x="380" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="310" y="150" width="140" height="70" rx="10" class="ig-success-box"/><text x="380" y="172" text-anchor="middle" class="ig-text-strong">WPA2 Crack</text><text x="380" y="188" text-anchor="middle" class="ig-text-small">Handshake +</text><text x="380" y="202" text-anchor="middle" class="ig-text-small">aircrack-ng</text>
+          <text x="380" y="65" text-anchor="middle" class="ig-text-small" style="fill:#34d399">~90 menit</text>
+          <circle cx="610" cy="100" r="32" fill="#161d2e" stroke="#a78bfa" stroke-width="2.5"/><text x="610" y="98" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">S3</text><text x="610" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="540" y="150" width="140" height="70" rx="10" class="ig-purple-box"/><text x="610" y="172" text-anchor="middle" class="ig-text-strong">Evil Twin</text><text x="610" y="188" text-anchor="middle" class="ig-text-small">Simulation +</text><text x="610" y="202" text-anchor="middle" class="ig-text-small">Mitigasi</text>
+          <text x="610" y="65" text-anchor="middle" class="ig-text-small" style="fill:#a78bfa">~75 menit</text>
+          <circle cx="820" cy="100" r="32" fill="#161d2e" stroke="#fbbf24" stroke-width="2.5"/><text x="820" y="98" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">S4</text><text x="820" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="750" y="150" width="140" height="70" rx="10" class="ig-warn-box"/><text x="820" y="172" text-anchor="middle" class="ig-text-strong">Audit &amp;</text><text x="820" y="188" text-anchor="middle" class="ig-text-small">Hardening</text><text x="820" y="202" text-anchor="middle" class="ig-text-small">Best Practices</text>
+          <text x="820" y="65" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">~60 menit</text>
+          <rect x="280" y="240" width="340" height="30" rx="15" fill="#161d2e" stroke="#22d3ee" stroke-width="1.5"/><text x="450" y="260" text-anchor="middle" class="ig-text-strong" style="fill:#22d3ee">Total ~4.5 jam → Laporan Discovery + Crack + Evil Twin + Audit</text>
+        </svg>
+        <div class="infographic-caption">Gambar 5. Workflow 4 sesi praktikum Modul 07 — total 20 langkah hands-on.</div>
+      </div>
+
+      <h3 class="sub-title">10.4 Langkah Praktikum</h3>
+
+      <h4 class="mini-title">Sesi 1 — Wireless Network Discovery</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Enable Monitor Mode</h5><p>Di Kali Linux, identify WiFi adapter: <code>iwconfig</code>. Enable monitor mode: <code>airmon-ng start wlan0</code>. Verifikasi: <code>iwconfig</code> — interface berubah ke <code>wlan0mon</code> mode=Monitor.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Discover Networks dengan airodump-ng</h5><p>Run: <code>airodump-ng wlan0mon</code>. Tunggu 30 detik. Catat: BSSID, SSID, channel, encryption (WEP/WPA/WPA2/WPA3), signal strength (PWR), number of clients. Identifikasi AP lab Anda di list.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Targeted Capture</h5><p>Target AP lab: <code>airodump-ng -c &lt;channel&gt; --bssid &lt;BSSID&gt; -w capture wlan0mon</code>. Tunggu 2-3 menit. Catat: connected clients (station MAC), data packets captured. File <code>capture-01.cap</code> tersimpan.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>Kismet Passive Discovery</h5><p>Install Kismet: <code>apt install kismet</code>. Run: <code>kismet -c wlan0mon</code>. Buka browser ke <code>http://localhost:2501</code>. Kismet melakukan <strong>passive scan</strong> — tidak broadcast probe requests. Bandingkan hasil dengan airodump-ng.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Map &amp; Laporan</h5><p>Buat map wireless landscape: AP count per channel (identify crowded channels), encryption distribution (berapa % WPA2 vs WPA3 vs WEP), signal heatmap. Rekomendasi: channel optimization, upgrade encryption. Laporan: discovery results + security assessment.</p></div></div>
+      </div>
+
+      <h4 class="mini-title">Sesi 2 — WPA2 Handshake Capture &amp; Crack</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Capture WPA2 Handshake</h5><p>Target AP lab (WPA2-PSK). Start capture: <code>airodump-ng -c &lt;ch&gt; --bssid &lt;BSSID&gt; -w wpa2_capture wlan0mon</code>. Tunggu client connect — atau <strong>force deauth</strong>: <code>aireplay-ng --deauth 5 -a &lt;BSSID&gt; -c &lt;client_MAC&gt; wlan0mon</code>. Capture handshake (muncul "WPA handshake: &lt;MAC&gt;" di airodump).</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Verify Handshake di Wireshark</h5><p>Buka <code>wpa2_capture-01.cap</code> di Wireshark. Filter: <code>eapol</code>. Identifikasi 4 EAPOL frames (4-way handshake): Message 1-4. Verifikasi: handshake lengkap = crackable. Jika tidak lengkap, ulang deauth + capture.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Dictionary Attack dengan aircrack-ng</h5><p>Crack: <code>aircrack-ng -w /usr/share/wordlists/rockyou.txt wpa2_capture-01.cap</code>. Jika password ada di wordlist → cracked dalam menit. Catat: waktu yang diperlukan, password yang recovered.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>Hashcat (GPU) — Opsional</h5><p>Konversi capture ke hashcat format: <code>hcxtools/hcxpcaptool -o hash.hccapx wpa2_capture-01.cap</code>. Crack dengan hashcat: <code>hashcat -m 22000 hash.hccapx rockyou.txt</code>. Bandingkan speed: aircrack-ng (CPU) vs hashcat (GPU).</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Laporan &amp; Mitigasi</h5><p>Laporan: (a) handshake capture screenshot, (b) crack results (password recovered/tidak), (c) time comparison CPU vs GPU, (d) mitigasi: gunakan strong passphrase (16+ char, tidak di wordlist), WPA3-SAE (resistant to offline crack), 802.1X Enterprise (no shared key).</p></div></div>
+      </div>
+
+      <h4 class="mini-title">Sesi 3 — Evil Twin Simulation</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Setup Evil Twin AP</h5><p>Di Kali Linux, install hostapd + dnsmasq. Config hostapd dengan <strong>same SSID</strong> sebagai lab AP, same channel. Config dnsmasq untuk DHCP. Enable IP forwarding + NAT. Start: <code>hostapd hostapd.conf</code> + <code>dnsmasq -C dnsmasq.conf</code>.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Deauth Legitimate AP</h5><p>Force client disconnect dari legitimate AP: <code>aireplay-ng --deauth 0 -a &lt;legit_BSSID&gt; wlan0mon</code> (continuous deauth). Client akan auto-connect ke evil twin (same SSID, stronger signal). Verifikasi: client connected ke evil twin.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Capture Client Traffic</h5><p>Saat client connected ke evil twin, capture traffic: <code>tcpdump -i &lt;ap_interface&gt; -w evil_twin_traffic.pcap</code>. Client browse HTTP site → traffic visible di plaintext. Demonstrasi: <strong>evil twin dapat intercept all traffic</strong>.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>Captive Portal (Optional)</h5><p>Setup captive portal (nginx + PHP) yang mimic login page. Client connect → redirect ke portal → enter credentials. <strong>Pelajaran:</strong> ini adalah cara attacker harvest credentials di public Wi-Fi. Screenshot: captive portal + credential capture.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Mitigasi &amp; Laporan</h5><p>Mitigasi evil twin: (a) <strong>WPA3-Enterprise dengan certificate validation</strong> — client verify server cert, reject fake AP, (b) VPN tunnel — encrypt all traffic, evil twin hanya lihat encrypted, (c) WIDS untuk detect unauthorized AP. Laporan: evil twin setup + attack demo + mitigasi.</p></div></div>
+      </div>
+
+      <h4 class="mini-title">Sesi 4 — Wireless Audit &amp; Hardening</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Audit Lab AP Configuration</h5><p>Login ke admin panel AP lab. Audit: (a) encryption type (WEP/WPA/WPA2/WPA3), (b) WPS enabled/disabled, (c) SSID broadcast (hidden/visible), (d) admin password (default/custom), (e) firmware version (latest?), (f) guest network isolation, (g) MAC filtering, (h) TX power (range control).</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Identify Misconfigurations</h5><p>Checklist: WEP/WPA-TKIP enabled? WPS on? Default admin password? Firmware outdated? Guest network can access LAN? SSID broadcast unnecessary? TX power too high (signal bleeds)? Document setiap misconfiguration dengan risk level.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Implement Hardening</h5><p>Fix: (a) upgrade ke WPA2-AES minimum (WPA3 jika supported), (b) disable WPS, (c) change admin password (16+ char), (d) update firmware, (e) enable guest network isolation, (f) reduce TX power (signal stays dalam building), (g) disable remote admin dari WAN.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>Enterprise Security (If Available)</h5><p>Jika punya RADIUS server (FreeRADIUS dari Modul 02): setup WPA2-Enterprise (802.1X/EAP-PEAP). Test: client connect dengan individual username/password. Verifikasi: handshake terenkripsi, no shared PSK. Compare security dengan PSK mode.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Final Audit &amp; Laporan</h5><p>Re-audit setelah hardening. Compare before vs after. Buat laporan: (a) audit checklist (before/after), (b) hardening actions, (c) enterprise auth setup (if done), (d) security posture improvement, (e) recommendations: WIDS/WIPS deployment, periodic audit schedule, wireless policy.</p></div></div>
+      </div>
+
+      <h3 class="sub-title">10.5 Lembar Kerja / Tugas</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">Q1</div>WEP vs WPA3</div><p>Mengapa WEP dapat di-crack dalam menit? Apa improvement utama WPA3 dibanding WPA2? Mengapa WPA3-SAE resistant terhadap offline dictionary attack?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q2</div>Evil Twin Risk</div><p>Dari Sesi 3, jelaskan bagaimana evil twin attack bekerja. Mengapa client auto-connect ke evil twin? Bagaimana WPA3-Enterprise mencegah evil twin? Apa mitigasi lain selain WPA3?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q3</div>WPA2-PSK vs Enterprise</div><p>Bandingkan WPA2-PSK (Personal) vs WPA2-Enterprise (802.1X). Kapan menggunakan masing-masing? Apa kelemahan PSK di enterprise? Bagaimana 802.1X mengatasi kelemahan tersebut?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q4</div>Deauth Attack</div><p>Apa itu deauthentication attack? Mengapa serangan ini efektif? Bagaimana WPA3 mengurangi risiko deauth? Apa mitigasi lain (selain WPA3)?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q5</div>Wireless Audit</div><p>Dari Sesi 4, apa 3 misconfiguration paling berbahaya yang ditemukan? Mengapa WPS berbahaya? Mengapa TX power control penting untuk security?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q6</div>Defense-in-Depth Wireless</div><p>Berdasarkan modul, jelaskan defense-in-depth untuk wireless: encryption + authentication + WIDS + segmentation + VPN. Apa yang terjadi jika salah satu dihilangkan?</p></div>
+      </div>
+
+      <h3 class="sub-title">10.6 Checklist Evaluasi</h3>
+      <p>Praktikum dinyatakan <strong>lulus</strong> jika minimal 10 dari 12 kriteria berikut terpenuhi:</p>
+      <ul class="checklist">
+        <li>Monitor mode WiFi adapter berhasil di-enable</li>
+        <li>airodump-ng menemukan minimal 5 wireless networks</li>
+        <li>Kismet passive discovery terdokumentasi dengan screenshot</li>
+        <li>WPA2 handshake berhasil di-capture (4 EAPOL frames)</li>
+        <li>aircrack-ng dictionary attack berhasil crack password lab (jika weak)</li>
+        <li>Wireshark analysis handshake terdokumentasi</li>
+        <li>Evil twin AP berhasil di-setup dengan same SSID</li>
+        <li>Client berhasil di-force connect ke evil twin</li>
+        <li>Evil twin traffic capture menunjukkan intercepted data</li>
+        <li>Wireless audit checklist lengkap (before hardening)</li>
+        <li>Minimal 5 hardening actions terimplementasi (WPA2/3, WPS off, dll)</li>
+        <li>Final audit menunjukkan improvement (before vs after)</li>
+      </ul>
+
+      <div class="info-box info-success">
+        <strong>Bonus:</strong> Mahasiswa yang dapat mendemonstrasikan: (a) WPA3-SAE setup dan test
+        resistance terhadap offline crack, (b) 802.1X Enterprise dengan FreeRADIUS + EAP-TLS
+        certificate, (c) WIDS deployment menggunakan Kismet alerting, atau (d) PMKID attack (clientless
+        WPA2 crack tanpa handshake) — akan mendapat nilai tambahan.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 11: RINGKASAN ============= -->
+    <section id="ringkasan">
+      <div class="section-header">
+        <span class="section-tag">Bagian 11</span>
+        <h2>Ringkasan Modul</h2>
+        <p>Rangkuman poin-poin kritis yang telah dibahas dalam Modul 07 Wireless Network Security.</p>
+      </div>
+
+      <div class="summary-box">
+        <h3>📋 Yang Telah Dipelajari</h3>
+        <ul class="checklist">
+          <li>Wireless terminology — SSID (network name), BSSID (AP MAC), Hotspot (public Wi-Fi), AP (access point).</li>
+          <li>802.11 standards — a (5GHz, 54Mbps), b (2.4GHz, 11Mbps), g (2.4GHz, 54Mbps), n/Wi-Fi 4 (dual-band, 600Mbps), ac/Wi-Fi 5 (5GHz, 3.5Gbps), ax/Wi-Fi 6 (tri-band, 9.6Gbps, WPA3).</li>
+          <li>Wireless components — AP (bridges wireless↔wired), wireless router (AP+router+switch+firewall), wireless client (laptop, phone, IoT).</li>
+          <li>Wireless topologies — Ad-Hoc (peer-to-peer, no AP) vs Infrastructure (BSS/ESS, central AP).</li>
+          <li>4 encryption generations — WEP (RC4, broken in minutes), WPA (RC4+TKIP, interim), WPA2 (AES-CCMP, current minimum, KRACK vulnerable), WPA3 (AES-256+GCMP+SAE, latest, offline-crack resistant).</li>
+          <li>3 authentication methods — Open System (no auth, zero security), Shared Key (WEP, vulnerable), WPA-Enterprise/802.1X (RADIUS + EAP, individual credentials, most secure).</li>
+          <li>WPA Personal (PSK) vs Enterprise — PSK = shared passphrase (simple, no individual accountability), Enterprise = per-user via RADIUS (audit, revocation, enterprise-grade).</li>
+          <li>8 wireless threats — Rogue AP, Evil Twin, Deauthentication, War Driving, Sniffing, Jamming, MAC Spoofing, KRACK.</li>
+          <li>Security measures — WPA3/WPA2 minimum, 802.1X Enterprise, WIDS/WIPS, disable WPS, network segmentation, VPN for guest access.</li>
+          <li>Wireless security tools — Aircrack-ng suite (airmon, airodump, aireplay, aircrack), Kismet (passive discovery), Wireshark (packet analysis), Wifite/Fluxion (automated attack).</li>
+          <li>Praktikum 4 sesi — Wireless Discovery (Kismet + airodump), WPA2 Handshake Capture &amp; Crack, Evil Twin Simulation, Wireless Audit &amp; Hardening.</li>
+        </ul>
+      </div>
+
+      <div class="info-box info-tip" style="margin-top:24px">
+        <strong>Key Takeaway:</strong> Wireless networks adalah <strong>inherently less secure</strong>
+        dari wired — RF signal bleeds beyond walls, anyone with antenna can listen. Security wireless
+        = <strong>defense-in-depth</strong>: strong encryption (WPA3) + individual authentication
+        (802.1X) + continuous monitoring (WIDS) + network segmentation (VLAN) + VPN tunnel. <strong>Tidak
+        ada single control yang cukup</strong> — kombinasi semua layers diperlukan. Wireless security
+        adalah modul terakhir dari 9 modul Network Defense Essentials — dari fundamentals (01) hingga
+        wireless (07), mobile (08), dan IoT (09), semuanya membentuk <strong>complete picture of modern
+        network defense</strong>.
+      </div>
+    </section>
+
+    <footer>
+      <p><strong>Modul 07: Wireless Network Security</strong> · Network Defense Essentials</p>
+      <p>Disusun sebagai materi pembelajaran — bebas digunakan untuk tujuan edukasi.</p>
+      <div class="next-modul"><span>Selanjutnya →</span><strong>Seri Modul Lengkap (01-09) Tersedia</strong></div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  (function(){
+    const tocLinks = document.querySelectorAll('#toc a');
+    const sections = Array.from(tocLinks).map(a => {
+      const id = a.getAttribute('href').slice(1);
+      return document.getElementById(id);
+    }).filter(Boolean);
+    function setActive(){
+      const scrollY = window.scrollY + 100;
+      let currentIdx = 0;
+      for(let i=0;i<sections.length;i++){
+        if(sections[i].offsetTop <= scrollY) currentIdx = i;
+      }
+      tocLinks.forEach((a, i) => a.classList.toggle('active', i === currentIdx));
+    }
+    setActive();
+    window.addEventListener('scroll', setActive, {passive:true});
+    tocLinks.forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = a.getAttribute('href').slice(1);
+        const target = document.getElementById(id);
+        if(target){
+          const offset = 80;
+          const top = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({top, behavior:'smooth'});
+          document.querySelector('.sidebar').classList.remove('open');
+        }
+      });
+    });
+  })();
+</script>
+</body>
+</html>

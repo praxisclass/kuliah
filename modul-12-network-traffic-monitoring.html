@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modul 12: Network Traffic Monitoring — Network Defense Essentials</title>
+<meta name="description" content="Ebook &amp; Modul Praktikum Network Traffic Monitoring - Network Defense Essentials">
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --bg-2:#0d1320;
+    --bg-elevated:#131a2a;
+    --bg-card:#161d2e;
+    --bg-card-hover:#1b2438;
+    --border:#242c40;
+    --border-strong:#344057;
+    --text:#e6edf3;
+    --text-2:#a8b3cf;
+    --text-muted:#6b7591;
+    --accent:#22d3ee;
+    --accent-2:#06b6d4;
+    --accent-glow:rgba(34,211,238,.15);
+    --accent-dim:rgba(34,211,238,.08);
+    --warn:#fbbf24;
+    --warn-bg:rgba(251,191,36,.08);
+    --danger:#f87171;
+    --danger-bg:rgba(248,113,113,.08);
+    --success:#34d399;
+    --success-bg:rgba(52,211,153,.08);
+    --purple:#a78bfa;
+    --purple-bg:rgba(167,139,250,.08);
+    --pink:#f472b6;
+    --shadow:0 4px 24px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:24px}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.7;
+    font-size:15px;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% 0%,rgba(34,211,238,.08),transparent),
+      radial-gradient(ellipse 60% 40% at 80% 100%,rgba(167,139,250,.06),transparent);
+    background-attachment:fixed;
+  }
+  h1,h2,h3,h4{font-family:'Space Grotesk','Inter',sans-serif;font-weight:700;line-height:1.3;letter-spacing:-.01em}
+  code,pre,.mono{font-family:'JetBrains Mono','Consolas','Monaco',monospace}
+  a{color:var(--accent);text-decoration:none}
+
+  /* Layout */
+  .layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+  .sidebar{
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+    background:var(--bg-2);
+    border-right:1px solid var(--border);
+    padding:24px 20px;
+    z-index:10;
+  }
+  .sidebar-brand{
+    display:flex;align-items:center;gap:12px;padding-bottom:20px;
+    border-bottom:1px solid var(--border);margin-bottom:20px;
+  }
+  .brand-logo{
+    width:40px;height:40px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;color:#0a0e1a;font-size:18px;
+    box-shadow:0 0 24px var(--accent-glow);
+  }
+  .brand-text{font-size:13px;color:var(--text-2);line-height:1.4}
+  .brand-text strong{display:block;color:var(--text);font-size:14px;font-weight:600}
+  .toc-title{
+    font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--text-muted);margin:16px 0 12px;font-weight:600;
+  }
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:2px}
+  .toc-list a{
+    display:block;padding:8px 12px;color:var(--text-2);
+    font-size:13.5px;border-radius:6px;border-left:2px solid transparent;
+    transition:all .15s ease;line-height:1.4;
+  }
+  .toc-list a:hover{background:var(--bg-card);color:var(--text)}
+  .toc-list a.active{
+    background:var(--accent-dim);color:var(--accent);
+    border-left-color:var(--accent);font-weight:500;
+  }
+  .toc-list a .num{
+    display:inline-block;width:24px;color:var(--text-muted);font-size:12px;
+  }
+  .toc-list a.active .num{color:var(--accent)}
+  .toc-sub{padding-left:14px;font-size:12.5px;color:var(--text-muted)}
+  .toc-sub a{padding:6px 12px;font-size:12.5px}
+
+  /* Content */
+  .content{max-width:980px;padding:0 56px 80px;min-width:0}
+  @media (max-width:1024px){
+    .layout{grid-template-columns:1fr}
+    .sidebar{position:fixed;left:-300px;width:280px;transition:left .25s ease}
+    .sidebar.open{left:0}
+    .content{padding:0 24px 60px}
+    .menu-toggle{display:flex!important}
+  }
+  .menu-toggle{
+    display:none;position:fixed;top:16px;right:16px;z-index:50;
+    width:44px;height:44px;border-radius:10px;
+    background:var(--bg-elevated);border:1px solid var(--border);
+    color:var(--text);align-items:center;justify-content:center;
+    cursor:pointer;font-size:20px;
+  }
+
+  /* Hero / Cover */
+  .hero{
+    position:relative;padding:80px 0 60px;
+    border-bottom:1px solid var(--border);margin-bottom:48px;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+    background-image:
+      linear-gradient(rgba(34,211,238,.04) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(34,211,238,.04) 1px,transparent 1px);
+    background-size:48px 48px;
+    mask-image:radial-gradient(ellipse 60% 70% at 50% 40%,#000 30%,transparent 75%);
+    -webkit-mask-image:radial-gradient(ellipse 60% 70% at 50% 40%,#000 30%,transparent 75%);
+    pointer-events:none;
+  }
+  .hero-content{position:relative;z-index:1}
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 14px;border-radius:999px;
+    background:var(--accent-dim);border:1px solid rgba(34,211,238,.3);
+    color:var(--accent);font-size:12px;font-weight:600;
+    letter-spacing:.08em;text-transform:uppercase;margin-bottom:24px;
+  }
+  .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+  .hero h1{
+    font-size:clamp(36px,5vw,56px);margin-bottom:16px;
+    background:linear-gradient(135deg,#fff 30%,var(--accent) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero-sub{
+    font-size:18px;color:var(--text-2);max-width:680px;margin-bottom:32px;
+  }
+  .hero-meta{
+    display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;
+  }
+  .meta-chip{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:10px 16px;background:var(--bg-card);
+    border:1px solid var(--border);border-radius:8px;
+    font-size:13px;color:var(--text-2);
+  }
+  .meta-chip strong{color:var(--text);font-weight:600}
+  .meta-chip svg{width:16px;height:16px;color:var(--accent)}
+
+  /* Section base */
+  section{margin-bottom:64px;scroll-margin-top:24px}
+  .section-header{margin-bottom:28px}
+  .section-tag{
+    display:inline-block;font-size:11px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.12em;
+    color:var(--accent);margin-bottom:8px;
+  }
+  .section-header h2{
+    font-size:30px;margin-bottom:8px;color:var(--text);
+  }
+  .section-header p{color:var(--text-2);font-size:15px;max-width:720px}
+  h3.sub-title{
+    font-size:20px;color:var(--text);margin:32px 0 14px;
+    padding-left:12px;border-left:3px solid var(--accent);
+  }
+  h4.mini-title{
+    font-size:15px;color:var(--accent);margin:20px 0 10px;
+    font-weight:600;text-transform:uppercase;letter-spacing:.05em;
+  }
+  p{margin-bottom:14px;color:var(--text-2)}
+  p strong{color:var(--text);font-weight:600}
+  ul,ol{margin:12px 0 20px;padding-left:24px;color:var(--text-2)}
+  ul li,ol li{margin-bottom:6px}
+  ul li::marker{color:var(--accent)}
+  ol li::marker{color:var(--accent);font-weight:600}
+
+  /* Card grid */
+  .card-grid{display:grid;gap:16px;margin:20px 0}
+  .grid-2{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:768px){
+    .grid-2,.grid-3{grid-template-columns:1fr}
+  }
+  .card{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:12px;padding:20px;transition:all .2s ease;
+  }
+  .card:hover{
+    border-color:var(--border-strong);background:var(--bg-card-hover);
+    transform:translateY(-2px);
+  }
+  .card-title{
+    display:flex;align-items:center;gap:10px;
+    font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px;
+  }
+  .card-icon{
+    width:32px;height:32px;border-radius:8px;
+    background:var(--accent-dim);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;flex-shrink:0;
+  }
+  .card p{font-size:13.5px;color:var(--text-2);margin:0}
+  .card .meta{
+    margin-top:10px;padding-top:10px;border-top:1px solid var(--border);
+    font-size:12px;color:var(--text-muted);display:flex;gap:12px;flex-wrap:wrap;
+  }
+  .card .meta span{display:inline-flex;align-items:center;gap:4px}
+
+  /* Info boxes */
+  .info-box{
+    border-left:3px solid;padding:14px 18px;border-radius:8px;
+    margin:16px 0;font-size:14px;
+  }
+  .info-tip{background:var(--accent-dim);border-color:var(--accent);color:var(--text)}
+  .info-tip strong{color:var(--accent)}
+  .info-warn{background:var(--warn-bg);border-color:var(--warn);color:var(--text)}
+  .info-warn strong{color:var(--warn)}
+  .info-danger{background:var(--danger-bg);border-color:var(--danger);color:var(--text)}
+  .info-danger strong{color:var(--danger)}
+  .info-success{background:var(--success-bg);border-color:var(--success);color:var(--text)}
+  .info-success strong{color:var(--success)}
+
+  /* Definition list */
+  .def-list{display:flex;flex-direction:column;gap:14px;margin:16px 0}
+  .def-item{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:10px;padding:16px 20px;
+  }
+  .def-item dt{
+    font-weight:600;color:var(--accent);font-size:14.5px;
+    margin-bottom:6px;display:flex;align-items:center;gap:8px;
+  }
+  .def-item dt::before{
+    content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);
+  }
+  .def-item dd{color:var(--text-2);font-size:14px;margin-left:14px}
+
+  /* Comparison table */
+  .table-wrap{overflow-x:auto;margin:20px 0;border-radius:12px;border:1px solid var(--border)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--bg-card)}
+  th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--border)}
+  th{background:var(--bg-elevated);color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+  td{color:var(--text-2)}
+  td strong{color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--bg-card-hover)}
+
+  /* Checklist */
+  .checklist{list-style:none;padding:0;margin:16px 0;display:flex;flex-direction:column;gap:8px}
+  .checklist li{
+    display:flex;gap:12px;padding:10px 14px;
+    background:var(--bg-card);border:1px solid var(--border);border-radius:8px;
+    font-size:14px;color:var(--text-2);line-height:1.5;
+  }
+  .checklist li::before{
+    content:'✓';flex-shrink:0;width:20px;height:20px;border-radius:50%;
+    background:var(--success-bg);color:var(--success);
+    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+  }
+  .checklist.warn li::before{background:var(--warn-bg);color:var(--warn)}
+  .checklist.danger li::before{content:'!';background:var(--danger-bg);color:var(--danger)}
+
+  /* Pill / badge */
+  .pill{
+    display:inline-block;padding:2px 10px;border-radius:999px;
+    font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-2);
+  }
+  .pill.accent{background:var(--accent-dim);color:var(--accent);border-color:rgba(34,211,238,.3)}
+  .pill.warn{background:var(--warn-bg);color:var(--warn);border-color:rgba(251,191,36,.3)}
+  .pill.danger{background:var(--danger-bg);color:var(--danger);border-color:rgba(248,113,113,.3)}
+  .pill.success{background:var(--success-bg);color:var(--success);border-color:rgba(52,211,153,.3)}
+  .pill.purple{background:var(--purple-bg);color:var(--purple);border-color:rgba(167,139,250,.3)}
+
+  /* Two column */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
+  @media (max-width:768px){.two-col{grid-template-columns:1fr}}
+  .col-box{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:12px;
+    padding:22px;
+  }
+  .col-box h4{
+    display:flex;align-items:center;gap:10px;
+    font-size:15px;color:var(--text);margin-bottom:14px;
+    padding-bottom:12px;border-bottom:1px solid var(--border);
+  }
+  .col-box h4 .ico{
+    width:28px;height:28px;border-radius:7px;display:flex;
+    align-items:center;justify-content:center;font-size:14px;
+  }
+  .col-box.left h4 .ico{background:var(--accent-dim);color:var(--accent)}
+  .col-box.right h4 .ico{background:var(--purple-bg);color:var(--purple)}
+
+  /* Steps */
+  .steps{position:relative;padding-left:32px;margin:24px 0}
+  .steps::before{
+    content:'';position:absolute;left:11px;top:8px;bottom:8px;
+    width:2px;background:var(--border-strong);
+  }
+  .step{position:relative;margin-bottom:24px}
+  .step-num{
+    position:absolute;left:-32px;top:0;width:24px;height:24px;border-radius:50%;
+    background:var(--bg-elevated);border:2px solid var(--accent);
+    color:var(--accent);font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;z-index:1;
+  }
+  .step-content{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+    padding:16px 20px;
+  }
+  .step-content h5{font-size:14px;color:var(--accent);margin-bottom:6px;font-weight:600}
+  .step-content p{font-size:13.5px;color:var(--text-2);margin:0}
+  .step-content ul{margin:8px 0 0;padding-left:18px;font-size:13px}
+
+  /* Practicum box */
+  .practicum-banner{
+    background:linear-gradient(135deg,var(--purple-bg),var(--accent-dim));
+    border:1px solid var(--border-strong);border-radius:16px;
+    padding:32px;margin:24px 0;text-align:center;
+  }
+  .practicum-banner h2{
+    font-size:28px;background:linear-gradient(135deg,var(--accent),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px;
+  }
+  .practicum-banner p{color:var(--text-2);max-width:600px;margin:0 auto}
+
+  /* Lab tools grid */
+  .tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px 0}
+  @media (max-width:600px){.tools-grid{grid-template-columns:1fr}}
+  .tool-card{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+    padding:14px 16px;display:flex;align-items:flex-start;gap:12px;
+  }
+  .tool-card .ico{
+    width:36px;height:36px;border-radius:8px;flex-shrink:0;
+    background:var(--bg-elevated);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;
+    color:var(--accent);
+  }
+  .tool-card .info{flex:1;min-width:0}
+  .tool-card .name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px}
+  .tool-card .desc{font-size:12.5px;color:var(--text-2);line-height:1.5}
+  .tool-card .url{font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace;margin-top:4px;display:block}
+
+  /* Summary */
+  .summary-box{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:14px;padding:28px;margin-top:24px;
+  }
+  .summary-box h3{
+    font-size:18px;color:var(--accent);margin-bottom:16px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .summary-box ul{margin:0;padding-left:20px}
+
+  /* Footer */
+  footer{
+    border-top:1px solid var(--border);padding:32px 0;
+    text-align:center;color:var(--text-muted);font-size:13px;
+  }
+  footer .next-modul{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:12px 20px;background:var(--bg-card);
+    border:1px solid var(--border);border-radius:10px;
+    color:var(--text-2);margin-top:16px;font-size:13px;
+  }
+  footer .next-modul strong{color:var(--accent)}
+
+  /* ===== INFOGRAPHICS / SVG STYLING ===== */
+  .infographic{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:14px;padding:24px;margin:24px 0;overflow:hidden;
+  }
+  .infographic-caption{
+    text-align:center;font-size:12.5px;color:var(--text-muted);
+    margin-top:12px;font-style:italic;
+  }
+  .infographic svg{display:block;margin:0 auto;max-width:100%;height:auto}
+  .ig-title{
+    font-size:13px;font-weight:600;color:var(--accent);
+    text-transform:uppercase;letter-spacing:.08em;
+    text-align:center;margin-bottom:16px;
+  }
+  .ig-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+  .ig-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:4px 10px;border-radius:6px;
+    font-size:11.5px;font-weight:500;
+    background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-2);
+  }
+  .ig-badge .dot{width:8px;height:8px;border-radius:50%}
+  .ig-badge.cyan{border-color:rgba(34,211,238,.4);color:var(--accent);background:var(--accent-dim)}
+  .ig-badge.cyan .dot{background:var(--accent)}
+  .ig-badge.purple{border-color:rgba(167,139,250,.4);color:var(--purple);background:var(--purple-bg)}
+  .ig-badge.purple .dot{background:var(--purple)}
+  .ig-badge.warn{border-color:rgba(251,191,36,.4);color:var(--warn);background:var(--warn-bg)}
+  .ig-badge.warn .dot{background:var(--warn)}
+  .ig-badge.danger{border-color:rgba(248,113,113,.4);color:var(--danger);background:var(--danger-bg)}
+  .ig-badge.danger .dot{background:var(--danger)}
+  .ig-badge.success{border-color:rgba(52,211,153,.4);color:var(--success);background:var(--success-bg)}
+  .ig-badge.success .dot{background:var(--success)}
+
+  /* Stat block */
+  .stat-row{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:24px 0;
+  }
+  @media (max-width:768px){.stat-row{grid-template-columns:repeat(2,1fr)}}
+  .stat-box{
+    background:linear-gradient(135deg,var(--bg-card),var(--bg-elevated));
+    border:1px solid var(--border);border-radius:12px;
+    padding:20px;text-align:center;position:relative;overflow:hidden;
+  }
+  .stat-box::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,var(--accent),var(--purple));
+  }
+  .stat-num{
+    font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    line-height:1;margin-bottom:6px;
+  }
+  .stat-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+  .stat-desc{font-size:12px;color:var(--text-2);margin-top:8px;line-height:1.4}
+
+  /* SVG text */
+  svg .ig-text{font-family:'Inter',sans-serif;font-size:11px;fill:var(--text-2)}
+  svg .ig-text-strong{font-family:'Inter',sans-serif;font-size:12px;fill:var(--text);font-weight:600}
+  svg .ig-text-title{font-family:'Space Grotesk',sans-serif;font-size:14px;fill:var(--accent);font-weight:700}
+  svg .ig-text-small{font-family:'Inter',sans-serif;font-size:10px;fill:var(--text-muted)}
+  svg .ig-line{stroke:var(--border-strong);fill:none}
+  svg .ig-accent-line{stroke:var(--accent);fill:none}
+  svg .ig-box{fill:var(--bg-elevated);stroke:var(--border-strong);stroke-width:1}
+  svg .ig-accent-box{fill:var(--accent-dim);stroke:var(--accent);stroke-width:1.5}
+  svg .ig-danger-box{fill:var(--danger-bg);stroke:var(--danger);stroke-width:1.5}
+  svg .ig-warn-box{fill:var(--warn-bg);stroke:var(--warn);stroke-width:1.5}
+  svg .ig-success-box{fill:var(--success-bg);stroke:var(--success);stroke-width:1.5}
+  svg .ig-purple-box{fill:var(--purple-bg);stroke:var(--purple);stroke-width:1.5}
+
+  /* Print */
+  @media print{
+    .sidebar,.menu-toggle{display:none}
+    .layout{grid-template-columns:1fr}
+    .content{padding:0 20px}
+    body{background:#fff;color:#000}
+    .hero h1{color:#000!important;-webkit-text-fill-color:#000}
+    .card,.col-box,.step-content,.tool-card,.summary-box,.info-box{
+      background:#f7f7f7;border-color:#ccc;color:#000;break-inside:avoid;
+    }
+  }
+
+  /* Anchor heading offset */
+  section[id],h3[id],h4[id]{scroll-margin-top:80px}
+</style>
+</head>
+<body>
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">☰</button>
+
+<div class="layout">
+
+  <!-- ===== SIDEBAR / TOC ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">M12</div>
+      <div class="brand-text"><strong>Traffic Monitoring</strong> Network Defense Essentials</div>
+    </div>
+    <div class="toc-title">Daftar Isi</div>
+    <ul class="toc-list" id="toc">
+      <li><a href="#cover"><span class="num">00</span>Cover</a></li>
+      <li><a href="#tujuan"><span class="num">01</span>Tujuan Pembelajaran</a></li>
+      <li><a href="#need"><span class="num">02</span>Need &amp; Advantages</a></li>
+      <li><a href="#signatures"><span class="num">03</span>Traffic Signatures</a></li>
+      <li><a href="#suspicious"><span class="num">04</span>Suspicious Categories</a></li>
+      <li><a href="#analysis"><span class="num">05</span>Signature Analysis</a></li>
+      <li><a href="#wireshark"><span class="num">06</span>Wireshark Monitoring</a></li>
+      <li><a href="#filters"><span class="num">07</span>Wireshark Filters</a></li>
+      <li><a href="#protocols"><span class="num">08</span>Protocol Analysis</a></li>
+      <li><a href="#sniffers"><span class="num">09</span>Network Sniffers</a></li>
+      <li><a href="#tools"><span class="num">10</span>Monitoring Tools</a></li>
+      <li><a href="#praktikum"><span class="num">11</span>Modul Praktikum</a></li>
+      <li><a href="#ringkasan"><span class="num">12</span>Ringkasan</a></li>
+    </ul>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="content">
+
+    <!-- ============= HERO ============= -->
+    <section id="cover" class="hero">
+      <div class="hero-content">
+        <div class="hero-badge"><span class="dot"></span> Module 12 · Network Defense Essentials · FINAL</div>
+        <h1>Network Traffic Monitoring</h1>
+        <p class="hero-sub">
+          Ebook &amp; Modul Praktikum — dari need for network monitoring, traffic signatures (normal vs
+          attack), 4 categories suspicious traffic (reconnaissance, unauthorized access, DoS, informational),
+          signature analysis techniques, Wireshark packet analysis (capture, filters, TCP stream, protocol
+          analysis), network sniffers (tcpdump), hingga monitoring tools (SolarWinds, Nagios, SNMP, NetFlow).
+        </p>
+        <div class="hero-meta">
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span><strong>Target:</strong> Mahasiswa</span></div>
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span><strong>Durasi:</strong> 4-5 jam</span></div>
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg><span><strong>Level:</strong> Intermediate</span></div>
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span><strong>13</strong> Bagian</span></div>
+        </div>
+
+        <div class="stat-row" style="margin-top:48px">
+          <div class="stat-box"><div class="stat-num">2</div><div class="stat-label">Signature Types</div><div class="stat-desc">Normal Traffic · Attack Signatures</div></div>
+          <div class="stat-box"><div class="stat-num">4</div><div class="stat-label">Suspicious Categories</div><div class="stat-desc">Reconnaissance · Unauthorized Access · DoS · Informational</div></div>
+          <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">Analysis Techniques</div><div class="stat-desc">Signature Recognition · Anomaly · Protocol Anomaly</div></div>
+          <div class="stat-box"><div class="stat-num">5+</div><div class="stat-label">Monitoring Tools</div><div class="stat-desc">Wireshark · tcpdump · SolarWinds · Nagios · Capsa</div></div>
+        </div>
+
+        <div class="infographic" style="margin-top:32px">
+          <div class="ig-title">Alur Pembelajaran Modul 12 (FINAL)</div>
+          <svg viewBox="0 0 920 280" width="920" height="280" aria-label="Module flow">
+            <defs><marker id="arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/></marker><linearGradient id="grad-flow" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#22d3ee" stop-opacity="0.2"/><stop offset="100%" stop-color="#a78bfa" stop-opacity="0.2"/></linearGradient></defs>
+            <rect x="20" y="30" width="140" height="60" rx="10" class="ig-accent-box"/><text x="90" y="55" text-anchor="middle" class="ig-text-title">1</text><text x="90" y="75" text-anchor="middle" class="ig-text-strong">Need &amp;</text><text x="90" y="88" text-anchor="middle" class="ig-text">Advantages</text><path d="M160 60 L205 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="210" y="30" width="140" height="60" rx="10" class="ig-accent-box"/><text x="280" y="55" text-anchor="middle" class="ig-text-title">2</text><text x="280" y="75" text-anchor="middle" class="ig-text-strong">Traffic</text><text x="280" y="88" text-anchor="middle" class="ig-text">Signatures</text><path d="M350 60 L395 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="400" y="30" width="140" height="60" rx="10" class="ig-accent-box"/><text x="470" y="55" text-anchor="middle" class="ig-text-title">3</text><text x="470" y="75" text-anchor="middle" class="ig-text-strong">Suspicious</text><text x="470" y="88" text-anchor="middle" class="ig-text">Categories</text><path d="M540 60 L585 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="590" y="30" width="140" height="60" rx="10" class="ig-warn-box"/><text x="660" y="55" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">4</text><text x="660" y="75" text-anchor="middle" class="ig-text-strong">Analysis</text><text x="660" y="88" text-anchor="middle" class="ig-text">Techniques</text>
+            <path d="M660 95 L660 145" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="590" y="150" width="140" height="60" rx="10" class="ig-purple-box"/><text x="660" y="175" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">5</text><text x="660" y="195" text-anchor="middle" class="ig-text-strong">Wireshark</text><text x="660" y="208" text-anchor="middle" class="ig-text">Monitoring</text><path d="M585 180 L540 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="400" y="150" width="140" height="60" rx="10" class="ig-purple-box"/><text x="470" y="175" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">6</text><text x="470" y="195" text-anchor="middle" class="ig-text-strong">Filters &amp;</text><text x="470" y="208" text-anchor="middle" class="ig-text">Protocol Analysis</text><path d="M395 180 L350 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="210" y="150" width="140" height="60" rx="10" class="ig-success-box"/><text x="280" y="175" text-anchor="middle" class="ig-text-title" style="fill:#34d399">7</text><text x="280" y="195" text-anchor="middle" class="ig-text-strong">Sniffers &amp;</text><text x="280" y="208" text-anchor="middle" class="ig-text">Tools</text><path d="M205 180 L160 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="20" y="150" width="140" height="60" rx="10" class="ig-success-box"/><text x="90" y="175" text-anchor="middle" class="ig-text-title" style="fill:#34d399">8</text><text x="90" y="195" text-anchor="middle" class="ig-text-strong">Praktikum</text><text x="90" y="208" text-anchor="middle" class="ig-text">Hands-on</text>
+            <rect x="380" y="230" width="160" height="40" rx="10" fill="url(#grad-flow)" stroke="#22d3ee" stroke-width="1.5"/><text x="460" y="248" text-anchor="middle" class="ig-text-title">LAB</text><text x="460" y="262" text-anchor="middle" class="ig-text-small">4 Sesi Praktikum</text>
+            <path d="M90 215 L90 250 L375 250" class="ig-accent-line" stroke-width="2" stroke-dasharray="4,3" fill="none"/><path d="M280 215 L280 245 L375 245" class="ig-accent-line" stroke-width="1.5" stroke-dasharray="3,3" fill="none" opacity="0.5"/><path d="M470 215 L470 225" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/><path d="M660 215 L660 245 L545 245" class="ig-accent-line" stroke-width="1.5" stroke-dasharray="3,3" fill="none" opacity="0.5"/>
+          </svg>
+          <div class="infographic-caption">Gambar 1. Alur pembelajaran Modul 12 (FINAL) — dari need for monitoring hingga praktikum Wireshark.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= TUJUAN ============= -->
+    <section id="tujuan">
+      <div class="section-header">
+        <span class="section-tag">Bagian 01</span>
+        <h2>Tujuan Pembelajaran</h2>
+        <p>Organisations need to perform network monitoring dan analyze traffic untuk identify suspicious activities.</p>
+      </div>
+      <p>
+        Organisasi perlu melakukan <strong>network monitoring</strong> dan menganalisis network traffic untuk
+        mengidentifikasi suspicious activities di seluruh jaringan mereka. Modul ini mencakup konsep network
+        traffic monitoring — dari understanding traffic signatures, categories suspicious traffic, attack
+        signature analysis techniques, hingga hands-on Wireshark untuk packet analysis.
+      </p>
+      <p>Setelah menyelesaikan modul ini, Anda akan mampu:</p>
+      <div class="card-grid grid-2" style="margin-top:20px">
+        <div class="card"><div class="card-title"><div class="card-icon">1</div>Need &amp; Advantages</div><p>Memahami need for dan advantages dari network traffic monitoring.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">2</div>Traffic Signatures</div><p>Memahami network traffic signatures — normal vs attack signatures.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">3</div>Suspicious Categories</div><p>Mendeskripsikan categories of suspicious traffic signatures — reconnaissance, unauthorized access, DoS, informational.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">4</div>Analysis &amp; Tools</div><p>Menjelaskan attack signature analysis techniques dan berbagai network monitoring tools (Wireshark, tcpdump, dll).</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 2: NEED & ADVANTAGES ============= -->
+    <section id="need">
+      <div class="section-header">
+        <span class="section-tag">Bagian 02</span>
+        <h2>Need &amp; Advantages of Network Traffic Monitoring</h2>
+        <p>Mengapa monitoring network traffic adalah essential untuk security operations.</p>
+      </div>
+      <p>
+        <strong>Network traffic monitoring</strong> adalah retrospective security approach yang involves
+        monitoring network traffic, analyzing it, dan extracting traffic characteristics yang help in
+        detecting anomalies. Monitoring network traffic memberikan organisation kemampuan untuk detect
+        malicious activity yang mungkin terlewat oleh preventive security controls seperti firewall dan IDS.
+      </p>
+
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">🔍</div>Detect Suspicious Activity</div><p>Monitoring memungkinkan detection of suspicious activities yang tidak terdeteksi oleh real-time controls — misal: slow data exfiltration, C2 beaconing, lateral movement.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📊</div>Baseline Network Behavior</div><p>Monitoring membantu establish baseline normal network behavior — sehingga deviations dapat terdeteksi. Tanpa baseline, sulit distinguish normal dari abnormal.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">⚡</div>Incident Response</div><p>Saat incident terjadi, traffic capture (PCAP) adalah evidence terbaik untuk forensics. Monitoring menyediakan historical data untuk reconstruct attack timeline.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📈</div>Performance &amp; Capacity</div><p>Monitoring juga memberikan insights tentang network performance — bandwidth usage, latency, packet loss. Help dengan capacity planning.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 3: SIGNATURES ============= -->
+    <section id="signatures">
+      <div class="section-header">
+        <span class="section-tag">Bagian 03</span>
+        <h2>Network Traffic Signatures</h2>
+        <p>Set of traffic characteristics yang define type of activity on a network.</p>
+      </div>
+      <p>
+        <strong>Signatures</strong> digunakan untuk define the type of activity on a network. Signature
+        adalah set of traffic characteristics seperti source/destination IP, port, protocol, packet size,
+        timing, dan content pattern. Signatures membantu detect malicious traffic entering a network.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">2 Types of Traffic Signatures — Normal vs Attack</div>
+        <svg viewBox="0 0 900 280" width="900" height="280" aria-label="Traffic signatures">
+          <rect x="40" y="20" width="400" height="240" rx="12" class="ig-success-box"/>
+          <text x="240" y="45" text-anchor="middle" class="ig-text-title" style="fill:#34d399">Normal Traffic Signatures</text>
+          <text x="240" y="65" text-anchor="middle" class="ig-text-small">Acceptable traffic patterns allowed to enter network</text>
+          <text x="60" y="95" class="ig-text-small" style="font-size:11px">• Expected source/destination IPs</text>
+          <text x="60" y="115" class="ig-text-small" style="font-size:11px">• Standard ports (80, 443, 25, 53)</text>
+          <text x="60" y="135" class="ig-text-small" style="font-size:11px">• Normal bandwidth usage patterns</text>
+          <text x="60" y="155" class="ig-text-small" style="font-size:11px">• Expected protocols (HTTP, HTTPS, DNS)</text>
+          <text x="60" y="175" class="ig-text-small" style="font-size:11px">• Regular business hours activity</text>
+          <text x="60" y="195" class="ig-text-small" style="font-size:11px">• Typical packet sizes &amp; timing</text>
+          <text x="60" y="225" class="ig-text-small" style="font-style:italic">e.g., Employee browsing company website</text>
+          <text x="60" y="245" class="ig-text-small" style="font-style:italic">during work hours from office IP</text>
+
+          <rect x="460" y="20" width="400" height="240" rx="12" class="ig-danger-box"/>
+          <text x="660" y="45" text-anchor="middle" class="ig-text-title" style="fill:#f87171">Attack Signatures</text>
+          <text x="660" y="65" text-anchor="middle" class="ig-text-small">Traffic patterns that appear suspicious</text>
+          <text x="480" y="95" class="ig-text-small" style="font-size:11px">• Unexpected source IPs (known malicious)</text>
+          <text x="480" y="115" class="ig-text-small" style="font-size:11px">• Non-standard ports (backdoors, C2)</text>
+          <text x="480" y="135" class="ig-text-small" style="font-size:11px">• Abnormal bandwidth (data exfiltration)</text>
+          <text x="480" y="155" class="ig-text-small" style="font-size:11px">• Unusual protocols or protocol anomalies</text>
+          <text x="480" y="175" class="ig-text-small" style="font-size:11px">• Off-hours activity (3 AM data transfer)</text>
+          <text x="480" y="195" class="ig-text-small" style="font-size:11px">• Abnormal packet sizes &amp; timing</text>
+          <text x="480" y="225" class="ig-text-small" style="font-style:italic">e.g., Large data transfer to unknown</text>
+          <text x="480" y="245" class="ig-text-small" style="font-style:italic">IP at 3 AM from database server</text>
+        </svg>
+        <div class="infographic-caption">Gambar 2. 2 types traffic signatures — Normal (expected, allowed) vs Attack (suspicious, investigate).</div>
+      </div>
+
+      <h3 class="sub-title">3.1 Baselining Normal Traffic</h3>
+      <p>
+        <strong>Baselining</strong> adalah process of establishing normal traffic patterns untuk network.
+        Tanpa baseline, tidak ada reference untuk detect anomalies. Baselining melibatkan: (1) capture
+        traffic untuk periode yang representative (1-4 minggu), (2) analyze patterns — top talkers, peak
+        hours, protocols used, bandwidth usage, (3) document normal ranges, (4) set thresholds untuk
+        alerts. Baseline harus di-update periodically — network berubah seiring waktu.
+      </p>
+    </section>
+
+    <!-- ============= BAGIAN 4: SUSPICIOUS CATEGORIES ============= -->
+    <section id="suspicious">
+      <div class="section-header">
+        <span class="section-tag">Bagian 04</span>
+        <h2>4 Categories of Suspicious Traffic Signatures</h2>
+        <p>Reconnaissance, Unauthorized Access, DoS, dan Informational — 4 kategori utama.</p>
+      </div>
+
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon" style="background:var(--danger-bg);color:var(--danger)">🔍</div>Reconnaissance Traffic</div><p>Signatures yang indicate attempt to discover network resources, services, atau vulnerabilities. Contoh: <strong>port scan</strong> (nmap), <strong>vulnerability scan</strong> (Nessus), <strong>network mapping</strong>, <strong>OS fingerprinting</strong>. <strong>Goal attacker:</strong> gather information untuk planning attack.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon" style="background:var(--danger-bg);color:var(--danger)">🔓</div>Unauthorized Access</div><p>Signatures yang indicate attempt to gain unauthorized access ke system atau data. Contoh: <strong>brute force</strong> (SSH, RDP, FTP), <strong>password guessing</strong>, <strong>privilege escalation</strong>, <strong>login dari unusual location</strong>.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon" style="background:var(--danger-bg);color:var(--danger)">💥</div>Denial of Service (DoS)</div><p>Traffic containing signatures yang indicate DoS attempt yang could disrupt service availability. Contoh: <strong>SYN flood</strong>, <strong>UDP flood</strong>, <strong>ICMP flood</strong>, <strong>HTTP flood</strong>, <strong>slowloris</strong>, <strong>DDoS amplification</strong> (DNS/NTP).</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon" style="background:var(--warn-bg);color:var(--warn)">ℹ</div>Informational Traffic</div><p>Traffic containing signatures yang may appear suspicious but might not be malicious. Contoh: <strong>unusual but legitimate protocol</strong>, <strong>new service deployment</strong>, <strong>network configuration change</strong>, <strong>unusual but authorized access</strong>. <strong>Requires investigation</strong> — could be false positive.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 5: ANALYSIS TECHNIQUES ============= -->
+    <section id="analysis">
+      <div class="section-header">
+        <span class="section-tag">Bagian 05</span>
+        <h2>Attack Signature Analysis Techniques</h2>
+        <p>3 teknik untuk detect attacks: signature recognition, anomaly detection, protocol anomaly.</p>
+      </div>
+
+      <div class="card-grid grid-3">
+        <div class="card"><div class="card-title"><div class="card-icon">📝</div>Signature Recognition</div><p>Juga disebut <strong>misuse detection</strong>. Identify events yang match known attack patterns (signatures). Mirip antivirus — setiap attack punya unique pattern. <strong>Kelebihan:</strong> low false positive. <strong>Kekurangan:</strong> cannot detect unknown/zero-day attacks.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📊</div>Anomaly-based Detection</div><p>Depends on observing dan comparing current behavior dengan <strong>established baseline</strong>. Detects deviations dari normal. <strong>Kelebihan:</strong> can detect zero-day. <strong>Kekurangan:</strong> high false positive rate, requires tuning period.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔌</div>Protocol Anomaly Detection</div><p>Depends on anomalies specific to a <strong>protocol</strong>. Contoh: HTTP request dengan invalid method, DNS query dengan unusual format, TCP handshake anomaly. Detects protocol misuse dan malformed packets.</p></div>
+      </div>
+
+      <h3 class="sub-title">5.1 Detection Outcomes — True/False Positive/Negative</h3>
+      <div class="infographic">
+        <div class="ig-title">4 Detection Outcomes — True/False Positive &amp; Negative</div>
+        <svg viewBox="0 0 900 280" width="900" height="280" aria-label="Detection outcomes">
+          <line x1="450" y1="40" x2="450" y2="260" class="ig-line" stroke-width="1.5"/>
+          <line x1="40" y1="150" x2="860" y2="150" class="ig-line" stroke-width="1.5"/>
+          <text x="245" y="30" text-anchor="middle" class="ig-text-strong">No Attack</text>
+          <text x="655" y="30" text-anchor="middle" class="ig-text-strong">Attack Occurs</text>
+          <text x="20" y="100" class="ig-text-strong" style="fill:#fbbf24">Alert</text>
+          <text x="20" y="200" class="ig-text-strong" style="fill:#34d399">No Alert</text>
+
+          <rect x="80" y="50" width="320" height="80" rx="10" class="ig-danger-box"/>
+          <text x="240" y="72" text-anchor="middle" class="ig-text-title" style="fill:#f87171">False Positive</text>
+          <text x="240" y="92" text-anchor="middle" class="ig-text-small">No attack → Alert triggered</text>
+          <text x="240" y="112" text-anchor="middle" class="ig-text-small" style="font-size:10px;font-style:italic">Wastes analyst time · Reduce via tuning</text>
+
+          <rect x="480" y="50" width="320" height="80" rx="10" class="ig-success-box"/>
+          <text x="640" y="72" text-anchor="middle" class="ig-text-title" style="fill:#34d399">True Positive</text>
+          <text x="640" y="92" text-anchor="middle" class="ig-text-small">Attack → Alert triggered ✓</text>
+          <text x="640" y="112" text-anchor="middle" class="ig-text-small" style="font-size:10px;font-style:italic">IDEAL — attack detected and alerted</text>
+
+          <rect x="80" y="170" width="320" height="80" rx="10" class="ig-accent-box"/>
+          <text x="240" y="192" text-anchor="middle" class="ig-text-title">True Negative</text>
+          <text x="240" y="212" text-anchor="middle" class="ig-text-small">No attack → No alert ✓</text>
+          <text x="240" y="232" text-anchor="middle" class="ig-text-small" style="font-size:10px;font-style:italic">CORRECT — nothing happened, nothing alerted</text>
+
+          <rect x="480" y="170" width="320" height="80" rx="10" class="ig-danger-box"/>
+          <text x="640" y="192" text-anchor="middle" class="ig-text-title" style="fill:#f87171">False Negative</text>
+          <text x="640" y="212" text-anchor="middle" class="ig-text-small">Attack → No alert ✗</text>
+          <text x="640" y="232" text-anchor="middle" class="ig-text-small" style="font-size:10px;font-style:italic">WORST — attack missed! Improve detection</text>
+        </svg>
+        <div class="infographic-caption">Gambar 3. 4 detection outcomes — True Positive (ideal), False Positive (waste time), True Negative (correct), False Negative (worst — missed attack).</div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 6: WIRESHARK ============= -->
+    <section id="wireshark">
+      <div class="section-header">
+        <span class="section-tag">Bagian 06</span>
+        <h2>Wireshark for Network Monitoring</h2>
+        <p>Widely used network sniffer untuk packet analysis dan troubleshooting.</p>
+      </div>
+      <p>
+        <strong>Wireshark</strong> adalah widely used network sniffer yang dapat digunakan untuk network
+        troubleshooting, investigate security issues, dan analyze protocol behavior. Wireshark mengcapture
+        packets dari network interface dan displays them dengan detailed protocol dissection. Wireshark
+        adalah <strong>de facto standard</strong> untuk packet analysis — free, open-source, cross-platform.
+      </p>
+
+      <h3 class="sub-title">6.1 Wireshark Components</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">📊</div>Packet List Pane</div><p>Displays summary setiap packet — number, timestamp, source, destination, protocol, length, info. Color-coded berdasarkan protocol. Click packet untuk see details.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📋</div>Packet Details Pane</div><p>Displays hierarchical protocol dissection dari selected packet. Expand each layer: Ethernet → IP → TCP → HTTP. Shows field values, flags, options.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔢</div>Packet Bytes Pane</div><p>Displays raw hex + ASCII dump dari selected packet. <strong>Lowest level</strong> — actual bytes on wire. Useful untuk custom protocol analysis.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🎨</div>Color Coding</div><p>Wireshark colorizes packet list berdasarkan protocol. Default: light blue = TCP, light green = HTTP, light yellow = DNS. <strong>Customizable</strong> — create rules untuk highlight suspicious traffic.</p></div>
+      </div>
+
+      <h3 class="sub-title">6.2 Follow TCP Stream</h3>
+      <p>
+        Wireshark displays data dari TCP port dengan feature yang dikenal sebagai <strong>"Follow TCP
+        Stream"</strong>. Feature ini reassembles semua packets dari TCP conversation menjadi single readable
+        stream. Berguna untuk: melihat complete HTTP request/response, FTP commands, Telnet session, email
+        content. Akses: click packet → Analyze → Follow → TCP Stream (atau right-click → Follow → TCP Stream).
+      </p>
+    </section>
+
+    <!-- ============= BAGIAN 7: FILTERS ============= -->
+    <section id="filters">
+      <div class="section-header">
+        <span class="section-tag">Bagian 07</span>
+        <h2>Wireshark Display Filters</h2>
+        <p>Filter traffic by protocol, IP, port, atau custom expression.</p>
+      </div>
+      <p>
+        Wireshark features <strong>display filters</strong> yang filter traffic on target network by protocol
+        type, IP address, port number, atau custom expression. Display filters menggunakan syntax yang
+        powerful — dapat combine multiple conditions. Wireshark dapat use multiple filters at a time.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Filter</th><th>Description</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><code>ip.addr == X.X.X.X</code></td><td>Filter by IP address (source or dest)</td><td><code>ip.addr == 192.168.1.1</code></td></tr>
+            <tr><td><code>ip.src == X.X.X.X</code></td><td>Filter by source IP only</td><td><code>ip.src == 10.0.0.5</code></td></tr>
+            <tr><td><code>tcp.port == XX</code></td><td>Filter by TCP port</td><td><code>tcp.port == 443</code></td></tr>
+            <tr><td><code>http</code></td><td>Show only HTTP traffic</td><td><code>http</code></td></tr>
+            <tr><td><code>http.request.method == "POST"</code></td><td>HTTP POST requests only</td><td><code>http.request.method == "POST"</code></td></tr>
+            <tr><td><code>dns</code></td><td>Show only DNS traffic</td><td><code>dns</code></td></tr>
+            <tr><td><code>tcp.flags.syn == 1</code></td><td>TCP SYN packets (connection starts)</td><td><code>tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0</code></td></tr>
+            <tr><td><code>tcp.flags.reset == 1</code></td><td>TCP RST packets (connection resets)</td><td><code>tcp.flags.reset == 1</code></td></tr>
+            <tr><td><code>frame contains "password"</code></td><td>Packets containing string "password"</td><td><code>frame contains "password"</code></td></tr>
+            <tr><td><code>!(ip.addr == 192.168.1.0/24)</code></td><td>Exclude internal traffic</td><td><code>!(ip.addr == 192.168.1.0/24)</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box info-tip">
+        <strong>Pro Tip:</strong> Combine filters dengan <code>&amp;&amp;</code> (AND), <code>||</code> (OR),
+        <code>!</code> (NOT). Contoh: <code>ip.src == 10.0.0.5 &amp;&amp; tcp.port == 443</code> = traffic
+        dari 10.0.0.5 on port 443. Simpan frequently used filters di Wireshark → Filter Expression Buttons.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 8: PROTOCOL ANALYSIS ============= -->
+    <section id="protocols">
+      <div class="section-header">
+        <span class="section-tag">Bagian 08</span>
+        <h2>Protocol Traffic Analysis</h2>
+        <p>Monitoring FTP, Telnet, HTTP traffic untuk detect suspicious activity.</p>
+      </div>
+
+      <div class="card-grid grid-3">
+        <div class="card"><div class="card-title"><div class="card-icon">📁</div>FTP Traffic Analysis</div><p>Wireshark provides complete information tentang FTP traffic. <strong>FTP is insecure</strong> — transmits credentials in plaintext. Filter: <code>ftp</code> atau <code>ftp.request.command</code>. Follow TCP Stream untuk see complete FTP session — username, password (plaintext!), files transferred.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">💻</div>Telnet Traffic Analysis</div><p>Telnet juga <strong>insecure</strong> — all traffic plaintext including login credentials. Filter: <code>telnet</code>. Follow TCP Stream untuk see complete session — commands typed, output, passwords. <strong>Timely monitoring</strong> of Telnet sessions can minimize risk of credential theft.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🌐</div>HTTP Traffic Analysis</div><p>Monitoring HTTP traffic — filter: <code>http</code>. Identify: <strong>unencrypted form submissions</strong> (passwords in plaintext), <strong>suspicious URLs</strong>, <strong>unusual user-agents</strong>, <strong>large file downloads</strong>. Ensure applications don't send data over HTTP — use HTTPS.</p></div>
+      </div>
+
+      <div class="info-box info-danger">
+        <strong>Security Warning:</strong> FTP dan Telnet transmit semua data — including passwords — dalam
+        <strong>plaintext</strong>. Siapa pun yang dapat sniff network traffic dapat read credentials.
+        <strong>Replace</strong> FTP dengan SFTP/FTPS, Telnet dengan SSH. Jika masih menggunakan FTP/Telnet,
+        monitoring dengan Wireshark adalah critical untuk detect credential exposure.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 9: SNIFFERS ============= -->
+    <section id="sniffers">
+      <div class="section-header">
+        <span class="section-tag">Bagian 09</span>
+        <h2>Network Sniffers</h2>
+        <p>Command-line dan GUI tools untuk packet capture dan analysis.</p>
+      </div>
+
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">⌨</div>tcpdump</div><p>Command-line network analyzer / packet sniffer. Security professionals use tcpdump untuk capture dan analyze traffic di servers tanpa GUI. <strong>Lightweight</strong> — minimal resource usage. Output dapat di-save ke PCAP file untuk analysis di Wireshark. <code>tcpdump.org</code></p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📊</div>Wireshark (GUI)</div><p>Full-featured GUI packet analyzer. Visual dissection, color coding, follow streams, display filters, statistics. <strong>De facto standard</strong> untuk packet analysis. Dapat read PCAP files dari tcpdump. Cross-platform: Windows, Linux, macOS.</p></div>
+      </div>
+
+      <h3 class="sub-title">9.1 tcpdump Common Commands</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Command</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>tcpdump -i eth0</code></td><td>Capture on interface eth0</td></tr>
+            <tr><td><code>tcpdump -i eth0 -w capture.pcap</code></td><td>Capture to PCAP file</td></tr>
+            <tr><td><code>tcpdump -i eth0 port 80</code></td><td>Capture only port 80 (HTTP)</td></tr>
+            <tr><td><code>tcpdump -i eth0 host 192.168.1.1</code></td><td>Capture traffic to/from specific host</td></tr>
+            <tr><td><code>tcpdump -i eth0 -c 100</code></td><td>Capture first 100 packets then stop</td></tr>
+            <tr><td><code>tcpdump -r capture.pcap</code></td><td>Read from saved PCAP file</td></tr>
+            <tr><td><code>tcpdump -i eth0 -nn -vv</code></td><td>Verbose output, no DNS resolution</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 10: MONITORING TOOLS ============= -->
+    <section id="tools">
+      <div class="section-header">
+        <span class="section-tag">Bagian 10</span>
+        <h2>Network Monitoring Tools</h2>
+        <p>Comprehensive tools untuk continuous network monitoring — SNMP, NetFlow, SIEM integration.</p>
+      </div>
+
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">☀</div>SolarWinds NPM</div><p>Network Performance Monitor — comprehensive network monitoring. SNMP-based, NetFlow analysis, custom alerts, dashboards. <strong>Enterprise-grade</strong> — widely used di large organizations.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📊</div>Capsa Free</div><p>Free network analyzer — packet capture, protocol analysis, network diagnostics. Real-time monitoring, 24/7 packet capture. Good untuk small networks dan learning.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📡</div>Monitis</div><p>Cloud-based network monitoring solution. Monitor network devices, servers, applications from cloud dashboard. Alert via email/SMS.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔧</div>Nagios</div><p>Open-source network monitoring. Monitor network services (HTTP, FTP, SSH, SMTP), host resources (CPU, disk, memory). Plugin ecosystem. <strong>Industry standard</strong> untuk open-source monitoring.</p></div>
+      </div>
+
+      <h3 class="sub-title">10.1 Monitoring Protocols &amp; Technologies</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">📡</div>SNMP Polling</div><p><strong>Simple Network Management Protocol</strong> — query network devices untuk status (CPU, memory, bandwidth, interface status). SNMP v3 = encrypted. Windows Management Instrumentation (WMI) untuk Windows.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🌊</div>NetFlow / sFlow</div><p><strong>NetFlow</strong> (Cisco), <strong>IPFIX</strong> (standard), <strong>jFlow</strong> (Juniper), <strong>sFlow</strong> (industry) — flow-based monitoring. Records source/dest, bytes, packets, duration. <strong>Not packet content</strong> — metadata only.</p></div>
+      </div>
+
+      <div class="info-box info-success">
+        <strong>SIEM Integration:</strong> Network monitoring tools harus integrate dengan SIEM (Modul 05).
+        NetFlow data + SIEM = detect data exfiltration, C2 beaconing, lateral movement. Wireshark PCAP +
+        SIEM = deep-dive forensics. <strong>Monitoring + SIEM + DLP</strong> = comprehensive visibility.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 11: PRAKTIKUM ============= -->
+    <section id="praktikum">
+      <div class="practicum-banner">
+        <span class="section-tag" style="margin-bottom:8px">Bagian 11 · Hands-on Lab · FINAL MODULE</span>
+        <h2>Modul Praktikum Network Traffic Monitoring</h2>
+        <p>Empat sesi praktik hands-on: Wireshark packet capture &amp; analysis, tcpdump command-line, protocol traffic analysis (FTP/Telnet/HTTP), dan network monitoring dengan Nagios + SNMP.</p>
+      </div>
+
+      <h3 class="sub-title">11.1 Tujuan Praktikum</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">1</div>Wireshark Capture</div><p>Capture live network traffic dengan Wireshark — apply display filters, follow TCP stream, analyze packet details.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">2</div>tcpdump CLI</div><p>Use tcpdump untuk command-line packet capture — save to PCAP, filter by host/port, analyze di Wireshark.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">3</div>Protocol Analysis</div><p>Monitor dan analyze FTP, Telnet, HTTP traffic — detect plaintext credentials, suspicious activity.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">4</div>Nagios + SNMP</div><p>Setup Nagios network monitoring dengan SNMP — monitor devices, set alerts, create dashboards.</p></div>
+      </div>
+
+      <h3 class="sub-title">11.2 Alat dan Bahan</h3>
+      <div class="two-col">
+        <div class="col-box left">
+          <h4><span class="ico">💻</span>Perangkat Keras</h4>
+          <ul class="checklist">
+            <li>VM Ubuntu Server (untuk tcpdump, Nagios)</li>
+            <li>VM Kali Linux (untuk Wireshark, attack simulation)</li>
+            <li>VM dengan FTP/Telnet/HTTP server (target)</li>
+            <li>Switch dengan SPAN/port mirroring (opsional)</li>
+          </ul>
+        </div>
+        <div class="col-box right">
+          <h4><span class="ico">🧰</span>Perangkat Lunak</h4>
+          <ul class="checklist">
+            <li><strong>Wireshark</strong> (GUI packet analyzer)</li>
+            <li><strong>tcpdump</strong> (command-line sniffer)</li>
+            <li><strong>Nagios Core</strong> (open-source monitoring)</li>
+            <li><strong>SNMP utilities</strong> (snmpwalk, snmpget)</li>
+            <li><strong>vsftpd</strong> (FTP server untuk lab)</li>
+            <li><strong>telnetd</strong> (Telnet server untuk lab)</li>
+            <li><strong>nginx</strong> (HTTP server untuk lab)</li>
+            <li><strong>nmap</strong> (untuk generate scan traffic)</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="sub-title">11.3 Workflow Praktikum 4 Sesi</h3>
+      <div class="infographic">
+        <div class="ig-title">Alur Praktikum — 4 Sesi, 20 Langkah, 1 Laporan Akhir</div>
+        <svg viewBox="0 0 900 280" width="900" height="280" aria-label="Practicum workflow">
+          <defs><linearGradient id="grad-lab-m12" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#22d3ee"/><stop offset="33%" stop-color="#34d399"/><stop offset="66%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#fbbf24"/></linearGradient></defs>
+          <path d="M 60 100 L 840 100" stroke="url(#grad-lab-m12)" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="150" cy="100" r="32" fill="#161d2e" stroke="#22d3ee" stroke-width="2.5"/><text x="150" y="98" text-anchor="middle" class="ig-text-title">S1</text><text x="150" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="80" y="150" width="140" height="70" rx="10" class="ig-accent-box"/><text x="150" y="172" text-anchor="middle" class="ig-text-strong">Wireshark</text><text x="150" y="188" text-anchor="middle" class="ig-text-small">Capture +</text><text x="150" y="202" text-anchor="middle" class="ig-text-small">Filters</text>
+          <text x="150" y="65" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">~60 menit</text>
+          <circle cx="380" cy="100" r="32" fill="#161d2e" stroke="#34d399" stroke-width="2.5"/><text x="380" y="98" text-anchor="middle" class="ig-text-title" style="fill:#34d399">S2</text><text x="380" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="310" y="150" width="140" height="70" rx="10" class="ig-success-box"/><text x="380" y="172" text-anchor="middle" class="ig-text-strong">tcpdump</text><text x="380" y="188" text-anchor="middle" class="ig-text-small">CLI Capture</text><text x="380" y="202" text-anchor="middle" class="ig-text-small">+ PCAP</text>
+          <text x="380" y="65" text-anchor="middle" class="ig-text-small" style="fill:#34d399">~45 menit</text>
+          <circle cx="610" cy="100" r="32" fill="#161d2e" stroke="#a78bfa" stroke-width="2.5"/><text x="610" y="98" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">S3</text><text x="610" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="540" y="150" width="140" height="70" rx="10" class="ig-purple-box"/><text x="610" y="172" text-anchor="middle" class="ig-text-strong">Protocol</text><text x="610" y="188" text-anchor="middle" class="ig-text-small">Analysis</text><text x="610" y="202" text-anchor="middle" class="ig-text-small">FTP/Telnet/HTTP</text>
+          <text x="610" y="65" text-anchor="middle" class="ig-text-small" style="fill:#a78bfa">~75 menit</text>
+          <circle cx="820" cy="100" r="32" fill="#161d2e" stroke="#fbbf24" stroke-width="2.5"/><text x="820" y="98" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">S4</text><text x="820" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="750" y="150" width="140" height="70" rx="10" class="ig-warn-box"/><text x="820" y="172" text-anchor="middle" class="ig-text-strong">Nagios +</text><text x="820" y="188" text-anchor="middle" class="ig-text-small">SNMP</text><text x="820" y="202" text-anchor="middle" class="ig-text-small">Monitoring</text>
+          <text x="820" y="65" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">~75 menit</text>
+          <rect x="280" y="240" width="340" height="30" rx="15" fill="#161d2e" stroke="#22d3ee" stroke-width="1.5"/><text x="450" y="260" text-anchor="middle" class="ig-text-strong" style="fill:#22d3ee">Total ~4.5 jam → Laporan Wireshark + tcpdump + Protocol + Nagios</text>
+        </svg>
+        <div class="infographic-caption">Gambar 4. Workflow 4 sesi praktikum Modul 12 (FINAL) — total 20 langkah hands-on.</div>
+      </div>
+
+      <h3 class="sub-title">11.4 Langkah Praktikum</h3>
+
+      <h4 class="mini-title">Sesi 1 — Wireshark Packet Capture &amp; Analysis</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Install &amp; Start Wireshark</h5><p>Install Wireshark di Kali Linux: <code>apt install wireshark</code>. Launch: <code>wireshark &amp;</code>. Pilih network interface (eth0 atau wlan0). Klik "Start capturing packets". Browse beberapa websites sambil capture berjalan.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Apply Display Filters</h5><p>Stop capture setelah 1-2 menit. Apply filters: <code>http</code> (only HTTP), <code>dns</code> (only DNS), <code>tcp.port == 443</code> (HTTPS), <code>ip.addr == 8.8.8.8</code> (Google DNS). Combine: <code>http &amp;&amp; ip.addr == 192.168.1.1</code>. Screenshot setiap filter result.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Follow TCP Stream</h5><p>Pilih HTTP packet → right-click → Follow → TCP Stream. Wireshark shows complete HTTP request + response dalam readable format. Identifikasi: HTTP method (GET/POST), headers, response code (200, 404), body content. Screenshot TCP stream.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>Packet Details Analysis</h5><p>Pilih satu packet. Expand di Packet Details Pane: Ethernet II → Internet Protocol → Transmission Control Protocol → Hypertext Transfer Protocol. Document: source MAC, dest MAC, source IP, dest IP, TTL, TCP flags, seq/ack numbers, HTTP method, host header.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Color Rules &amp; Laporan</h5><p>Create custom color rule: Edit → Preferences → Coloring Rules. Add rule: <code>tcp.flags.reset == 1</code> → red background (highlight RST). Capture traffic sambil run nmap scan — RST packets highlighted. Laporan: capture screenshots, filter examples, TCP stream, packet details, color rules.</p></div></div>
+      </div>
+
+      <h4 class="mini-title">Sesi 2 — tcpdump Command-Line Capture</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Basic tcpdump Capture</h5><p>Di Ubuntu VM: <code>tcpdump -i eth0</code> — live capture ke console. Press Ctrl+C untuk stop. Lihat: timestamp, protocol, source:port → dest:port, flags, length. <code>tcpdump -i eth0 -c 50</code> — capture first 50 packets.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Save to PCAP File</h5><p><code>tcpdump -i eth0 -w capture.pcap -c 500</code> — capture 500 packets ke file. Verifikasi: <code>ls -la capture.pcap</code>. Read back: <code>tcpdump -r capture.pcap</code>. Transfer PCAP ke Wireshark VM untuk GUI analysis.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Filter di tcpdump</h5><p>By host: <code>tcpdump -i eth0 host 192.168.1.1</code>. By port: <code>tcpdump -i eth0 port 80</code>. By protocol: <code>tcpdump -i eth0 tcp</code>. Exclude: <code>tcpdump -i eth0 not port 22</code> (exclude SSH). Combine: <code>tcpdump -i eth0 'host 192.168.1.1 and port 80'</code>.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>Generate Suspicious Traffic</h5><p>Dari Kali VM: run nmap scan ke Ubuntu: <code>nmap -sS 192.168.1.10</code>. Capture di Ubuntu: <code>tcpdump -i eth0 'host 192.168.1.5 and tcp' -w scan.pcap</code>. Analyze di Wireshark: identify SYN scan pattern (SYN packets tanpa completing handshake).</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Laporan tcpdump</h5><p>Laporan: (a) tcpdump commands used, (b) PCAP file analysis di Wireshark, (c) filter examples, (d) nmap scan traffic analysis — identify scan type dari packet pattern, (e) comparison tcpdump vs Wireshark (when to use each).</p></div></div>
+      </div>
+
+      <h4 class="mini-title">Sesi 3 — Protocol Traffic Analysis (FTP/Telnet/HTTP)</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Setup FTP Server &amp; Capture</h5><p>Di Ubuntu: install vsftpd, create test user. Start Wireshark capture. Dari Kali: <code>ftp 192.168.1.10</code>, login dengan test user, download file, quit. Stop capture. Filter: <code>ftp</code>. Follow TCP Stream — <strong>username dan password terlihat plaintext!</strong></p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Telnet Traffic Analysis</h5><p>Di Ubuntu: install telnetd. Start capture. Dari Kali: <code>telnet 192.168.1.10</code>, login, run beberapa commands (<code>ls</code>, <code>whoami</code>), logout. Stop capture. Filter: <code>telnet</code>. Follow TCP Stream — <strong>semua commands dan output plaintext</strong>, including password!</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>HTTP Traffic Analysis</h5><p>Di Ubuntu: install nginx, create login page (HTTP, not HTTPS). Start capture. Dari Kali: browse to <code>http://192.168.1.10/login.html</code>, submit form dengan username/password. Stop capture. Filter: <code>http.request.method == "POST"</code>. Follow TCP Stream — <strong>form data (credentials) terlihat plaintext</strong>!</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>Detect Suspicious Traffic</h5><p>Generate suspicious traffic: (a) nmap scan: <code>nmap -sS -p 1-1000 192.168.1.10</code>, (b) brute force SSH: <code>hydra -l admin -P rockyou.txt ssh://192.168.1.10</code>. Capture all. Analyze: identify scan pattern (SYN flood), identify brute force (multiple SSH login attempts).</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Laporan Protocol Analysis</h5><p>Laporan: (a) FTP capture — plaintext credentials, (b) Telnet capture — plaintext session, (c) HTTP capture — form data exposure, (d) suspicious traffic detection — scan + brute force patterns, (e) recommendation: replace FTP→SFTP, Telnet→SSH, HTTP→HTTPS.</p></div></div>
+      </div>
+
+      <h4 class="mini-title">Sesi 4 — Nagios + SNMP Network Monitoring</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Install Nagios Core</h5><p>Di Ubuntu: <code>apt install nagios4 nagios-plugins</code>. Set admin password: <code>htpasswd -c /etc/nagios4/htpasswd.users nagiosadmin</code>. Start: <code>systemctl start nagios4 apache2</code>. Access: <code>http://localhost/nagios4</code>.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Configure SNMP Monitoring</h5><p>Install SNMP di target VM: <code>apt install snmpd</code>. Edit <code>/etc/snmp/snmpd.conf</code> — set community string, allow access. Restart: <code>systemctl restart snmpd</code>. Test: <code>snmpwalk -v2c -c public 192.168.1.10</code> — harus return SNMP data.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Add Host ke Nagios</h5><p>Edit <code>/etc/nagios4/conf.d/hosts.cfg</code> — add target VM sebagai host. Edit <code>services.cfg</code> — add services: check_ping, check_snmp (CPU, memory, disk). Verify config: <code>nagios4 -v /etc/nagios4/nagios.cfg</code>. Restart: <code>systemctl restart nagios4</code>.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>Set Alerts &amp; Notifications</h5><p>Configure alerts: (a) host down → email alert, (b) service critical (CPU &gt; 90%) → email, (c) disk space low (&lt; 10%) → warning. Edit <code>contacts.cfg</code> — set email. Test: stop snmpd di target → Nagios should alert "SNMP CRITICAL".</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Dashboard &amp; Laporan</h5><p>Review Nagios dashboard: Host Status, Service Status, Alerts. Laporan: (a) Nagios architecture, (b) SNMP configuration, (c) host/service monitoring config, (d) alert test results, (e) dashboard screenshots, (f) recommendation: integrate dengan SIEM untuk centralized alerting.</p></div></div>
+      </div>
+
+      <h3 class="sub-title">11.5 Lembar Kerja / Tugas</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">Q1</div>Normal vs Attack Signatures</div><p>Jelaskan perbedaan normal traffic signature vs attack signature. Berikan 2 contoh masing-masing. Mengapa baselining penting sebelum detect anomalies?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q2</div>4 Suspicious Categories</div><p>Sebutkan 4 categories suspicious traffic signatures. Berikan contoh attack untuk masing-masing. Mana yang paling berbahaya? Mengapa?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q3</div>Wireshark vs tcpdump</div><p>Dari Sesi 1 &amp; 2, bandingkan Wireshark dan tcpdump. Kapan menggunakan masing-masing? Apa kelebihan GUI vs CLI untuk packet analysis?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q4</div>Plaintext Protocol Risk</div><p>Dari Sesi 3, jelaskan mengapa FTP dan Telnet berbahaya. Apa yang terlihat di Wireshark saat menggunakan FTP/Telnet? Apa mitigasinya?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q5</div>Detection Outcomes</div><p>Jelaskan 4 detection outcomes (true/false positive/negative). Mana yang paling berbahaya? Mengapa false negative lebih berbahaya dari false positive? Bagaimana mengurangi false negatives?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q6</div>Monitoring Integration</div><p>Bagaimana network monitoring (Wireshark/Nagios) integrate dengan SIEM dan DLP untuk comprehensive security? Apa yang terjadi jika salah satu tidak ada?</p></div>
+      </div>
+
+      <h3 class="sub-title">11.6 Checklist Evaluasi</h3>
+      <p>Praktikum dinyatakan <strong>lulus</strong> jika minimal 10 dari 12 kriteria berikut terpenuhi:</p>
+      <ul class="checklist">
+        <li>Wireshark capture minimal 500 packets dengan multiple display filters applied</li>
+        <li>Follow TCP Stream menampilkan complete HTTP request/response</li>
+        <li>Packet Details analysis terdokumentasi (5 layer expansion)</li>
+        <li>Custom color rule created dan tested (RST highlight)</li>
+        <li>tcpdump capture saved to PCAP file dan analyzed di Wireshark</li>
+        <li>tcpdump filters (host, port, protocol) teruji</li>
+        <li>Nmap scan traffic captured dan scan type identified dari packet pattern</li>
+        <li>FTP traffic captured — plaintext credentials visible</li>
+        <li>Telnet traffic captured — complete session visible</li>
+        <li>HTTP form data (credentials) captured in plaintext</li>
+        <li>Nagios terinstall dengan minimal 1 host + 3 services monitored</li>
+        <li>SNMP alert teruji (service down → alert triggered)</li>
+      </ul>
+
+      <div class="info-box info-success">
+        <strong>Bonus:</strong> Mahasiswa yang dapat mendemonstrasikan: (a) Wireshark decrypt TLS traffic
+        dengan SSLKEYLOGFILE, (b) detect C2 beaconing pattern dari captured traffic, (c) NetFlow analysis
+        untuk detect data exfiltration, atau (d) integrate Nagios alerts dengan SIEM (Elastic Security) —
+        akan mendapat nilai tambahan.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 12: RINGKASAN ============= -->
+    <section id="ringkasan">
+      <div class="section-header">
+        <span class="section-tag">Bagian 12</span>
+        <h2>Ringkasan Modul (FINAL)</h2>
+        <p>Rangkuman poin-poin kritis yang telah dibahas dalam Modul 12 Network Traffic Monitoring.</p>
+      </div>
+
+      <div class="summary-box">
+        <h3>📋 Yang Telah Dipelajari</h3>
+        <ul class="checklist">
+          <li>Need for network traffic monitoring — detect suspicious activity, baseline network behavior, incident response forensics, performance &amp; capacity planning.</li>
+          <li>Advantages — retrospective security, anomaly detection, historical evidence, compliance audit trail.</li>
+          <li>Network traffic signatures — set of traffic characteristics (IP, port, protocol, timing, content). 2 types: Normal (acceptable) vs Attack (suspicious).</li>
+          <li>Baselining — establish normal traffic patterns (1-4 weeks capture, analyze, document, set thresholds). Without baseline = can't detect anomalies.</li>
+          <li>4 categories suspicious traffic — Reconnaissance (port/vuln scan), Unauthorized Access (brute force, privilege escalation), DoS (SYN flood, DDoS), Informational (unusual but possibly legitimate).</li>
+          <li>3 analysis techniques — Signature Recognition (known patterns, low false positive, can't detect zero-day), Anomaly Detection (baseline deviation, detects zero-day, high false positive), Protocol Anomaly (protocol-specific anomalies, malformed packets).</li>
+          <li>4 detection outcomes — True Positive (attack + alert = ideal), False Positive (no attack + alert = wasted time), True Negative (no attack + no alert = correct), False Negative (attack + no alert = WORST, missed attack).</li>
+          <li>Wireshark — de facto standard packet analyzer. Components: Packet List, Packet Details, Packet Bytes, Color Coding. Features: Follow TCP Stream, display filters, protocol dissection.</li>
+          <li>Wireshark display filters — filter by IP (ip.addr), port (tcp.port), protocol (http, dns), flags (tcp.flags.syn), content (frame contains "password"). Combine with &amp;&amp;, ||, !.</li>
+          <li>Protocol analysis — FTP (insecure, plaintext credentials), Telnet (insecure, plaintext session), HTTP (form data in plaintext). Replace with SFTP, SSH, HTTPS.</li>
+          <li>Network sniffers — tcpdump (CLI, lightweight, save to PCAP), Wireshark (GUI, full-featured, read PCAP). tcpdump untuk servers, Wireshark untuk deep analysis.</li>
+          <li>Monitoring tools — SolarWinds NPM (enterprise), Capsa Free (small network), Monitis (cloud), Nagios (open-source). Protocols: SNMP (device status), NetFlow/sFlow (flow metadata).</li>
+          <li>Praktikum 4 sesi — Wireshark capture &amp; filters, tcpdump CLI, protocol analysis (FTP/Telnet/HTTP), Nagios + SNMP monitoring.</li>
+        </ul>
+      </div>
+
+      <div class="info-box info-tip" style="margin-top:24px">
+        <strong>Key Takeaway (FINAL MODULE):</strong> Network traffic monitoring adalah <strong>mata
+        dari security operations</strong>. Tanpa monitoring, organisation buta terhadap apa yang terjadi
+        di jaringan mereka. <strong>Wireshark + tcpdump</strong> untuk deep-dive packet analysis.
+        <strong>Nagios + SNMP</strong> untuk continuous device monitoring. <strong>SIEM + NetFlow</strong>
+        untuk centralized correlation. <strong>DLP</strong> untuk data movement. Bersama-sama, mereka
+        membentuk <strong>comprehensive visibility</strong> yang memungkinkan detect, investigate, dan
+        respond ke threats. <strong>Modul 12 adalah modul terakhir dari 12 modul Network Defense
+        Essentials</strong> — dari fundamentals (01) hingga monitoring (12), semuanya membentuk complete
+        picture of modern network defense.
+      </div>
+
+      <div class="infographic" style="margin-top:32px">
+        <div class="ig-title">🎉 SERI LENGKAP: 12 Modul Network Defense Essentials</div>
+        <svg viewBox="0 0 900 200" width="900" height="200" aria-label="Complete series">
+          <defs><linearGradient id="grad-final" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#22d3ee"/><stop offset="50%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#34d399"/></linearGradient></defs>
+          <path d="M 40 100 Q 200 40 360 80 T 680 90 T 860 100" stroke="url(#grad-final)" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <g>
+            <circle cx="40" cy="100" r="10" fill="#22d3ee" stroke="#0a0e1a" stroke-width="2"/><text x="40" y="125" text-anchor="middle" class="ig-text-small" style="font-size:9px">M01</text>
+            <circle cx="115" cy="80" r="10" fill="#22d3ee" stroke="#0a0e1a" stroke-width="2"/><text x="115" y="65" text-anchor="middle" class="ig-text-small" style="font-size:9px">M02</text>
+            <circle cx="190" cy="70" r="10" fill="#34d399" stroke="#0a0e1a" stroke-width="2"/><text x="190" y="55" text-anchor="middle" class="ig-text-small" style="font-size:9px">M03</text>
+            <circle cx="265" cy="75" r="10" fill="#34d399" stroke="#0a0e1a" stroke-width="2"/><text x="265" y="60" text-anchor="middle" class="ig-text-small" style="font-size:9px">M04</text>
+            <circle cx="340" cy="80" r="10" fill="#34d399" stroke="#0a0e1a" stroke-width="2"/><text x="340" y="65" text-anchor="middle" class="ig-text-small" style="font-size:9px">M05</text>
+            <circle cx="415" cy="85" r="10" fill="#fbbf24" stroke="#0a0e1a" stroke-width="2"/><text x="415" y="70" text-anchor="middle" class="ig-text-small" style="font-size:9px">M06</text>
+            <circle cx="490" cy="85" r="10" fill="#fbbf24" stroke="#0a0e1a" stroke-width="2"/><text x="490" y="70" text-anchor="middle" class="ig-text-small" style="font-size:9px">M07</text>
+            <circle cx="565" cy="90" r="10" fill="#a78bfa" stroke="#0a0e1a" stroke-width="2"/><text x="565" y="75" text-anchor="middle" class="ig-text-small" style="font-size:9px">M08</text>
+            <circle cx="640" cy="90" r="10" fill="#a78bfa" stroke="#0a0e1a" stroke-width="2"/><text x="640" y="75" text-anchor="middle" class="ig-text-small" style="font-size:9px">M09</text>
+            <circle cx="715" cy="95" r="10" fill="#a78bfa" stroke="#0a0e1a" stroke-width="2"/><text x="715" y="80" text-anchor="middle" class="ig-text-small" style="font-size:9px">M10</text>
+            <circle cx="790" cy="98" r="10" fill="#a78bfa" stroke="#0a0e1a" stroke-width="2"/><text x="790" y="83" text-anchor="middle" class="ig-text-small" style="font-size:9px">M11</text>
+            <circle cx="860" cy="100" r="14" fill="#34d399" stroke="#0a0e1a" stroke-width="3"/><text x="860" y="105" text-anchor="middle" style="font-size:14px;fill:#0a0e1a;font-weight:800">✓</text><text x="860" y="125" text-anchor="middle" class="ig-text-small" style="font-size:9px;fill:#34d399">M12</text>
+          </g>
+          <rect x="40" y="145" width="820" height="40" rx="10" fill="#161d2e" stroke="url(#grad-final)" stroke-width="2"/>
+          <text x="450" y="170" text-anchor="middle" class="ig-text-strong" style="fill:#22d3ee">12/12 Modul Selesai · Network Defense Essentials Exam 112-51 · COMPLETE!</text>
+        </svg>
+        <div class="infographic-caption">Gambar 5. SERI LENGKAP 12 modul Network Defense Essentials — dari Fundamentals (01) hingga Traffic Monitoring (12).</div>
+      </div>
+    </section>
+
+    <footer>
+      <p><strong>Modul 12: Network Traffic Monitoring</strong> · Network Defense Essentials · FINAL MODULE</p>
+      <p>Disusun sebagai materi pembelajaran — bebas digunakan untuk tujuan edukasi.</p>
+      <div class="next-modul"><span>Seri Lengkap →</span><strong>12/12 Modul Selesai! 🎉</strong></div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  (function(){
+    const tocLinks = document.querySelectorAll('#toc a');
+    const sections = Array.from(tocLinks).map(a => {
+      const id = a.getAttribute('href').slice(1);
+      return document.getElementById(id);
+    }).filter(Boolean);
+    function setActive(){
+      const scrollY = window.scrollY + 100;
+      let currentIdx = 0;
+      for(let i=0;i<sections.length;i++){
+        if(sections[i].offsetTop <= scrollY) currentIdx = i;
+      }
+      tocLinks.forEach((a, i) => a.classList.toggle('active', i === currentIdx));
+    }
+    setActive();
+    window.addEventListener('scroll', setActive, {passive:true});
+    tocLinks.forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = a.getAttribute('href').slice(1);
+        const target = document.getElementById(id);
+        if(target){
+          const offset = 80;
+          const top = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({top, behavior:'smooth'});
+          document.querySelector('.sidebar').classList.remove('open');
+        }
+      });
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,2931 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modul 09: IoT Device Security — Network Defense Essentials</title>
+<meta name="description" content="Ebook & Modul Praktikum IoT Device Security - Network Defense Essentials">
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --bg-2:#0d1320;
+    --bg-elevated:#131a2a;
+    --bg-card:#161d2e;
+    --bg-card-hover:#1b2438;
+    --border:#242c40;
+    --border-strong:#344057;
+    --text:#e6edf3;
+    --text-2:#a8b3cf;
+    --text-muted:#6b7591;
+    --accent:#22d3ee;
+    --accent-2:#06b6d4;
+    --accent-glow:rgba(34,211,238,.15);
+    --accent-dim:rgba(34,211,238,.08);
+    --warn:#fbbf24;
+    --warn-bg:rgba(251,191,36,.08);
+    --danger:#f87171;
+    --danger-bg:rgba(248,113,113,.08);
+    --success:#34d399;
+    --success-bg:rgba(52,211,153,.08);
+    --purple:#a78bfa;
+    --purple-bg:rgba(167,139,250,.08);
+    --pink:#f472b6;
+    --shadow:0 4px 24px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:24px}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.7;
+    font-size:15px;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% 0%,rgba(34,211,238,.08),transparent),
+      radial-gradient(ellipse 60% 40% at 80% 100%,rgba(167,139,250,.06),transparent);
+    background-attachment:fixed;
+  }
+  h1,h2,h3,h4{font-family:'Space Grotesk','Inter',sans-serif;font-weight:700;line-height:1.3;letter-spacing:-.01em}
+  code,pre,.mono{font-family:'JetBrains Mono','Consolas','Monaco',monospace}
+  a{color:var(--accent);text-decoration:none}
+
+  /* Layout */
+  .layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+  .sidebar{
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+    background:var(--bg-2);
+    border-right:1px solid var(--border);
+    padding:24px 20px;
+    z-index:10;
+  }
+  .sidebar-brand{
+    display:flex;align-items:center;gap:12px;padding-bottom:20px;
+    border-bottom:1px solid var(--border);margin-bottom:20px;
+  }
+  .brand-logo{
+    width:40px;height:40px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;color:#0a0e1a;font-size:18px;
+    box-shadow:0 0 24px var(--accent-glow);
+  }
+  .brand-text{font-size:13px;color:var(--text-2);line-height:1.4}
+  .brand-text strong{display:block;color:var(--text);font-size:14px;font-weight:600}
+  .toc-title{
+    font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--text-muted);margin:16px 0 12px;font-weight:600;
+  }
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:2px}
+  .toc-list a{
+    display:block;padding:8px 12px;color:var(--text-2);
+    font-size:13.5px;border-radius:6px;border-left:2px solid transparent;
+    transition:all .15s ease;line-height:1.4;
+  }
+  .toc-list a:hover{background:var(--bg-card);color:var(--text)}
+  .toc-list a.active{
+    background:var(--accent-dim);color:var(--accent);
+    border-left-color:var(--accent);font-weight:500;
+  }
+  .toc-list a .num{
+    display:inline-block;width:24px;color:var(--text-muted);font-size:12px;
+  }
+  .toc-list a.active .num{color:var(--accent)}
+  .toc-sub{padding-left:14px;font-size:12.5px;color:var(--text-muted)}
+  .toc-sub a{padding:6px 12px;font-size:12.5px}
+
+  /* Content */
+  .content{max-width:980px;padding:0 56px 80px;min-width:0}
+  @media (max-width:1024px){
+    .layout{grid-template-columns:1fr}
+    .sidebar{position:fixed;left:-300px;width:280px;transition:left .25s ease}
+    .sidebar.open{left:0}
+    .content{padding:0 24px 60px}
+    .menu-toggle{display:flex!important}
+  }
+  .menu-toggle{
+    display:none;position:fixed;top:16px;right:16px;z-index:50;
+    width:44px;height:44px;border-radius:10px;
+    background:var(--bg-elevated);border:1px solid var(--border);
+    color:var(--text);align-items:center;justify-content:center;
+    cursor:pointer;font-size:20px;
+  }
+
+  /* Hero / Cover */
+  .hero{
+    position:relative;padding:80px 0 60px;
+    border-bottom:1px solid var(--border);margin-bottom:48px;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+    background-image:
+      linear-gradient(rgba(34,211,238,.04) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(34,211,238,.04) 1px,transparent 1px);
+    background-size:48px 48px;
+    mask-image:radial-gradient(ellipse 60% 70% at 50% 40%,#000 30%,transparent 75%);
+    -webkit-mask-image:radial-gradient(ellipse 60% 70% at 50% 40%,#000 30%,transparent 75%);
+    pointer-events:none;
+  }
+  .hero-content{position:relative;z-index:1}
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 14px;border-radius:999px;
+    background:var(--accent-dim);border:1px solid rgba(34,211,238,.3);
+    color:var(--accent);font-size:12px;font-weight:600;
+    letter-spacing:.08em;text-transform:uppercase;margin-bottom:24px;
+  }
+  .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+  .hero h1{
+    font-size:clamp(36px,5vw,56px);margin-bottom:16px;
+    background:linear-gradient(135deg,#fff 30%,var(--accent) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero-sub{
+    font-size:18px;color:var(--text-2);max-width:680px;margin-bottom:32px;
+  }
+  .hero-meta{
+    display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;
+  }
+  .meta-chip{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:10px 16px;background:var(--bg-card);
+    border:1px solid var(--border);border-radius:8px;
+    font-size:13px;color:var(--text-2);
+  }
+  .meta-chip strong{color:var(--text);font-weight:600}
+  .meta-chip svg{width:16px;height:16px;color:var(--accent)}
+
+  /* Section base */
+  section{margin-bottom:64px;scroll-margin-top:24px}
+  .section-header{margin-bottom:28px}
+  .section-tag{
+    display:inline-block;font-size:11px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.12em;
+    color:var(--accent);margin-bottom:8px;
+  }
+  .section-header h2{
+    font-size:30px;margin-bottom:8px;color:var(--text);
+  }
+  .section-header p{color:var(--text-2);font-size:15px;max-width:720px}
+  h3.sub-title{
+    font-size:20px;color:var(--text);margin:32px 0 14px;
+    padding-left:12px;border-left:3px solid var(--accent);
+  }
+  h4.mini-title{
+    font-size:15px;color:var(--accent);margin:20px 0 10px;
+    font-weight:600;text-transform:uppercase;letter-spacing:.05em;
+  }
+  p{margin-bottom:14px;color:var(--text-2)}
+  p strong{color:var(--text);font-weight:600}
+  ul,ol{margin:12px 0 20px;padding-left:24px;color:var(--text-2)}
+  ul li,ol li{margin-bottom:6px}
+  ul li::marker{color:var(--accent)}
+  ol li::marker{color:var(--accent);font-weight:600}
+
+  /* Card grid */
+  .card-grid{display:grid;gap:16px;margin:20px 0}
+  .grid-2{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:768px){
+    .grid-2,.grid-3{grid-template-columns:1fr}
+  }
+  .card{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:12px;padding:20px;transition:all .2s ease;
+  }
+  .card:hover{
+    border-color:var(--border-strong);background:var(--bg-card-hover);
+    transform:translateY(-2px);
+  }
+  .card-title{
+    display:flex;align-items:center;gap:10px;
+    font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px;
+  }
+  .card-icon{
+    width:32px;height:32px;border-radius:8px;
+    background:var(--accent-dim);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;flex-shrink:0;
+  }
+  .card p{font-size:13.5px;color:var(--text-2);margin:0}
+  .card .meta{
+    margin-top:10px;padding-top:10px;border-top:1px solid var(--border);
+    font-size:12px;color:var(--text-muted);display:flex;gap:12px;flex-wrap:wrap;
+  }
+  .card .meta span{display:inline-flex;align-items:center;gap:4px}
+
+  /* Info boxes */
+  .info-box{
+    border-left:3px solid;padding:14px 18px;border-radius:8px;
+    margin:16px 0;font-size:14px;
+  }
+  .info-tip{background:var(--accent-dim);border-color:var(--accent);color:var(--text)}
+  .info-tip strong{color:var(--accent)}
+  .info-warn{background:var(--warn-bg);border-color:var(--warn);color:var(--text)}
+  .info-warn strong{color:var(--warn)}
+  .info-danger{background:var(--danger-bg);border-color:var(--danger);color:var(--text)}
+  .info-danger strong{color:var(--danger)}
+  .info-success{background:var(--success-bg);border-color:var(--success);color:var(--text)}
+  .info-success strong{color:var(--success)}
+
+  /* Definition list */
+  .def-list{display:flex;flex-direction:column;gap:14px;margin:16px 0}
+  .def-item{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:10px;padding:16px 20px;
+  }
+  .def-item dt{
+    font-weight:600;color:var(--accent);font-size:14.5px;
+    margin-bottom:6px;display:flex;align-items:center;gap:8px;
+  }
+  .def-item dt::before{
+    content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);
+  }
+  .def-item dd{color:var(--text-2);font-size:14px;margin-left:14px}
+
+  /* Comparison table */
+  .table-wrap{overflow-x:auto;margin:20px 0;border-radius:12px;border:1px solid var(--border)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--bg-card)}
+  th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--border)}
+  th{background:var(--bg-elevated);color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+  td{color:var(--text-2)}
+  td strong{color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--bg-card-hover)}
+
+  /* Checklist */
+  .checklist{list-style:none;padding:0;margin:16px 0;display:flex;flex-direction:column;gap:8px}
+  .checklist li{
+    display:flex;gap:12px;padding:10px 14px;
+    background:var(--bg-card);border:1px solid var(--border);border-radius:8px;
+    font-size:14px;color:var(--text-2);line-height:1.5;
+  }
+  .checklist li::before{
+    content:'✓';flex-shrink:0;width:20px;height:20px;border-radius:50%;
+    background:var(--success-bg);color:var(--success);
+    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+  }
+  .checklist.warn li::before{background:var(--warn-bg);color:var(--warn)}
+  .checklist.danger li::before{content:'!';background:var(--danger-bg);color:var(--danger)}
+
+  /* Pill / badge */
+  .pill{
+    display:inline-block;padding:2px 10px;border-radius:999px;
+    font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-2);
+  }
+  .pill.accent{background:var(--accent-dim);color:var(--accent);border-color:rgba(34,211,238,.3)}
+  .pill.warn{background:var(--warn-bg);color:var(--warn);border-color:rgba(251,191,36,.3)}
+  .pill.danger{background:var(--danger-bg);color:var(--danger);border-color:rgba(248,113,113,.3)}
+  .pill.success{background:var(--success-bg);color:var(--success);border-color:rgba(52,211,153,.3)}
+  .pill.purple{background:var(--purple-bg);color:var(--purple);border-color:rgba(167,139,250,.3)}
+
+  /* Two column */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
+  @media (max-width:768px){.two-col{grid-template-columns:1fr}}
+  .col-box{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:12px;
+    padding:22px;
+  }
+  .col-box h4{
+    display:flex;align-items:center;gap:10px;
+    font-size:15px;color:var(--text);margin-bottom:14px;
+    padding-bottom:12px;border-bottom:1px solid var(--border);
+  }
+  .col-box h4 .ico{
+    width:28px;height:28px;border-radius:7px;display:flex;
+    align-items:center;justify-content:center;font-size:14px;
+  }
+  .col-box.left h4 .ico{background:var(--accent-dim);color:var(--accent)}
+  .col-box.right h4 .ico{background:var(--purple-bg);color:var(--purple)}
+
+  /* Steps */
+  .steps{position:relative;padding-left:32px;margin:24px 0}
+  .steps::before{
+    content:'';position:absolute;left:11px;top:8px;bottom:8px;
+    width:2px;background:var(--border-strong);
+  }
+  .step{position:relative;margin-bottom:24px}
+  .step-num{
+    position:absolute;left:-32px;top:0;width:24px;height:24px;border-radius:50%;
+    background:var(--bg-elevated);border:2px solid var(--accent);
+    color:var(--accent);font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;z-index:1;
+  }
+  .step-content{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+    padding:16px 20px;
+  }
+  .step-content h5{font-size:14px;color:var(--accent);margin-bottom:6px;font-weight:600}
+  .step-content p{font-size:13.5px;color:var(--text-2);margin:0}
+  .step-content ul{margin:8px 0 0;padding-left:18px;font-size:13px}
+
+  /* Practicum box */
+  .practicum-banner{
+    background:linear-gradient(135deg,var(--purple-bg),var(--accent-dim));
+    border:1px solid var(--border-strong);border-radius:16px;
+    padding:32px;margin:24px 0;text-align:center;
+  }
+  .practicum-banner h2{
+    font-size:28px;background:linear-gradient(135deg,var(--accent),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px;
+  }
+  .practicum-banner p{color:var(--text-2);max-width:600px;margin:0 auto}
+
+  /* Lab tools grid */
+  .tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px 0}
+  @media (max-width:600px){.tools-grid{grid-template-columns:1fr}}
+  .tool-card{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+    padding:14px 16px;display:flex;align-items:flex-start;gap:12px;
+  }
+  .tool-card .ico{
+    width:36px;height:36px;border-radius:8px;flex-shrink:0;
+    background:var(--bg-elevated);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;
+    color:var(--accent);
+  }
+  .tool-card .info{flex:1;min-width:0}
+  .tool-card .name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px}
+  .tool-card .desc{font-size:12.5px;color:var(--text-2);line-height:1.5}
+  .tool-card .url{font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace;margin-top:4px;display:block}
+
+  /* Summary */
+  .summary-box{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:14px;padding:28px;margin-top:24px;
+  }
+  .summary-box h3{
+    font-size:18px;color:var(--accent);margin-bottom:16px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .summary-box ul{margin:0;padding-left:20px}
+
+  /* Footer */
+  footer{
+    border-top:1px solid var(--border);padding:32px 0;
+    text-align:center;color:var(--text-muted);font-size:13px;
+  }
+  footer .next-modul{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:12px 20px;background:var(--bg-card);
+    border:1px solid var(--border);border-radius:10px;
+    color:var(--text-2);margin-top:16px;font-size:13px;
+  }
+  footer .next-modul strong{color:var(--accent)}
+
+  /* ===== INFOGRAPHICS / SVG STYLING ===== */
+  .infographic{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:14px;padding:24px;margin:24px 0;overflow:hidden;
+  }
+  .infographic-caption{
+    text-align:center;font-size:12.5px;color:var(--text-muted);
+    margin-top:12px;font-style:italic;
+  }
+  .infographic svg{display:block;margin:0 auto;max-width:100%;height:auto}
+  .ig-title{
+    font-size:13px;font-weight:600;color:var(--accent);
+    text-transform:uppercase;letter-spacing:.08em;
+    text-align:center;margin-bottom:16px;
+  }
+  .ig-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+  .ig-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:4px 10px;border-radius:6px;
+    font-size:11.5px;font-weight:500;
+    background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-2);
+  }
+  .ig-badge .dot{width:8px;height:8px;border-radius:50%}
+  .ig-badge.cyan{border-color:rgba(34,211,238,.4);color:var(--accent);background:var(--accent-dim)}
+  .ig-badge.cyan .dot{background:var(--accent)}
+  .ig-badge.purple{border-color:rgba(167,139,250,.4);color:var(--purple);background:var(--purple-bg)}
+  .ig-badge.purple .dot{background:var(--purple)}
+  .ig-badge.warn{border-color:rgba(251,191,36,.4);color:var(--warn);background:var(--warn-bg)}
+  .ig-badge.warn .dot{background:var(--warn)}
+  .ig-badge.danger{border-color:rgba(248,113,113,.4);color:var(--danger);background:var(--danger-bg)}
+  .ig-badge.danger .dot{background:var(--danger)}
+  .ig-badge.success{border-color:rgba(52,211,153,.4);color:var(--success);background:var(--success-bg)}
+  .ig-badge.success .dot{background:var(--success)}
+
+  /* Stat block */
+  .stat-row{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:24px 0;
+  }
+  @media (max-width:768px){.stat-row{grid-template-columns:repeat(2,1fr)}}
+  .stat-box{
+    background:linear-gradient(135deg,var(--bg-card),var(--bg-elevated));
+    border:1px solid var(--border);border-radius:12px;
+    padding:20px;text-align:center;position:relative;overflow:hidden;
+  }
+  .stat-box::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,var(--accent),var(--purple));
+  }
+  .stat-num{
+    font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    line-height:1;margin-bottom:6px;
+  }
+  .stat-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+  .stat-desc{font-size:12px;color:var(--text-2);margin-top:8px;line-height:1.4}
+
+  /* SVG text */
+  svg .ig-text{font-family:'Inter',sans-serif;font-size:11px;fill:var(--text-2)}
+  svg .ig-text-strong{font-family:'Inter',sans-serif;font-size:12px;fill:var(--text);font-weight:600}
+  svg .ig-text-title{font-family:'Space Grotesk',sans-serif;font-size:14px;fill:var(--accent);font-weight:700}
+  svg .ig-text-small{font-family:'Inter',sans-serif;font-size:10px;fill:var(--text-muted)}
+  svg .ig-line{stroke:var(--border-strong);fill:none}
+  svg .ig-accent-line{stroke:var(--accent);fill:none}
+  svg .ig-box{fill:var(--bg-elevated);stroke:var(--border-strong);stroke-width:1}
+  svg .ig-accent-box{fill:var(--accent-dim);stroke:var(--accent);stroke-width:1.5}
+  svg .ig-danger-box{fill:var(--danger-bg);stroke:var(--danger);stroke-width:1.5}
+  svg .ig-warn-box{fill:var(--warn-bg);stroke:var(--warn);stroke-width:1.5}
+  svg .ig-success-box{fill:var(--success-bg);stroke:var(--success);stroke-width:1.5}
+  svg .ig-purple-box{fill:var(--purple-bg);stroke:var(--purple);stroke-width:1.5}
+
+  /* Print */
+  @media print{
+    .sidebar,.menu-toggle{display:none}
+    .layout{grid-template-columns:1fr}
+    .content{padding:0 20px}
+    body{background:#fff;color:#000}
+    .hero h1{color:#000!important;-webkit-text-fill-color:#000}
+    .card,.col-box,.step-content,.tool-card,.summary-box,.info-box{
+      background:#f7f7f7;border-color:#ccc;color:#000;break-inside:avoid;
+    }
+  }
+
+  /* Anchor heading offset */
+  section[id],h3[id],h4[id]{scroll-margin-top:80px}
+</style>
+</head>
+<body>
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">☰</button>
+
+<div class="layout">
+
+  <!-- ===== SIDEBAR / TOC ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">M09</div>
+      <div class="brand-text">
+        <strong>IoT Device Security</strong>
+        Network Defense Essentials
+      </div>
+    </div>
+
+    <div class="toc-title">Daftar Isi</div>
+    <ul class="toc-list" id="toc">
+      <li><a href="#cover"><span class="num">00</span>Cover</a></li>
+      <li><a href="#tujuan"><span class="num">01</span>Tujuan Pembelajaran</a></li>
+      <li><a href="#definisi"><span class="num">02</span>Definisi &amp; Komponen IoT</a></li>
+      <li><a href="#aplikasi"><span class="num">03</span>Area Aplikasi IoT</a></li>
+      <li><a href="#arsitektur"><span class="num">04</span>Arsitektur IoT</a></li>
+      <li><a href="#komunikasi"><span class="num">05</span>Model Komunikasi IoT</a></li>
+      <li><a href="#lingkungan"><span class="num">06</span>Lingkungan IoT-Enabled</a></li>
+      <li><a href="#keamanan"><span class="num">07</span>Keamanan IoT</a></li>
+      <li><a href="#manajemen-sistem"><span class="num">08</span>Manajemen Sistem IoT</a></li>
+      <li><a href="#stack-wise"><span class="num">09</span>Prinsip Stack-wise</a></li>
+      <li><a href="#framework"><span class="num">10</span>Framework Security IoT</a></li>
+      <li><a href="#device-mgmt"><span class="num">11</span>IoT Device Management</a></li>
+      <li><a href="#best-practice"><span class="num">12</span>Best Practices</a></li>
+      <li><a href="#tools"><span class="num">13</span>Tools Keamanan IoT</a></li>
+      <li><a href="#praktikum"><span class="num">14</span>Modul Praktikum</a></li>
+      <li><a href="#ringkasan"><span class="num">15</span>Ringkasan</a></li>
+    </ul>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="content">
+
+    <!-- ============= HERO / COVER ============= -->
+    <section id="cover" class="hero">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          Module 09 · Network Defense Essentials
+        </div>
+        <h1>IoT Device Security</h1>
+        <p class="hero-sub">
+          Ebook &amp; Modul Praktikum — memahami konsep Internet of Things, arsitektur 4-lapis,
+          model komunikasi device-to-cloud, risiko keamanan di lingkungan IoT-enabled,
+          prinsip stack-wise security, framework Edge–Gateway–Cloud–Mobile, hingga best practices
+          dan tools untuk mengamankan ekosistem IoT yang terus berkembang.
+        </p>
+        <div class="hero-meta">
+          <div class="meta-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <span><strong>Target:</strong> Mahasiswa</span>
+          </div>
+          <div class="meta-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <span><strong>Durasi:</strong> 4-5 jam</span>
+          </div>
+          <div class="meta-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+            <span><strong>Level:</strong> Intermediate-Advanced</span>
+          </div>
+          <div class="meta-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <span><strong>15</strong> Bagian</span>
+          </div>
+        </div>
+
+        <!-- Hero Stats Infographic -->
+        <div class="stat-row" style="margin-top:48px">
+          <div class="stat-box">
+            <div class="stat-num">4</div>
+            <div class="stat-label">Lapisan Arsitektur</div>
+            <div class="stat-desc">Device · Communication · Cloud · Process — saling tergantung</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">4</div>
+            <div class="stat-label">Model Komunikasi</div>
+            <div class="stat-desc">D2D · D2C · D2G · C2C — fleksibilitas koneksi IoT</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">8</div>
+            <div class="stat-label">Service Sectors</div>
+            <div class="stat-desc">Buildings, Energy, Consumer, Healthcare, Transportation, Industrial, Retail, IT</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">25B+</div>
+            <div class="stat-label">IoT Devices (2025)</div>
+            <div class="stat-desc">Estimasi perangkat terhubung global — attack surface masif</div>
+          </div>
+        </div>
+
+        <!-- Module Flow Infographic -->
+        <div class="infographic" style="margin-top:32px">
+          <div class="ig-title">Alur Pembelajaran Modul 09</div>
+          <svg viewBox="0 0 920 280" width="920" height="280" aria-label="Module flow diagram">
+            <defs>
+              <marker id="arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/>
+              </marker>
+              <linearGradient id="grad-flow" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.2"/>
+                <stop offset="100%" stop-color="#a78bfa" stop-opacity="0.2"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Row 1: Steps 1-4 -->
+            <rect x="20" y="30" width="130" height="60" rx="10" class="ig-accent-box"/>
+            <text x="85" y="55" text-anchor="middle" class="ig-text-title">1</text>
+            <text x="85" y="75" text-anchor="middle" class="ig-text-strong">Konsep</text>
+            <text x="85" y="88" text-anchor="middle" class="ig-text">IoT &amp; Komponen</text>
+            <path d="M150 60 L195 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+
+            <rect x="200" y="30" width="130" height="60" rx="10" class="ig-accent-box"/>
+            <text x="265" y="55" text-anchor="middle" class="ig-text-title">2</text>
+            <text x="265" y="75" text-anchor="middle" class="ig-text-strong">Area</text>
+            <text x="265" y="88" text-anchor="middle" class="ig-text">Aplikasi IoT</text>
+            <path d="M330 60 L375 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+
+            <rect x="380" y="30" width="130" height="60" rx="10" class="ig-accent-box"/>
+            <text x="445" y="55" text-anchor="middle" class="ig-text-title">3</text>
+            <text x="445" y="75" text-anchor="middle" class="ig-text-strong">Arsitektur</text>
+            <text x="445" y="88" text-anchor="middle" class="ig-text">4 Layer IoT</text>
+            <path d="M510 60 L555 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+
+            <rect x="560" y="30" width="130" height="60" rx="10" class="ig-accent-box"/>
+            <text x="625" y="55" text-anchor="middle" class="ig-text-title">4</text>
+            <text x="625" y="75" text-anchor="middle" class="ig-text-strong">Model</text>
+            <text x="625" y="88" text-anchor="middle" class="ig-text">Komunikasi</text>
+
+            <!-- vertical down -->
+            <path d="M625 95 L625 145" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+
+            <!-- Row 2: Steps 5-7 -->
+            <rect x="560" y="150" width="130" height="60" rx="10" class="ig-warn-box"/>
+            <text x="625" y="175" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">5</text>
+            <text x="625" y="195" text-anchor="middle" class="ig-text-strong">Keamanan</text>
+            <text x="625" y="208" text-anchor="middle" class="ig-text">IoT Environment</text>
+            <path d="M555 180 L510 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+
+            <rect x="380" y="150" width="130" height="60" rx="10" class="ig-purple-box"/>
+            <text x="445" y="175" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">6</text>
+            <text x="445" y="195" text-anchor="middle" class="ig-text-strong">Stack-wise</text>
+            <text x="445" y="208" text-anchor="middle" class="ig-text">Security Principles</text>
+            <path d="M375 180 L330 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+
+            <rect x="200" y="150" width="130" height="60" rx="10" class="ig-purple-box"/>
+            <text x="265" y="175" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">7</text>
+            <text x="265" y="195" text-anchor="middle" class="ig-text-strong">Framework</text>
+            <text x="265" y="208" text-anchor="middle" class="ig-text">Edge/Gw/Cloud/Mob</text>
+            <path d="M195 180 L150 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+
+            <!-- Step 8: Best practices -->
+            <rect x="20" y="150" width="130" height="60" rx="10" class="ig-success-box"/>
+            <text x="85" y="175" text-anchor="middle" class="ig-text-title" style="fill:#34d399">8</text>
+            <text x="85" y="195" text-anchor="middle" class="ig-text-strong">Best Practices</text>
+            <text x="85" y="208" text-anchor="middle" class="ig-text">&amp; Tools</text>
+
+            <!-- Bottom badge: PRACTICUM -->
+            <rect x="380" y="230" width="130" height="40" rx="10" fill="url(#grad-flow)" stroke="#22d3ee" stroke-width="1.5"/>
+            <text x="445" y="248" text-anchor="middle" class="ig-text-title">LAB</text>
+            <text x="445" y="262" text-anchor="middle" class="ig-text-small">Modul Praktikum IoT</text>
+            <path d="M85 215 L85 250 L375 250" class="ig-accent-line" stroke-width="2" stroke-dasharray="4,3" fill="none"/>
+            <path d="M265 215 L265 245 L375 245" class="ig-accent-line" stroke-width="1.5" stroke-dasharray="3,3" fill="none" opacity="0.5"/>
+            <path d="M445 215 L445 225" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <path d="M625 215 L625 245 L515 245" class="ig-accent-line" stroke-width="1.5" stroke-dasharray="3,3" fill="none" opacity="0.5"/>
+          </svg>
+          <div class="infographic-caption">Gambar 1. Alur pembelajaran Modul 09 — dari konsep dasar IoT hingga praktikum hands-on.</div>
+        </div>
+      </div>
+    </section>
+    <!-- ============= TUJUAN PEMBELAJARAN ============= -->
+    <section id="tujuan">
+      <div class="section-header">
+        <span class="section-tag">Bagian 01</span>
+        <h2>Tujuan Pembelajaran</h2>
+        <p>Mengapa keamanan IoT menjadi tantangan kritis dengan attack surface yang jauh lebih luas dari mobile device.</p>
+      </div>
+      <p>
+        Penggunaan perangkat <strong>Internet of Things (IoT)</strong> dalam infrastruktur IT enterprise
+        telah menciptakan perimeter keamanan yang sangat luas. Perangkat IoT menggunakan jaringan dan
+        cloud secara bersamaan, tetapi sangat rentan terhadap serangan <em>malware, ransomware, dan botnet</em>.
+        Penyerang dapat dengan mudah mengkompromi endpoint IoT sebagai pintu masuk ke jaringan korporat.
+        Memahami langkah-langkah keamanan akan membantu mengamankan lingkungan IoT-enabled secara efektif.
+      </p>
+      <p>Setelah menyelesaikan modul ini, Anda akan mampu:</p>
+
+      <!-- Learning outcomes Bloom-style infographic -->
+      <div class="infographic" style="margin:24px 0">
+        <div class="ig-title">Capaian Pembelajaran — Progresi Taksonomi Bloom</div>
+        <svg viewBox="0 0 900 200" width="900" height="200" aria-label="Learning outcomes">
+          <defs>
+            <linearGradient id="grad-bloom" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.6"/>
+              <stop offset="100%" stop-color="#a78bfa" stop-opacity="0.6"/>
+            </linearGradient>
+          </defs>
+          <g>
+            <rect x="20" y="140" width="110" height="40" rx="6" fill="url(#grad-bloom)" stroke="#22d3ee"/>
+            <text x="75" y="158" text-anchor="middle" class="ig-text-strong">Pahami</text>
+            <text x="75" y="173" text-anchor="middle" class="ig-text-small">konsep IoT</text>
+
+            <rect x="140" y="120" width="110" height="60" rx="6" fill="url(#grad-bloom)" stroke="#22d3ee"/>
+            <text x="195" y="143" text-anchor="middle" class="ig-text-strong">Jelaskan</text>
+            <text x="195" y="158" text-anchor="middle" class="ig-text-small">area aplikasi</text>
+            <text x="195" y="172" text-anchor="middle" class="ig-text-small">&amp; devices</text>
+
+            <rect x="260" y="100" width="110" height="80" rx="6" fill="url(#grad-bloom)" stroke="#34d399"/>
+            <text x="315" y="123" text-anchor="middle" class="ig-text-strong">Bandingkan</text>
+            <text x="315" y="138" text-anchor="middle" class="ig-text-small">arsitektur &amp;</text>
+            <text x="315" y="152" text-anchor="middle" class="ig-text-small">model komunikasi</text>
+
+            <rect x="380" y="80" width="110" height="100" rx="6" fill="url(#grad-bloom)" stroke="#fbbf24"/>
+            <text x="435" y="103" text-anchor="middle" class="ig-text-strong">Analisis</text>
+            <text x="435" y="118" text-anchor="middle" class="ig-text-small">risiko &amp;</text>
+            <text x="435" y="132" text-anchor="middle" class="ig-text-small">ancaman IoT</text>
+            <text x="435" y="146" text-anchor="middle" class="ig-text-small">environment</text>
+
+            <rect x="500" y="60" width="110" height="120" rx="6" fill="url(#grad-bloom)" stroke="#a78bfa"/>
+            <text x="555" y="83" text-anchor="middle" class="ig-text-strong">Terapkan</text>
+            <text x="555" y="98" text-anchor="middle" class="ig-text-small">stack-wise</text>
+            <text x="555" y="112" text-anchor="middle" class="ig-text-small">security</text>
+            <text x="555" y="126" text-anchor="middle" class="ig-text-small">principles</text>
+
+            <rect x="620" y="40" width="110" height="140" rx="6" fill="url(#grad-bloom)" stroke="#f87171"/>
+            <text x="675" y="63" text-anchor="middle" class="ig-text-strong">Evaluasi</text>
+            <text x="675" y="78" text-anchor="middle" class="ig-text-small">framework</text>
+            <text x="675" y="92" text-anchor="middle" class="ig-text-small">Edge/Gw/Cloud</text>
+            <text x="675" y="106" text-anchor="middle" class="ig-text-small">/Mobile &amp;</text>
+            <text x="675" y="120" text-anchor="middle" class="ig-text-small">device mgmt</text>
+
+            <rect x="740" y="20" width="140" height="160" rx="6" fill="url(#grad-bloom)" stroke="#22d3ee"/>
+            <text x="810" y="43" text-anchor="middle" class="ig-text-strong">Ciptakan</text>
+            <text x="810" y="58" text-anchor="middle" class="ig-text-small">praktikum IoT</text>
+            <text x="810" y="72" text-anchor="middle" class="ig-text-small">lab: simulator</text>
+            <text x="810" y="86" text-anchor="middle" class="ig-text-small">+ MQTT audit</text>
+            <text x="810" y="100" text-anchor="middle" class="ig-text-small">+ firmware</text>
+            <text x="810" y="114" text-anchor="middle" class="ig-text-small">analysis</text>
+          </g>
+          <path d="M 20 195 L 880 195" stroke="#22d3ee" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <text x="20" y="183" class="ig-text-small" style="fill:#22d3ee">← lower-order thinking</text>
+          <text x="880" y="183" text-anchor="end" class="ig-text-small" style="fill:#22d3ee">higher-order thinking →</text>
+        </svg>
+        <div class="infographic-caption">Gambar 2. Capaian pembelajaran berjenjang — dari pemahaman konsep hingga praktikum IoT lab.</div>
+      </div>
+
+      <div class="card-grid grid-2" style="margin-top:20px">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">1</div>Konsep IoT</div>
+          <p>Memahami IoT dan mengapa organisasi memilih lingkungan IoT-enabled untuk meningkatkan efisiensi bisnis.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">2</div>Area Aplikasi</div>
+          <p>Menjelaskan area aplikasi IoT (8 service sectors) dan berbagai jenis perangkat IoT di tiap sektor.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">3</div>Arsitektur &amp; Komunikasi</div>
+          <p>Mendeskripsikan arsitektur 4-layer IoT dan 4 model komunikasi (D2D, D2C, D2G, C2C).</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">4</div>Keamanan IoT</div>
+          <p>Memahami keamanan di lingkungan IoT-enabled dan prinsip stack-wise IoT security.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">5</div>Framework Security</div>
+          <p>Memahami pertimbangan keamanan IoT framework (Edge, Gateway, Cloud, Mobile).</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">6</div>Device Management</div>
+          <p>Memahami IoT device management dan solusi-solusi enterprise untuk monitoring perangkat IoT.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">7</div>Best Practices &amp; Tools</div>
+          <p>Menjelaskan best practices keamanan IoT dan tools untuk audit, simulasi, dan threat defense.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 2: DEFINISI & KOMPONEN IoT ============= -->
+    <section id="definisi">
+      <div class="section-header">
+        <span class="section-tag">Bagian 02</span>
+        <h2>Definisi &amp; Komponen IoT</h2>
+        <p>Internet of Things sebagai jaringan perangkat ber-IP dengan kemampuan sensing, collecting, dan sending data melalui sensor, komunikasi hardware, dan prosesor embedded.</p>
+      </div>
+
+      <h3 class="sub-title">2.1 Apa itu IoT?</h3>
+      <p>
+        <strong>Internet of Things (IoT)</strong>, juga dikenal sebagai <em>Internet of Everything (IoE)</em>,
+        adalah jaringan perangkat komputasi yang <em>web-enabled</em> dan memiliki kemampuan untuk
+        <strong>sensing</strong> (merasakan), <strong>collecting</strong> (mengumpulkan), dan
+        <strong>sending</strong> (mengirim) data menggunakan sensor, hardware komunikasi, dan prosesor
+        yang tertanam di dalam perangkat. Dalam IoT, istilah <em>"thing"</em> merujuk pada perangkat
+        yang ditanamkan pada objek alami, buatan manusia, atau buatan mesin dan memiliki fungsionalitas
+        untuk berkomunikasi melalui jaringan.
+      </p>
+      <p>
+        IoT memanfaatkan teknologi yang sudah ada maupun yang sedang berkembang — sensing, networking,
+        dan robotics — sehingga memungkinkan pengguna mencapai analisis yang lebih dalam, otomatisasi,
+        dan integrasi dalam sebuah sistem. Dengan meningkatnya kemampuan jaringan mesin dan peralatan
+        sehari-hari di berbagai sektor (perkantoran, rumah, industri, transportasi, bangunan, dan
+        wearable devices), IoT membuka peluang baru untuk peningkatan bisnis dan kepuasan pelanggan.
+      </p>
+
+      <h4 class="mini-title">Fitur Kunci IoT</h4>
+      <div class="card-grid grid-3">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🔗</div>Connectivity</div>
+          <p>Konektivitas antar perangkat melalui berbagai protokol — Wi-Fi, Bluetooth, Zigbee, Z-Wave, LoRa, 5G, NB-IoT. Setiap "thing" mendapat IP address (IPv4/IPv6) untuk komunikasi global.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">📡</div>Sensors</div>
+          <p>Sensor embedded mengumpulkan data lingkungan: suhu, kelembaban, tekanan, lokasi (GPS), getaran, cahaya, gas, elektrokimia, RFID. Sensor adalah mata dan telinga IoT.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🧠</div>Artificial Intelligence</div>
+          <p>IoT modern dipadukan dengan AI/ML untuk analisis prediktif, anomaly detection, dan autonomous decision-making. Tanpa AI, IoT hanyalah kumpulan data mentah.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">📏</div>Small Devices</div>
+          <p>Perangkat IoT umumnya kecil, low-power, dengan microcontroller (MCU) terbatas. Keterbatasan resource ini menjadi tantangan utama implementasi keamanan.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">⚡</div>Active Engagement</div>
+          <p>IoT tidak sekadar pasif mengumpulkan data — perangkat aktif terlibat dalam interaksi dua arah dengan pengguna dan sistem lain melalui aktuator dan control loop.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🌐</div>Edge Computing</div>
+          <p>Pemrosesan data di tepi jaringan (edge) sebelum dikirim ke cloud — mengurangi latensi, menghemat bandwidth, dan meningkatkan privasi data sensitif.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">2.2 Tiga Dimensi Konektivitas IoT</h3>
+      <div class="infographic">
+        <div class="ig-title">Mengapa Organisasi Memilih IoT — 3D Plane of Connectivity</div>
+        <svg viewBox="0 0 900 380" width="900" height="380" aria-label="3D plane">
+          <defs>
+            <linearGradient id="grad-3d" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="#a78bfa" stop-opacity="0.15"/>
+            </linearGradient>
+          </defs>
+
+          <!-- 3 axes from origin -->
+          <circle cx="450" cy="200" r="6" fill="#22d3ee"/>
+          <text x="465" y="195" class="ig-text-small" style="fill:#22d3ee">origin (device)</text>
+
+          <!-- X axis: connect any place -->
+          <line x1="450" y1="200" x2="100" y2="120" stroke="#22d3ee" stroke-width="2"/>
+          <rect x="40" y="80" width="180" height="80" rx="10" class="ig-accent-box"/>
+          <text x="130" y="105" text-anchor="middle" class="ig-text-title">Connect Any PLACE</text>
+          <text x="130" y="123" text-anchor="middle" class="ig-text-small">Outdoors / Indoors</text>
+          <text x="130" y="138" text-anchor="middle" class="ig-text-small">On the move</text>
+          <text x="130" y="153" text-anchor="middle" class="ig-text-small">At PC / Outdoor / Indoor</text>
+
+          <!-- Y axis: connect anything -->
+          <line x1="450" y1="200" x2="800" y2="120" stroke="#34d399" stroke-width="2"/>
+          <rect x="680" y="80" width="180" height="80" rx="10" class="ig-success-box"/>
+          <text x="770" y="105" text-anchor="middle" class="ig-text-title" style="fill:#34d399">Connect Any THING</text>
+          <text x="770" y="123" text-anchor="middle" class="ig-text-small">H2H (Human to Human)</text>
+          <text x="770" y="138" text-anchor="middle" class="ig-text-small">H2T (Human to Thing)</text>
+          <text x="770" y="153" text-anchor="middle" class="ig-text-small">T2T (Thing to Thing)</text>
+
+          <!-- Z axis: connect anytime -->
+          <line x1="450" y1="200" x2="450" y2="340" stroke="#a78bfa" stroke-width="2"/>
+          <rect x="360" y="280" width="180" height="80" rx="10" class="ig-purple-box"/>
+          <text x="450" y="305" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">Connect Any TIME</text>
+          <text x="450" y="323" text-anchor="middle" class="ig-text-small">Daytime · Night</text>
+          <text x="450" y="338" text-anchor="middle" class="ig-text-small">24/7/365 continuous</text>
+          <text x="450" y="353" text-anchor="middle" class="ig-text-small">Real-time monitoring</text>
+
+          <!-- Center: IoT cloud -->
+          <circle cx="450" cy="200" r="60" fill="url(#grad-3d)" stroke="#22d3ee" stroke-width="2"/>
+          <text x="450" y="195" text-anchor="middle" class="ig-text-title">IoT</text>
+          <text x="450" y="212" text-anchor="middle" class="ig-text-small">3D Plane</text>
+        </svg>
+        <div class="infographic-caption">Gambar 3. Tiga dimensi IoT — Place × Thing × Time memungkinkan konektivitas tanpa batas untuk anyone, anything, anytime, anywhere.</div>
+      </div>
+
+      <p>
+        Perangkat IoT bekerja pada bidang tiga dimensi yang menawarkan konektivitas untuk siapa saja
+        kapan saja, untuk hal apa pun, dan dari mana pun. IoT memfasilitasi koneksi ke berbagai objek
+        — interaksi <strong>Human-to-Thing (H2T)</strong> menggunakan peralatan generik,
+        <strong>Thing-to-Thing (T2T)</strong> antar PC/perangkat, dan <strong>Human-to-Human (H2H)</strong>
+        tanpa menggunakan PC. Pengguna dapat menghubungkan ke perangkat IoT di mana pun baik saat
+        dalam perjalanan, di dalam ruangan (jauh dari PC), di luar ruangan, atau di PC.
+      </p>
+
+      <h3 class="sub-title">2.3 Komponen Utama Teknologi IoT</h3>
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">📡</div>Sensing Technology</div>
+          <p>Sensor yang tertanam dalam perangkat memperoleh berbagai informasi dari lingkungan sekitar: suhu, gas, lokasi, kondisi kerja mesin industri, dan data kesehatan pasien. Sensor adalah sumber data utama IoT.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🌐</div>IoT Gateways</div>
+          <p>Gateway menjembatani kesenjangan antara perangkat IoT (jaringan internal) dan pengguna akhir (jaringan eksternal). Data dari sensor dikumpulkan dan dikirim ke pengguna atau cloud melalui gateway.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">☁</div>Cloud Server / Data Storage</div>
+          <p>Setelah melewati gateway, data tiba di cloud untuk disimpan dan dianalisis. Data yang sudah diproses kemudian dikirim ke pengguna, yang akan mengambil tindakan berdasarkan informasi yang diterima.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">📱</div>Remote Control via Mobile Apps</div>
+          <p>Pengguna akhir menggunakan perangkat remote (ponsel, tablet, laptop) dengan aplikasi mobile untuk memantau, mengontrol, mengambil data, dan mengambil tindakan pada perangkat IoT dari lokasi jauh.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">2.4 Contoh Workflow: Sistem Keamanan Pintar</h3>
+      <div class="infographic">
+        <div class="ig-title">Workflow Sistem Keamanan IoT — Sensor → Gateway → Cloud → Mobile</div>
+        <svg viewBox="0 0 900 240" width="900" height="240" aria-label="IoT workflow">
+          <defs>
+            <marker id="arr-flow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/>
+            </marker>
+          </defs>
+
+          <!-- Step 1: Camera (sensor) -->
+          <rect x="30" y="80" width="140" height="80" rx="10" class="ig-accent-box"/>
+          <text x="100" y="105" text-anchor="middle" class="ig-text-title">1. Sensor</text>
+          <text x="100" y="123" text-anchor="middle" class="ig-text-small">📹 Smart Camera</text>
+          <text x="100" y="138" text-anchor="middle" class="ig-text-small">merekam footage</text>
+          <text x="100" y="153" text-anchor="middle" class="ig-text-small">ID: CAM-001</text>
+
+          <!-- arrow 1 -->
+          <path d="M 170 120 L 220 120" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-flow)"/>
+          <text x="195" y="115" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">raw data</text>
+
+          <!-- Step 2: Gateway -->
+          <rect x="225" y="80" width="140" height="80" rx="10" class="ig-purple-box"/>
+          <text x="295" y="105" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">2. Gateway</text>
+          <text x="295" y="123" text-anchor="middle" class="ig-text-small">🌐 bridge</text>
+          <text x="295" y="138" text-anchor="middle" class="ig-text-small">pre-process &amp;</text>
+          <text x="295" y="153" text-anchor="middle" class="ig-text-small">filter data</text>
+
+          <path d="M 365 120 L 415 120" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-flow)"/>
+          <text x="390" y="115" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">filtered</text>
+
+          <!-- Step 3: Cloud -->
+          <rect x="420" y="80" width="140" height="80" rx="10" class="ig-success-box"/>
+          <text x="490" y="105" text-anchor="middle" class="ig-text-title" style="fill:#34d399">3. Cloud</text>
+          <text x="490" y="123" text-anchor="middle" class="ig-text-small">☁ storage &amp;</text>
+          <text x="490" y="138" text-anchor="middle" class="ig-text-small">analysis</text>
+          <text x="490" y="153" text-anchor="middle" class="ig-text-small">match device ID</text>
+
+          <path d="M 560 120 L 610 120" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-flow)"/>
+          <text x="585" y="115" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">alert</text>
+
+          <!-- Step 4: User mobile -->
+          <rect x="615" y="80" width="140" height="80" rx="10" class="ig-accent-box"/>
+          <text x="685" y="105" text-anchor="middle" class="ig-text-title">4. User App</text>
+          <text x="685" y="123" text-anchor="middle" class="ig-text-small">📱 smartphone</text>
+          <text x="685" y="138" text-anchor="middle" class="ig-text-small">authentication</text>
+          <text x="685" y="153" text-anchor="middle" class="ig-text-small">+ action</text>
+
+          <!-- Reverse: command from user -->
+          <path d="M 685 165 L 490 195 L 295 195 L 100 165" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="4,3" fill="none" marker-end="url(#arr-flow)"/>
+          <text x="390" y="215" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">control command (e.g., alarm off) flows back</text>
+
+          <!-- Annotation at top -->
+          <text x="450" y="40" text-anchor="middle" class="ig-text-strong">Security Workflow IoT — 5 tahap end-to-end</text>
+          <text x="450" y="60" text-anchor="middle" class="ig-text-small">Jika aktivitas tidak wajar terdeteksi, alert otomatis dikirim ke mobile user via cloud</text>
+        </svg>
+        <div class="infographic-caption">Gambar 4. Workflow 5 tahap IoT untuk smart security system — sensor → gateway → cloud → user → command balik ke aktuator.</div>
+      </div>
+
+      <p>
+        Contoh konkret: sistem keamanan pintar terintegrasi dengan gateway yang menghubungkan perangkat
+        ke internet dan infrastruktur cloud. Data storage di cloud mencatat informasi setiap perangkat
+        (device ID, status, siapa yang mengakses, frekuensi akses, durasi akses terakhir). Koneksi ke
+        cloud server melalui web services. Pengguna dengan aplikasi mobile mengautentikasi diri —
+        jika kredensial cocok dengan yang tersimpan di cloud, akses diberikan; jika tidak, akses ditolak.
+        Saat sistem keamanan mendeteksi aktivitas tidak wajar, alert dikirim ke cloud melalui gateway,
+        lalu cloud mencocokkan device ID dengan user terkait, dan akhirnya pengguna akhir menerima alert.
+      </p>
+
+      <div class="info-box info-warn">
+        <strong>Insight Keamanan:</strong> Workflow IoT di atas menunjukkan titik-titik kritis di mana
+        penyerang dapat mengintervensi: (1) sensor dapat di-spoof, (2) gateway dapat di-compromise
+        untuk manipulasi data, (3) cloud dapat bocor data, (4) mobile app dapat di-phishing.
+        Setiap hop adalah <em>trust boundary</em> yang memerlukan autentikasi &amp; enkripsi.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 3: AREA APLIKASI IoT ============= -->
+    <section id="aplikasi">
+      <div class="section-header">
+        <span class="section-tag">Bagian 03</span>
+        <h2>Area Aplikasi IoT</h2>
+        <p>IoT digunakan hampir di setiap sektor masyarakat untuk menyederhanakan pekerjaan rutin dan tugas personal, meningkatkan standar hidup.</p>
+      </div>
+
+      <p>
+        Perangkat IoT memiliki berbagai macam aplikasi. Teknologi IoT termasuk dalam smart home dan
+        bangunan, perangkat healthcare, peralatan industri, transportasi, perangkat keamanan, sektor
+        retail, dan banyak lagi. Berikut adalah 8 service sectors utama beserta application groups,
+        locations, dan contoh perangkat di tiap sektor.
+      </p>
+
+      <h3 class="sub-title">3.1 Visualisasi 8 Service Sectors IoT</h3>
+      <div class="infographic">
+        <div class="ig-title">8 Sektor Utama Aplikasi IoT</div>
+        <svg viewBox="0 0 900 400" width="900" height="400" aria-label="8 sectors">
+          <defs>
+            <radialGradient id="grad-center-iot" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Center: IoT -->
+          <circle cx="450" cy="200" r="220" fill="url(#grad-center-iot)"/>
+          <circle cx="450" cy="200" r="50" fill="#161d2e" stroke="#22d3ee" stroke-width="2"/>
+          <text x="450" y="195" text-anchor="middle" class="ig-text-title">IoT</text>
+          <text x="450" y="212" text-anchor="middle" class="ig-text-small">8 sectors</text>
+
+          <!-- 8 sector boxes arranged in circle -->
+          <!-- 1. Buildings (top) -->
+          <rect x="380" y="20" width="140" height="60" rx="10" class="ig-accent-box"/>
+          <text x="450" y="42" text-anchor="middle" class="ig-text-title">1. Buildings</text>
+          <text x="450" y="58" text-anchor="middle" class="ig-text-small">HVAC, lighting,</text>
+          <text x="450" y="72" text-anchor="middle" class="ig-text-small">security, access</text>
+          <line x1="450" y1="80" x2="450" y2="150" stroke="#22d3ee" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+          <!-- 2. Energy (top-right) -->
+          <rect x="640" y="50" width="160" height="60" rx="10" class="ig-warn-box"/>
+          <text x="720" y="72" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">2. Energy</text>
+          <text x="720" y="88" text-anchor="middle" class="ig-text-small">Turbines, windmills,</text>
+          <text x="720" y="102" text-anchor="middle" class="ig-text-small">meters, fuel cells</text>
+          <line x1="640" y1="110" x2="495" y2="180" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+          <!-- 3. Consumer & Home (right) -->
+          <rect x="720" y="170" width="160" height="60" rx="10" class="ig-success-box"/>
+          <text x="800" y="192" text-anchor="middle" class="ig-text-title" style="fill:#34d399">3. Consumer/Home</text>
+          <text x="800" y="208" text-anchor="middle" class="ig-text-small">TVs, washing machines,</text>
+          <text x="800" y="222" text-anchor="middle" class="ig-text-small">alarms, lights</text>
+          <line x1="720" y1="200" x2="500" y2="200" stroke="#34d399" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+          <!-- 4. Healthcare (bottom-right) -->
+          <rect x="640" y="290" width="160" height="60" rx="10" class="ig-danger-box"/>
+          <text x="720" y="312" text-anchor="middle" class="ig-text-title" style="fill:#f87171">4. Healthcare</text>
+          <text x="720" y="328" text-anchor="middle" class="ig-text-small">MRI, implants, pumps,</text>
+          <text x="720" y="342" text-anchor="middle" class="ig-text-small">telemedicine</text>
+          <line x1="640" y1="290" x2="495" y2="220" stroke="#f87171" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+          <!-- 5. Transportation (bottom) -->
+          <rect x="380" y="320" width="140" height="60" rx="10" class="ig-purple-box"/>
+          <text x="450" y="342" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">5. Transportation</text>
+          <text x="450" y="358" text-anchor="middle" class="ig-text-small">Vehicles, ships, planes,</text>
+          <text x="450" y="372" text-anchor="middle" class="ig-text-small">tolls, navigation</text>
+          <line x1="450" y1="320" x2="450" y2="250" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+          <!-- 6. Industrial (bottom-left) -->
+          <rect x="100" y="290" width="160" height="60" rx="10" class="ig-accent-box"/>
+          <text x="180" y="312" text-anchor="middle" class="ig-text-title">6. Industrial</text>
+          <text x="180" y="328" text-anchor="middle" class="ig-text-small">Pumps, valves, conveyors,</text>
+          <text x="180" y="342" text-anchor="middle" class="ig-text-small">vessels/tanks</text>
+          <line x1="260" y1="290" x2="405" y2="220" stroke="#22d3ee" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+          <!-- 7. Retail (left) -->
+          <rect x="20" y="170" width="160" height="60" rx="10" class="ig-success-box"/>
+          <text x="100" y="192" text-anchor="middle" class="ig-text-title" style="fill:#34d399">7. Retail</text>
+          <text x="100" y="208" text-anchor="middle" class="ig-text-small">POS terminals, vending,</text>
+          <text x="100" y="222" text-anchor="middle" class="ig-text-small">cash registers, signs</text>
+          <line x1="180" y1="200" x2="400" y2="200" stroke="#34d399" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+          <!-- 8. Security/Public Safety (top-left) -->
+          <rect x="100" y="50" width="160" height="60" rx="10" class="ig-danger-box"/>
+          <text x="180" y="72" text-anchor="middle" class="ig-text-title" style="fill:#f87171">8. Public Safety</text>
+          <text x="180" y="88" text-anchor="middle" class="ig-text-small">Surveillance, tracking,</text>
+          <text x="180" y="102" text-anchor="middle" class="ig-text-small">emergency services</text>
+          <line x1="260" y1="110" x2="405" y2="180" stroke="#f87171" stroke-width="1.5" stroke-dasharray="3,2"/>
+        </svg>
+        <div class="infographic-caption">Gambar 5. 8 service sectors IoT — setiap sektor memiliki kelompok aplikasi, lokasi, dan perangkat khas.</div>
+      </div>
+
+      <h3 class="sub-title">3.2 Tabel Lengkap Area Aplikasi IoT</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Service Sector</th><th>Application Group</th><th>Locations</th><th>Contoh Devices</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Buildings</strong></td><td>Commercial/Institutional</td><td>Office, Education, Retail, Hospitality, Healthcare, Airports, Stadiums</td><td>HVAC, Transport, Fire &amp; Safety, Lighting, Security, Access</td></tr>
+            <tr><td><strong>Energy</strong></td><td>Supply/Demand · Alternative · Oil/Gas</td><td>Power Gen, Trans &amp; Dist, Solar Wind, Rigs, Pipelines</td><td>Turbines, Windmills, UPS, Batteries, Generators, Meters, Drills, Fuel Cells</td></tr>
+            <tr><td><strong>Consumer &amp; Home</strong></td><td>Infrastructure · Awareness/Safety · Convenience</td><td>Wiring, Network Access, Security/Alerts, HVAC/Climate, Entertainment</td><td>Digital Cameras, Dishwashers, Washing Machines, TVs, MP3 Players, Game Consoles, Alarms</td></tr>
+            <tr><td><strong>Healthcare &amp; Life Science</strong></td><td>Care · In Vivo/Home · Research</td><td>Hospital, ER, Mobile, POC, Clinic, Labs, Implants, Drug Discovery</td><td>MRI Machines, PDAs, Implants, Surgical Equipment, Pumps, Monitors, Telemedicine</td></tr>
+            <tr><td><strong>Transportation</strong></td><td>Non-Vehicular · Vehicles · Trans Systems</td><td>Air, Rail, Marine, Consumer, Commercial, Tolls, Navigation</td><td>Vehicles, Lights, Ships, Planes, Signage, Tolls</td></tr>
+            <tr><td><strong>Industrial</strong></td><td>Resource Automation · Fluid/Processes · Converting · Distribution</td><td>Mining, Irrigation, Petro-Chem, Metals, Pipelines, Conveyance</td><td>Pumps, Valves, Vats, Conveyors, Fabrication, Vessels/Tanks</td></tr>
+            <tr><td><strong>Retail</strong></td><td>Specialty · Hospitality · Stores</td><td>Fuel Stations, Cinemas, Hotels, Supermarkets, Shopping Centers</td><td>POS Terminals, Tags, Cash Registers, Vending Machines, Signs</td></tr>
+            <tr><td><strong>Security / Public Safety</strong></td><td>Surveillance · Equipment · Tracking · Public Infra · Emergency</td><td>Radar/Satellite, Military, Weapons, Human/Animal, Water, Ambulance, Police, Fire</td><td>Tanks, Fighter Jets, Battlefields, Jeeps, Cars, Ambulance, Homeland Security</td></tr>
+            <tr><td><strong>IT and Networks</strong></td><td>Public · Private Enterprise</td><td>Services, E-Commerce, Data Centers, Mobile Carriers, ISPs, IT/Data Center Office</td><td>Servers, Storage, PCs, Routers, Switches, PBXs</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="sub-title">3.3 Studi Kasus per Sektor</h3>
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🏠</div>Smart Home</div>
+          <p>Perangkat pintar terhubung internet yang melayani pengguna akhir: <strong>thermostat</strong>, <strong>lighting systems</strong>, <strong>security systems</strong> di bangunan residensial. Contoh: Nest Thermostat yang belajar pola suhu penghuni dan menghemat energi 10-15%.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">❤</div>Healthcare &amp; Life Science</div>
+          <p>Wearable devices, health monitoring devices seperti <strong>implanted heart pacemakers</strong>, ECG/EKG, surgical equipment, telemedicine. Implant modern dapat mengirim data jantung langsung ke kardiolog secara real-time.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🏭</div>Industrial IoT (IIoT)</div>
+          <p>Tumbuh melalui 3 pendekatan: meningkatkan produksi untuk revenue, teknologi intelligent yang mengubah cara produksi, dan model bisnis hibrida baru. Contoh: predictive maintenance sensor mesin yang mencegah downtime.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🚗</div>Transportation</div>
+          <p>Konsep <strong>Vehicle-to-Vehicle (V2V)</strong>, <strong>Vehicle-to-Roadside (V2R)</strong>, dan <strong>Vehicle-to-Pedestrian (V2P)</strong> communication. Meningkatkan kondisi lalu lintas, sistem navigasi, dan skema parkir.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🛒</div>Retail</div>
+          <p>IoT digunakan untuk <strong>payments</strong>, <strong>advertisements</strong>, dan <strong>tracking/monitoring produk</strong> untuk mencegah pencurian dan kerugian, meningkatkan revenue. Contoh: smart shelves yang auto-order stok.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">💻</div>IT and Networks</div>
+          <p>IoT di lingkungan IT mencakup mesin kantor seperti <strong>printers, fax, copiers</strong>, serta <strong>PBX monitoring systems</strong>. Memudahkan komunikasi antar endpoint dan pengiriman data jarak jauh.</p>
+        </div>
+      </div>
+
+      <div class="info-box info-tip">
+        <strong>Insight Penting:</strong> Setiap sektor memiliki profil risiko unik. Healthcare IoT
+        (implant) menuntut <em>life-critical availability</em>. Industrial IoT menuntut <em>deterministic latency</em>.
+        Smart Home menuntut <em>privacy by design</em>. Strategi keamanan IoT harus disesuaikan per use case.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 4: ARSITEKTUR IoT ============= -->
+    <section id="arsitektur">
+      <div class="section-header">
+        <span class="section-tag">Bagian 04</span>
+        <h2>Arsitektur IoT</h2>
+        <p>Empat lapisan arsitektur IoT — Device, Communication, Cloud, dan Process — dirancang untuk memenuhi kebutuhan berbagai sektor.</p>
+      </div>
+
+      <p>
+        Arsitektur IoT mencakup beberapa lapisan yang saling terhubung untuk <strong>mengumpulkan,
+        menyimpan, dan memproses data</strong>. Lapisan-lapisan ini dirancang sedemikian rupa sehingga
+        dapat memenuhi kebutuhan berbagai sektor: masyarakat, industri, enterprise, dan pemerintah.
+        Arsitektur umum IoT ecosystem berbeda untuk setiap organisasi, tetapi model referensi yang
+        banyak digunakan mencakup 4 lapisan utama berikut.
+      </p>
+
+      <h3 class="sub-title">4.1 4 Lapisan Arsitektur IoT</h3>
+      <div class="infographic">
+        <div class="ig-title">4-Layer IoT Architecture — Device → Communication → Cloud → Process</div>
+        <svg viewBox="0 0 900 420" width="900" height="420" aria-label="IoT 4 layers">
+          <defs>
+            <linearGradient id="grad-l1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#22d3ee" stop-opacity="0.05"/>
+            </linearGradient>
+            <linearGradient id="grad-l2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#34d399" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#34d399" stop-opacity="0.05"/>
+            </linearGradient>
+            <linearGradient id="grad-l3" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#a78bfa" stop-opacity="0.05"/>
+            </linearGradient>
+            <linearGradient id="grad-l4" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#fbbf24" stop-opacity="0.05"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Layer 4: Process (top) -->
+          <rect x="40" y="20" width="820" height="80" rx="12" fill="url(#grad-l4)" stroke="#fbbf24" stroke-width="2"/>
+          <text x="60" y="45" class="ig-text-title" style="fill:#fbbf24">Layer 4: PROCESS Layer</text>
+          <text x="60" y="62" class="ig-text-small">People, Businesses, Collaborations, Decision making based on policies &amp; procedures</text>
+          <text x="60" y="78" class="ig-text-small">Applications: CRM, ERP, SCM, PLM — analytics &amp; processes</text>
+          <g class="ig-text-small">
+            <rect x="600" y="35" width="80" height="22" rx="11" fill="#161d2e" stroke="#fbbf24"/>
+            <text x="640" y="50" text-anchor="middle">CRM</text>
+            <rect x="690" y="35" width="80" height="22" rx="11" fill="#161d2e" stroke="#fbbf24"/>
+            <text x="730" y="50" text-anchor="middle">ERP</text>
+            <rect x="780" y="35" width="70" height="22" rx="11" fill="#161d2e" stroke="#fbbf24"/>
+            <text x="815" y="50" text-anchor="middle">SCM</text>
+            <rect x="600" y="65" width="250" height="22" rx="11" fill="#161d2e" stroke="#fbbf24"/>
+            <text x="725" y="80" text-anchor="middle">Analytics Platform · Business Intelligence</text>
+          </g>
+
+          <!-- Layer 3: Cloud -->
+          <rect x="40" y="110" width="820" height="80" rx="12" fill="url(#grad-l3)" stroke="#a78bfa" stroke-width="2"/>
+          <text x="60" y="135" class="ig-text-title" style="fill:#a78bfa">Layer 3: CLOUD Layer</text>
+          <text x="60" y="152" class="ig-text-small">Cloud servers accept, store, &amp; process sensor data from IoT gateways</text>
+          <text x="60" y="168" class="ig-text-small">Streaming processors · Data lakes · Big data warehouses · ML models · Control apps</text>
+          <g class="ig-text-small">
+            <rect x="600" y="125" width="80" height="22" rx="11" fill="#161d2e" stroke="#a78bfa"/>
+            <text x="640" y="140" text-anchor="middle">Data Lake</text>
+            <rect x="690" y="125" width="80" height="22" rx="11" fill="#161d2e" stroke="#a78bfa"/>
+            <text x="730" y="140" text-anchor="middle">Warehouse</text>
+            <rect x="780" y="125" width="70" height="22" rx="11" fill="#161d2e" stroke="#a78bfa"/>
+            <text x="815" y="140" text-anchor="middle">ML/AI</text>
+            <rect x="600" y="155" width="250" height="22" rx="11" fill="#161d2e" stroke="#a78bfa"/>
+            <text x="725" y="170" text-anchor="middle">Data Analytics · Control Applications</text>
+          </g>
+
+          <!-- Layer 2: Communication -->
+          <rect x="40" y="200" width="820" height="80" rx="12" fill="url(#grad-l2)" stroke="#34d399" stroke-width="2"/>
+          <text x="60" y="225" class="ig-text-title" style="fill:#34d399">Layer 2: COMMUNICATION Layer</text>
+          <text x="60" y="242" class="ig-text-small">Protocols &amp; networks for connectivity + edge computing</text>
+          <text x="60" y="258" class="ig-text-small">Internet IoT: TCP/IP. Intranet IoT: LAN, RF, Wi-Fi, Li-Fi. Gateways manage traffic.</text>
+          <g class="ig-text-small">
+            <rect x="600" y="215" width="60" height="22" rx="11" fill="#161d2e" stroke="#34d399"/>
+            <text x="630" y="230" text-anchor="middle">Wi-Fi</text>
+            <rect x="670" y="215" width="60" height="22" rx="11" fill="#161d2e" stroke="#34d399"/>
+            <text x="700" y="230" text-anchor="middle">Zigbee</text>
+            <rect x="740" y="215" width="60" height="22" rx="11" fill="#161d2e" stroke="#34d399"/>
+            <text x="770" y="230" text-anchor="middle">LoRa</text>
+            <rect x="810" y="215" width="50" height="22" rx="11" fill="#161d2e" stroke="#34d399"/>
+            <text x="835" y="230" text-anchor="middle">5G</text>
+            <rect x="600" y="245" width="250" height="22" rx="11" fill="#161d2e" stroke="#34d399"/>
+            <text x="725" y="260" text-anchor="middle">Gateway · Edge Computing · Level-5 Gateways</text>
+          </g>
+
+          <!-- Layer 1: Device (bottom) -->
+          <rect x="40" y="290" width="820" height="120" rx="12" fill="url(#grad-l1)" stroke="#22d3ee" stroke-width="2"/>
+          <text x="60" y="315" class="ig-text-title">Layer 1: DEVICE Layer</text>
+          <text x="60" y="332" class="ig-text-small">Hardware yang membentuk IoT devices — endpoint yang acquire data berdasarkan use case</text>
+
+          <g class="ig-text-small">
+            <rect x="60" y="345" width="110" height="40" rx="8" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="115" y="362" text-anchor="middle" class="ig-text-strong">Sensors</text>
+            <text x="115" y="376" text-anchor="middle" style="font-size:9px">temp, gyro, GPS, RFID</text>
+
+            <rect x="180" y="345" width="110" height="40" rx="8" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="235" y="362" text-anchor="middle" class="ig-text-strong">Mobile devices</text>
+            <text x="235" y="376" text-anchor="middle" style="font-size:9px">smartphone, tablet</text>
+
+            <rect x="300" y="345" width="110" height="40" rx="8" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="355" y="362" text-anchor="middle" class="ig-text-strong">MCU</text>
+            <text x="355" y="376" text-anchor="middle" style="font-size:9px">microcontroller unit</text>
+
+            <rect x="420" y="345" width="110" height="40" rx="8" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="475" y="362" text-anchor="middle" class="ig-text-strong">Networking gear</text>
+            <text x="475" y="376" text-anchor="middle" style="font-size:9px">routers, switches</text>
+
+            <rect x="540" y="345" width="110" height="40" rx="8" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="595" y="362" text-anchor="middle" class="ig-text-strong">Single-board PC</text>
+            <text x="595" y="376" text-anchor="middle" style="font-size:9px">Raspberry Pi, Arduino</text>
+
+            <rect x="660" y="345" width="190" height="40" rx="8" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="755" y="362" text-anchor="middle" class="ig-text-strong">Actuators</text>
+            <text x="755" y="376" text-anchor="middle" style="font-size:9px">motor, valve, relay, switch</text>
+          </g>
+        </svg>
+        <div class="infographic-caption">Gambar 6. Arsitektur 4-layer IoT — Device mengumpulkan data, Communication mengirim, Cloud menyimpan/proses, Process mengubah menjadi keputusan bisnis.</div>
+      </div>
+
+      <h3 class="sub-title">4.2 Komponen Building Block Arsitektur IoT</h3>
+      <dl class="def-list">
+        <div class="def-item">
+          <dt>Gateways (Field Gateways)</dt>
+          <dd>Perangkat yang mentransmisikan data dari things ke cloud dan sebaliknya. Fungsi: <strong>pre-processing &amp; filtering</strong> data sebelum transmit ke cloud (mengurangi volume), mengirimkan <strong>control commands</strong> dari cloud ke things untuk dieksekusi aktuator.</dd>
+        </div>
+        <div class="def-item">
+          <dt>Cloud Gateways</dt>
+          <dd>Fitur: <em>data compression</em>, mengamankan transfer data antara field gateways dan cloud IoT servers, memastikan kompatibilitas protokol berbeda, dan berkomunikasi dengan field gateways melalui protokol yang didukung gateway.</dd>
+        </div>
+        <div class="def-item">
+          <dt>Streaming Data Processors</dt>
+          <dd>Memastikan tidak ada data yang hilang atau corrupt. Fitur: transisi data efektif ke <em>data lake</em>, application control. Processor ini adalah jantung aliran data real-time IoT.</dd>
+        </div>
+        <div class="def-item">
+          <dt>Data Lakes</dt>
+          <dd>Menyimpan data dari perangkat terhubung dalam <strong>format natural</strong>. Jika data dibutuhkan untuk insight bermakna, diekstrak dari data lake dan dimuat ke big data warehouse.</dd>
+        </div>
+        <div class="def-item">
+          <dt>Big Data Warehouses</dt>
+          <dd>Hanya berisi data yang sudah dibersihkan, terstruktur, dan di-match. Menyimpan: <em>context information</em> tentang things/devices (lokasi sensor), commands yang dikirim control applications ke things.</dd>
+        </div>
+        <div class="def-item">
+          <dt>Data Analytics</dt>
+          <dd>Membantu data analysts menemukan trends dan actionable insights. Analisis dalam bentuk schema, diagram, dan infographics mengungkap: <strong>device performance</strong>, <strong>inefficiencies IoT system</strong> dan cara enhancement. Korelasi manual membantu membuat algoritma untuk control applications.</dd>
+        </div>
+        <div class="def-item">
+          <dt>Machine Learning</dt>
+          <dd>Memungkinkan data analysts membuat <strong>models</strong> untuk control applications. Model diupdate reguler sesuai data di big data warehouse. Contoh: model pengenalan pola perilaku karyawan (jam masuk/keluar) untuk auto-adjust lampu ruangan.</dd>
+        </div>
+        <div class="def-item">
+          <dt>Control Applications</dt>
+          <dd>Mengirim <strong>automatic commands &amp; alerts</strong> ke aktuator. Contoh: saat pre-failure situation terdeteksi, sensor memantau state device, IoT system mengirim notifikasi otomatis ke system engineer. Dua tipe: <em>rule-based</em> (rule dari specialist) dan <em>ML-based</em> (model yang diupdate reguler).</dd>
+        </div>
+        <div class="def-item">
+          <dt>User Applications</dt>
+          <dd>Aplikasi web/mobile untuk mengubah behavior application controls. Memungkinkan user: connect ke IoT system, monitor &amp; control smart things (kirim command ke control apps, set option automatic behavior) saat terhubung ke network of similar things.</dd>
+        </div>
+      </dl>
+
+      <div class="info-box info-tip">
+        <strong>Best Practice:</strong> Arsitektur IoT yang baik harus mendukung
+        <strong>horizontal scaling</strong> (jumlah device bertambah) dan <strong>vertical scaling</strong>
+        (berbagai IoT solution). Cloud tier harus bisa orchestrate seluruh workflow IoT end-to-end.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 5: MODEL KOMUNIKASI IoT ============= -->
+    <section id="komunikasi">
+      <div class="section-header">
+        <span class="section-tag">Bagian 05</span>
+        <h2>Model Komunikasi IoT</h2>
+        <p>Empat model komunikasi IoT yang menyoroti fleksibilitas perangkat IoT dalam berkomunikasi satu sama lain atau dengan client.</p>
+      </div>
+
+      <p>
+        Teknologi IoT menggunakan berbagai model komunikasi teknis, masing-masing dengan karakteristik
+        unik. Model-model ini menyoroti fleksibilitas perangkat IoT dalam berkomunikasi satu sama lain
+        atau dengan client. Pemilihan model komunikasi yang tepat sangat mempengaruhi arsitektur
+        keamanan, latensi, dan skalabilitas solusi IoT.
+      </p>
+
+      <h3 class="sub-title">5.1 Empat Model Komunikasi — Visualisasi</h3>
+      <div class="infographic">
+        <div class="ig-title">4 IoT Communication Models — Perbandingan Arsitektur</div>
+        <svg viewBox="0 0 900 480" width="900" height="480" aria-label="Communication models">
+          <defs>
+            <marker id="arr-cm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/>
+            </marker>
+          </defs>
+
+          <!-- Model 1: Device-to-Device -->
+          <rect x="30" y="20" width="400" height="200" rx="12" class="ig-accent-box"/>
+          <text x="230" y="45" text-anchor="middle" class="ig-text-title">① Device-to-Device (D2D)</text>
+          <text x="230" y="62" text-anchor="middle" class="ig-text-small">Protocols: ZigBee, Z-Wave, Bluetooth</text>
+
+          <rect x="60" y="80" width="120" height="60" rx="8" fill="#0d1320" stroke="#22d3ee"/>
+          <text x="120" y="105" text-anchor="middle" class="ig-text-strong">Light Bulb</text>
+          <text x="120" y="120" text-anchor="middle" class="ig-text-small">Mfr A</text>
+          <text x="120" y="133" text-anchor="middle" class="ig-text-small" style="font-size:9px">Bluetooth/Z-wave/Zigbee</text>
+
+          <rect x="280" y="80" width="120" height="60" rx="8" fill="#0d1320" stroke="#22d3ee"/>
+          <text x="340" y="105" text-anchor="middle" class="ig-text-strong">Light Switch</text>
+          <text x="340" y="120" text-anchor="middle" class="ig-text-small">Mfr B</text>
+          <text x="340" y="133" text-anchor="middle" class="ig-text-small" style="font-size:9px">Bluetooth/Z-wave/Zigbee</text>
+
+          <path d="M 180 110 L 280 110" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-cm)"/>
+          <path d="M 280 130 L 180 130" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-cm)"/>
+          <text x="230" y="170" text-anchor="middle" class="ig-text-small">Direct P2P — no cloud, no gateway</text>
+          <text x="230" y="190" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">Use case: smart home, wearable ↔ smartphone</text>
+
+          <!-- Model 2: Device-to-Cloud -->
+          <rect x="470" y="20" width="400" height="200" rx="12" class="ig-success-box"/>
+          <text x="670" y="45" text-anchor="middle" class="ig-text-title" style="fill:#34d399">② Device-to-Cloud (D2C)</text>
+          <text x="670" y="62" text-anchor="middle" class="ig-text-small">Protocols: Wi-Fi, Ethernet, Cellular</text>
+
+          <rect x="500" y="80" width="120" height="60" rx="8" fill="#0d1320" stroke="#34d399"/>
+          <text x="560" y="105" text-anchor="middle" class="ig-text-strong">CCTV Camera</text>
+          <text x="560" y="120" text-anchor="middle" class="ig-text-small">Sensor</text>
+          <text x="560" y="133" text-anchor="middle" class="ig-text-small" style="font-size:9px">HTTP/TLS/TCP/IP</text>
+
+          <rect x="720" y="80" width="120" height="60" rx="8" fill="#0d1320" stroke="#34d399"/>
+          <text x="780" y="105" text-anchor="middle" class="ig-text-strong">☁ Cloud</text>
+          <text x="780" y="120" text-anchor="middle" class="ig-text-small">App Provider</text>
+
+          <path d="M 620 110 L 720 110" stroke="#34d399" stroke-width="2" marker-end="url(#arr-cm)"/>
+          <path d="M 720 130 L 620 130" stroke="#34d399" stroke-width="2" marker-end="url(#arr-cm)"/>
+          <text x="670" y="170" text-anchor="middle" class="ig-text-small">Direct to cloud — no intermediary</text>
+          <text x="670" y="190" text-anchor="middle" class="ig-text-small" style="fill:#34d399">Use case: remote CCTV access via smartphone</text>
+
+          <!-- Model 3: Device-to-Gateway -->
+          <rect x="30" y="240" width="400" height="200" rx="12" class="ig-purple-box"/>
+          <text x="230" y="265" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">③ Device-to-Gateway (D2G)</text>
+          <text x="230" y="282" text-anchor="middle" class="ig-text-small">Protocols: ZigBee, Z-Wave, Wi-Fi, Bluetooth</text>
+
+          <rect x="60" y="300" width="100" height="60" rx="8" fill="#0d1320" stroke="#a78bfa"/>
+          <text x="110" y="325" text-anchor="middle" class="ig-text-strong">Temp Sensor</text>
+          <text x="110" y="340" text-anchor="middle" class="ig-text-small" style="font-size:9px">CoAP/DTLS/UDP</text>
+
+          <rect x="190" y="300" width="100" height="60" rx="8" fill="#0d1320" stroke="#a78bfa"/>
+          <text x="240" y="325" text-anchor="middle" class="ig-text-strong">Gateway</text>
+          <text x="240" y="340" text-anchor="middle" class="ig-text-small" style="font-size:9px">smartphone/hub</text>
+
+          <rect x="320" y="300" width="100" height="60" rx="8" fill="#0d1320" stroke="#a78bfa"/>
+          <text x="370" y="325" text-anchor="middle" class="ig-text-strong">☁ Cloud</text>
+          <text x="370" y="340" text-anchor="middle" class="ig-text-small">App Provider</text>
+
+          <path d="M 160 330 L 190 330" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr-cm)"/>
+          <path d="M 290 330 L 320 330" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr-cm)"/>
+          <text x="230" y="390" text-anchor="middle" class="ig-text-small">Gateway = protocol translation + security</text>
+          <text x="230" y="410" text-anchor="middle" class="ig-text-small" style="fill:#a78bfa">Use case: smart TV via mobile app hub</text>
+
+          <!-- Model 4: Cloud-to-Cloud -->
+          <rect x="470" y="240" width="400" height="200" rx="12" class="ig-warn-box"/>
+          <text x="670" y="265" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">④ Cloud-to-Cloud (C2C)</text>
+          <text x="670" y="282" text-anchor="middle" class="ig-text-small">Back-End Data-Sharing — HTTPS, OAuth 2.0, JSON</text>
+
+          <rect x="500" y="300" width="80" height="60" rx="8" fill="#0d1320" stroke="#fbbf24"/>
+          <text x="540" y="325" text-anchor="middle" class="ig-text-strong">Sensor</text>
+          <text x="540" y="340" text-anchor="middle" class="ig-text-small" style="font-size:9px">temp, CO</text>
+
+          <rect x="600" y="300" width="80" height="60" rx="8" fill="#0d1320" stroke="#fbbf24"/>
+          <text x="640" y="325" text-anchor="middle" class="ig-text-strong">☁ Cloud 1</text>
+          <text x="640" y="340" text-anchor="middle" class="ig-text-small" style="font-size:9px">ASP #1</text>
+
+          <rect x="700" y="300" width="80" height="60" rx="8" fill="#0d1320" stroke="#fbbf24"/>
+          <text x="740" y="325" text-anchor="middle" class="ig-text-strong">☁ Cloud 2</text>
+          <text x="740" y="340" text-anchor="middle" class="ig-text-small" style="font-size:9px">ASP #2</text>
+
+          <rect x="800" y="300" width="60" height="60" rx="8" fill="#0d1320" stroke="#fbbf24"/>
+          <text x="830" y="325" text-anchor="middle" class="ig-text-strong">☁ 3</text>
+          <text x="830" y="340" text-anchor="middle" class="ig-text-small" style="font-size:9px">ASP #3</text>
+
+          <path d="M 580 330 L 600 330" stroke="#fbbf24" stroke-width="2" marker-end="url(#arr-cm)"/>
+          <path d="M 680 330 L 700 330" stroke="#fbbf24" stroke-width="2" marker-end="url(#arr-cm)"/>
+          <path d="M 780 330 L 800 330" stroke="#fbbf24" stroke-width="2" marker-end="url(#arr-cm)"/>
+          <text x="670" y="390" text-anchor="middle" class="ig-text-small">Authorized 3rd-party data sharing</text>
+          <text x="670" y="410" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">Use case: energy consumption analyzer for company</text>
+        </svg>
+        <div class="infographic-caption">Gambar 7. Perbandingan 4 model komunikasi IoT — D2D (langsung), D2C (ke cloud), D2G (via gateway), C2C (antar cloud).</div>
+      </div>
+
+      <h3 class="sub-title">5.2 Penjelasan Detail Setiap Model</h3>
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">D2D</div>Device-to-Device Communication</div>
+          <p>Perangkat saling berinteraksi langsung melalui internet tetapi didominasi protokol <strong>ZigBee, Z-Wave, atau Bluetooth</strong>. Paling umum di smart home: thermostat, light bulb, door lock, CCTV, fridge — transfer paket data kecil dengan data rate rendah.</p>
+          <p>Populer juga di komunikasi <em>wearable devices</em>. Contoh: ECG/EKG yang dikenakan pasien di-pair ke smartphone, mengirim notifikasi darurat.</p>
+          <div class="meta">
+            <span class="pill accent">Low latency</span>
+            <span class="pill warn">No cloud needed</span>
+            <span class="pill danger">Limited range</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">D2C</div>Device-to-Cloud Communication</div>
+          <p>Perangkat berkomunikasi dengan cloud <strong>langsung</strong>, bukan dengan client. Menggunakan Wi-Fi, Ethernet, atau Cellular. Contoh: CCTV yang diakses via smartphone dari lokasi remote.</p>
+          <p>Device tidak dapat berkomunikasi langsung dengan client — harus lewat cloud. Client input kredensial → akses cloud → akses device.</p>
+          <div class="meta">
+            <span class="pill success">Global access</span>
+            <span class="pill warn">Cloud-dependent</span>
+            <span class="pill danger">Latency variabel</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">D2G</div>Device-to-Gateway Communication</div>
+          <p>Perangkat IoT berkomunikasi dengan <strong>gateway intermediate</strong>, yang kemudian berkomunikasi dengan cloud service. Gateway bisa smartphone atau hub yang menyediakan security features dan protocol/data translation.</p>
+          <p>Protokol umum: <strong>ZigBee dan Z-Wave</strong>. Jika gateway adalah smartphone, bisa berupa aplikasi yang berinteraksi dengan IoT device dan cloud. Contoh: smart TV yang connect ke cloud via mobile app.</p>
+          <div class="meta">
+            <span class="pill accent">Protocol translation</span>
+            <span class="pill success">Edge security</span>
+            <span class="pill warn">Extra hop</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">C2C</div>Cloud-to-Cloud (Back-End Sharing)</div>
+          <p>Memperluas D2C sehingga data IoT dapat diakses oleh <strong>pihak ketiga yang berwenang</strong>. Perangkat upload data ke cloud, lalu diakses/dianalisis oleh pihak ketiga.</p>
+          <p>Contoh: analyzer konsumsi energi tahunan/bulanan perusahaan. Hasil analisis digunakan untuk mengurangi pengeluaran energi via teknik energy-harvesting atau saving.</p>
+          <div class="meta">
+            <span class="pill warn">3rd-party sharing</span>
+            <span class="pill accent">OAuth 2.0</span>
+            <span class="pill danger">Privacy concern</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box info-warn">
+        <strong>Trade-off Penting:</strong> Pemilihan model komunikasi menentukan postur keamanan:
+        D2D rentan di physical layer (jamming, eavesdropping); D2C rentan di cloud (data breach);
+        D2G menambah attack surface gateway; C2C memperumit consent &amp; data sovereignty.
+        Tidak ada model "paling aman" — yang ada adalah model "paling sesuai use case".
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 6: LINGKUNGAN IoT-ENABLED ============= -->
+    <section id="lingkungan">
+      <div class="section-header">
+        <span class="section-tag">Bagian 06</span>
+        <h2>Lingkungan IoT-Enabled</h2>
+        <p>Tiga tier lingkungan IoT enterprise: Things/Devices, Gateway/Control, dan Cloud/Platform — dengan 5 fitur kunci.</p>
+      </div>
+
+      <p>
+        Lingkungan IT IoT-enabled yang khas terdiri dari perangkat/things yang menggunakan gateway
+        untuk berkomunikasi melalui jaringan ke server back-end organisasi yang menjalankan IoT cloud
+        platform. Platform IoT ini memungkinkan integrasi informasi IoT ke dalam organisasi.
+      </p>
+
+      <h3 class="sub-title">6.1 Tiga Tier Lingkungan IoT-Enabled</h3>
+      <div class="infographic">
+        <div class="ig-title">3-Tier IoT-Enabled IT Environment</div>
+        <svg viewBox="0 0 900 360" width="900" height="360" aria-label="3-tier IoT env">
+          <defs>
+            <marker id="arr-tier" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/>
+            </marker>
+          </defs>
+
+          <!-- Tier 1: Things/Devices (bottom) -->
+          <rect x="40" y="240" width="820" height="100" rx="12" class="ig-accent-box"/>
+          <text x="60" y="265" class="ig-text-title">Tier 1: Things / Devices</text>
+          <text x="60" y="282" class="ig-text-small">Smartphone, wearable, autonomous machines, tags (RFID/NFC/QR)</text>
+          <g class="ig-text-small">
+            <rect x="60" y="295" width="100" height="35" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="110" y="312" text-anchor="middle" class="ig-text-strong">📱 Smartphone</text>
+            <text x="110" y="324" text-anchor="middle" style="font-size:9px">+ wearable</text>
+
+            <rect x="180" y="295" width="100" height="35" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="230" y="312" text-anchor="middle" class="ig-text-strong">🤖 Autonomous</text>
+            <text x="230" y="324" text-anchor="middle" style="font-size:9px">machines</text>
+
+            <rect x="300" y="295" width="100" height="35" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="350" y="312" text-anchor="middle" class="ig-text-strong">🏷 RFID/NFC</text>
+            <text x="350" y="324" text-anchor="middle" style="font-size:9px">QR tags</text>
+
+            <rect x="420" y="295" width="200" height="35" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="520" y="312" text-anchor="middle" class="ig-text-strong">Sensors</text>
+            <text x="520" y="324" text-anchor="middle" style="font-size:9px">air quality, humidity, light, pressure</text>
+
+            <rect x="640" y="295" width="200" height="35" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="740" y="312" text-anchor="middle" class="ig-text-strong">Actuators</text>
+            <text x="740" y="324" text-anchor="middle" style="font-size:9px">switch off faulty device, alarm</text>
+          </g>
+
+          <!-- bidirectional arrow Tier1-Tier2 -->
+          <path d="M 450 240 L 450 200" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-tier)"/>
+          <path d="M 460 200 L 460 240" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-tier)"/>
+          <text x="480" y="225" class="ig-text-small" style="fill:#22d3ee">telemetry ↑ / command ↓</text>
+
+          <!-- Tier 2: Gateway/Control (middle) -->
+          <rect x="40" y="130" width="820" height="70" rx="12" class="ig-purple-box"/>
+          <text x="60" y="155" class="ig-text-title" style="fill:#a78bfa">Tier 2: Gateway / Control</text>
+          <text x="60" y="172" class="ig-text-small">Pre-process data sensors → reduce unwanted data → cloud. Bidirectional: route commands back-end → device</text>
+          <g class="ig-text-small">
+            <rect x="60" y="180" width="80" height="20" rx="6" fill="#0d1320" stroke="#a78bfa"/>
+            <text x="100" y="194" text-anchor="middle">PAN</text>
+            <rect x="150" y="180" width="80" height="20" rx="6" fill="#0d1320" stroke="#a78bfa"/>
+            <text x="190" y="194" text-anchor="middle">LAN</text>
+            <rect x="240" y="180" width="80" height="20" rx="6" fill="#0d1320" stroke="#a78bfa"/>
+            <text x="280" y="194" text-anchor="middle">Bluetooth</text>
+            <rect x="330" y="180" width="80" height="20" rx="6" fill="#0d1320" stroke="#a78bfa"/>
+            <text x="370" y="194" text-anchor="middle">Zigbee</text>
+            <rect x="420" y="180" width="120" height="20" rx="6" fill="#0d1320" stroke="#a78bfa"/>
+            <text x="480" y="194" text-anchor="middle">MQTT/TCP</text>
+            <rect x="550" y="180" width="290" height="20" rx="6" fill="#0d1320" stroke="#a78bfa"/>
+            <text x="695" y="194" text-anchor="middle">Micro-computing (multi-core chips)</text>
+          </g>
+
+          <path d="M 450 130 L 450 90" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-tier)"/>
+          <path d="M 460 90 L 460 130" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-tier)"/>
+          <text x="480" y="115" class="ig-text-small" style="fill:#22d3ee">filtered data ↑ / business rules ↓</text>
+
+          <!-- Tier 3: Cloud/Platform (top) -->
+          <rect x="40" y="20" width="820" height="70" rx="12" class="ig-success-box"/>
+          <text x="60" y="45" class="ig-text-title" style="fill:#34d399">Tier 3: Cloud IoT Platform</text>
+          <text x="60" y="62" class="ig-text-small">Data computation → insights → business value. Middleware orchestrate IoT workflow end-to-end</text>
+          <g class="ig-text-small">
+            <rect x="60" y="70" width="100" height="20" rx="6" fill="#0d1320" stroke="#34d399"/>
+            <text x="110" y="84" text-anchor="middle">Event processing</text>
+            <rect x="170" y="70" width="100" height="20" rx="6" fill="#0d1320" stroke="#34d399"/>
+            <text x="220" y="84" text-anchor="middle">Data storage</text>
+            <rect x="280" y="70" width="140" height="20" rx="6" fill="#0d1320" stroke="#34d399"/>
+            <text x="350" y="84" text-anchor="middle">Message routing</text>
+            <rect x="430" y="70" width="180" height="20" rx="6" fill="#0d1320" stroke="#34d399"/>
+            <text x="520" y="84" text-anchor="middle">Application integration (SaaS)</text>
+            <rect x="620" y="70" width="220" height="20" rx="6" fill="#0d1320" stroke="#34d399"/>
+            <text x="730" y="84" text-anchor="middle">User access controls + Linux OS</text>
+          </g>
+        </svg>
+        <div class="infographic-caption">Gambar 8. 3-tier IoT-enabled environment — Things (devices) → Gateway (pre-process) → Cloud (compute/insights).</div>
+      </div>
+
+      <h3 class="sub-title">6.2 Fungsi Setiap Tier</h3>
+      <div class="card-grid grid-3">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">T1</div>Things/Devices Tier</div>
+          <p>Smartphone, wearable, autonomous machines, tag (RFID/NFC/QR) yang mengumpulkan data via sensor. Mentransfer telemetry/command ke gateway via protokol wired/wireless. Dapat mengontrol state device lain — switch off faulty device atau raise alarm.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">T2</div>Gateway/Control Tier</div>
+          <p>Fokus pada komunikasi, offload processing, dan driving actions. Pre-process huge data dari sensor sebelum kirim ke cloud — mengurangi unwanted data. Bertindak sebagai <strong>proxy/edge device</strong> untuk legacy &amp; low-power devices yang tidak bisa langsung register ke IoT platform.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">T3</div>Cloud IoT Platform Tier</div>
+          <p>Fokus pada data computation untuk insights dan business value. Bertindak sebagai <strong>middleware</strong> yang orchestrate seluruh IoT workflow. Backend business analytics untuk run event processes, create/adapt business rules berdasarkan historical trends.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">6.3 Lima Fitur Kunci IoT-Enabled IT Environment</h3>
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">📡</div>Real-time Monitoring</div>
+          <p>Memantau IoT assets, processing products, memelihara flow, membantu detect issue, dan mengambil tindakan <strong>segera</strong>. Dasar dari operasional IoT yang responsif.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">📊</div>Real-time Analytics</div>
+          <p>Menganalisis IoT things dan mengambil langkah sesuai. Menyediakan grafik dan real-time streaming analytics, memungkinkan bisnis overview performance dan produksi.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🛡</div>Multi-layer Security</div>
+          <p>Mencegah akses tidak sah ke IoT things menggunakan <strong>MFA, TLS, device identity management</strong>, dll. Pendekatan berlapis untuk defense-in-depth.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">📥</div>Data Collection</div>
+          <p>Pertukaran data antar organisasi IoT-enabled menggunakan berbagai communication protocols. Protokol harus <strong>lightweight</strong> dengan low-network-bandwidth functionality.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🔄</div>Multi-Device Communication</div>
+          <p>Mengkonfigurasi multiple device untuk mengakses IoT things bahkan <strong>remote</strong> kapan saja dan dari mana pun. Mendukung fleksibilitas IoT 3D plane.</p>
+        </div>
+      </div>
+
+      <div class="info-box info-tip">
+        <strong>Cloud Tier sebagai Middleware:</strong> Cloud tier harus mampu
+        <strong>horizontal scaling</strong> (jumlah device bertambah) DAN <strong>vertical scaling</strong>
+        (berbagai IoT solution). Inilah yang membedakan IoT platform dari sekadar server tradisional.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 7: KEAMANAN IoT ============= -->
+    <section id="keamanan">
+      <div class="section-header">
+        <span class="section-tag">Bagian 07</span>
+        <h2>Keamanan di Lingkungan IoT-Enabled</h2>
+        <p>Mengapa keamanan IoT jauh lebih sulit dari keamanan mobile — dan strategi multi-layer untuk mengatasinya.</p>
+      </div>
+
+      <p>
+        Karena perangkat IoT sangat beragam, keamanan perangkat bergantung pada tipe dan modelnya.
+        Dengan <strong>minim atau tidak adekuatnya fokus manufacturer</strong> pada keamanan IoT,
+        langkah keamanan yang digunakan sering kali tidak memadai. Oleh karena itu, organisasi harus
+        fokus mengamankan perangkat IoT dan menangkal skenario serangan di lingkungan IoT-enabled.
+      </p>
+
+      <p>
+        Seorang penyerang menggunakan perangkat IoT yang ter-compromise sebagai <em>entry point</em>
+        ke jaringan dan melakukan <strong>lateral movement attack</strong>. Contoh: smart printer
+        yang ter-compromise dapat menginfeksi sistem dan device lain di jaringan yang sama. Router
+        yang ter-compromise dapat menyebarkan malware ke semua device IoT yang terhubung.
+      </p>
+
+      <h3 class="sub-title">7.1 Strategi Pengamanan Dasar IoT</h3>
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🔑</div>Ubah Default Password</div>
+          <p>Password default yang dipublikasikan di internet adalah vektor serangan #1 IoT. Mirai botnet menggunakan 60+ kredensial default untuk mengkompromi jutaan device. <strong>Wajib</strong> mengganti password saat deploy pertama kali.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🚫</div>Disable Unused Features</div>
+          <p>Banyak IoT device mengaktifkan UPnP, Telnet, SSH, debug console by default. Setiap fitur yang aktif adalah attack surface. Nonaktifkan yang tidak digunakan — terutama UPnP di router.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">⬆</div>Update Firmware &amp; Apps</div>
+          <p>Patch vulnerability secara reguler. Banyak device IoT tidak pernah di-update setelah deploy — penyerang exploit CVE lama yang sudah ada patch-nya. Otomatisasi update jika memungkinkan.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">✓</div>Apps dari Vendor Terpercaya</div>
+          <p>Untuk IoT yang bergantung pada third-party apps, gunakan hanya aplikasi legitimate dari vendor reliable. Hindari sideloading APK/executable dari sumber tidak jelas.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">7.2 Mengamankan Jaringan &amp; Router IoT</h3>
+      <div class="infographic">
+        <div class="ig-title">Anatom Serangan Lateral Movement via IoT Compromised Device</div>
+        <svg viewBox="0 0 900 360" width="900" height="360" aria-label="Lateral movement">
+          <defs>
+            <marker id="arr-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#f87171"/>
+            </marker>
+            <marker id="arr-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#34d399"/>
+            </marker>
+          </defs>
+
+          <!-- Phase 1: Initial Compromise -->
+          <text x="450" y="25" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">Phase 1 — Initial Compromise (Smart Printer)</text>
+
+          <rect x="370" y="40" width="160" height="60" rx="10" class="ig-danger-box"/>
+          <text x="450" y="65" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">🖨 Smart Printer</text>
+          <text x="450" y="82" text-anchor="middle" class="ig-text-small">default password</text>
+          <text x="450" y="96" text-anchor="middle" class="ig-text-small">Telnet port 23 open</text>
+
+          <!-- Phase 2: Lateral Movement -->
+          <text x="450" y="135" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">Phase 2 — Lateral Movement (same network)</text>
+
+          <rect x="60" y="155" width="140" height="60" rx="10" class="ig-danger-box"/>
+          <text x="130" y="180" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">💻 Workstation</text>
+          <text x="130" y="197" text-anchor="middle" class="ig-text-small">infected via SMB</text>
+          <text x="130" y="211" text-anchor="middle" class="ig-text-small">data exfiltration</text>
+
+          <rect x="220" y="155" width="140" height="60" rx="10" class="ig-danger-box"/>
+          <text x="290" y="180" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">📹 CCTV</text>
+          <text x="290" y="197" text-anchor="middle" class="ig-text-small">recruit to botnet</text>
+          <text x="290" y="211" text-anchor="middle" class="ig-text-small">DDoS amplifier</text>
+
+          <rect x="380" y="155" width="140" height="60" rx="10" class="ig-danger-box"/>
+          <text x="450" y="180" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">🌡 Thermostat</text>
+          <text x="450" y="197" text-anchor="middle" class="ig-text-small">firmware overwrite</text>
+          <text x="450" y="211" text-anchor="middle" class="ig-text-small">persistent backdoor</text>
+
+          <rect x="540" y="155" width="140" height="60" rx="10" class="ig-danger-box"/>
+          <text x="610" y="180" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">💡 Smart Light</text>
+          <text x="610" y="197" text-anchor="middle" class="ig-text-small">Zigbee exploit</text>
+          <text x="610" y="211" text-anchor="middle" class="ig-text-small">physical signal</text>
+
+          <rect x="700" y="155" width="140" height="60" rx="10" class="ig-danger-box"/>
+          <text x="770" y="180" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">🌐 Router</text>
+          <text x="770" y="197" text-anchor="middle" class="ig-text-small">DNS hijack</text>
+          <text x="770" y="211" text-anchor="middle" class="ig-text-small">traffic redirect</text>
+
+          <!-- Arrows from printer -->
+          <path d="M 380 100 L 130 155" stroke="#f87171" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+          <path d="M 410 100 L 290 155" stroke="#f87171" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+          <path d="M 450 100 L 450 155" stroke="#f87171" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+          <path d="M 490 100 L 610 155" stroke="#f87171" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+          <path d="M 520 100 L 770 155" stroke="#f87171" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-red)"/>
+
+          <!-- Phase 3: Mitigation -->
+          <text x="450" y="250" text-anchor="middle" class="ig-text-strong" style="fill:#34d399">Phase 3 — Mitigation: Network Segmentation + Firewall</text>
+
+          <rect x="40" y="270" width="820" height="80" rx="10" class="ig-success-box"/>
+          <text x="60" y="295" class="ig-text-title" style="fill:#34d399">🛡 Defense Strategy</text>
+          <text x="60" y="312" class="ig-text-small">✓ Network segmentation: IoT devices di VLAN terpisah dari workstation &amp; server</text>
+          <text x="60" y="328" class="ig-text-small">✓ Router dengan in-built firewall · Disable UPnP, Telnet, unnecessary services</text>
+          <text x="60" y="344" class="ig-text-small">✓ Map &amp; monitor all devices · Apply rules-based access · NAC (Network Access Control)</text>
+        </svg>
+        <div class="infographic-caption">Gambar 9. Serangan lateral movement via IoT — satu device ter-compromise dapat menginfeksi seluruh jaringan. Mitigasi: segmentasi + firewall.</div>
+      </div>
+
+      <h3 class="sub-title">7.3 Lima Pilar Keamanan IoT</h3>
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">1</div>Fokus Manufacturer yang Kurang</div>
+          <p>Dengan tidak adekuatnya fokus manufacturer pada security, langkah keamanan sering tidak memadai. Organisasi harus <strong>memilih vendor dengan track record keamanan</strong> dan melakukan security assessment sebelum deploy.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">2</div>Amankan Network Devices &amp; Routers</div>
+          <p>Karena IoT device sebagai entry point, fokus pada pengamanan network devices dan routers: map &amp; monitor semua device, segmentasi jaringan, arsitektur jaringan aman, router dengan in-built firewall, disable UPnP.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">3</div>Multi-layered Management</div>
+          <p>Untuk mengamankan IoT device yang beragam, diperlukan <strong>overarching multi-layered security plan</strong> dan maintenance konstan. Endpoint security + network traffic monitoring + appliance-based threat detection.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">4</div>Company-wide Collaboration</div>
+          <p>Kolaborasi &amp; sinkronisasi seluruh perusahaan diperlukan — IT, OT, Security, Legal, HR harus align. IoT security bukan hanya masalah IT, tapi melibatkan seluruh organisasi.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">5</div>Endpoint &amp; Network Defense</div>
+          <p>Enforce security solutions yang safeguard IoT devices dan detect malware di endpoint level. Security software yang check network traffic antara router dan device. Network appliance yang monitor semua port &amp; protocol.</p>
+        </div>
+      </div>
+
+      <div class="info-box info-danger">
+        <strong>Kasus Nyata:</strong> Botnet <em>Mirai</em> (2016) mengkompromi 600.000+ IoT device
+        (CCTV, router, DVR) menggunakan 60+ kredensial default, lalu meluncurkan DDoS 1.2 Tbps ke Dyn DNS
+        yang menjatuhkan Twitter, Netflix, Reddit. <em>VPNFilter</em> (2018) menginfeksi 500.000+ router
+        dengan kemampuan firmware bricking. Pelajaran: <strong>default credentials + no segmentation = bencana skala internet</strong>.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 8: MANAJEMEN SISTEM IoT ============= -->
+    <section id="manajemen-sistem">
+      <div class="section-header">
+        <span class="section-tag">Bagian 08</span>
+        <h2>Manajemen Sistem IoT</h2>
+        <p>Tiga pilar manajemen sistem IoT: Device Management, User Management, dan Security Monitoring.</p>
+      </div>
+
+      <p>
+        Manajemen sistem IoT mencakup tiga aspek utama yang saling terkait: <strong>Device Management</strong>
+        (mengelola perangkat), <strong>User Management</strong> (mengelola pengguna), dan
+        <strong>Security Monitoring</strong> (memantau keamanan). Ketiganya bekerja sama untuk memastikan
+        sistem IoT berjalan aman, andal, dan dapat di-audit.
+      </p>
+
+      <h3 class="sub-title">8.1 Tiga Pilar Manajemen Sistem IoT</h3>
+      <div class="infographic">
+        <div class="ig-title">3 Pilar IoT System Management</div>
+        <svg viewBox="0 0 900 300" width="900" height="300" aria-label="3 pillars">
+          <defs>
+            <linearGradient id="grad-pillar" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#22d3ee" stop-opacity="0.05"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Top: IoT System Management -->
+          <rect x="280" y="20" width="340" height="50" rx="10" fill="url(#grad-pillar)" stroke="#22d3ee" stroke-width="2"/>
+          <text x="450" y="50" text-anchor="middle" class="ig-text-title">IoT System Management</text>
+
+          <!-- 3 pillars -->
+          <rect x="60" y="90" width="240" height="180" rx="10" class="ig-accent-box"/>
+          <text x="180" y="115" text-anchor="middle" class="ig-text-title">Device Mgmt</text>
+          <text x="180" y="135" text-anchor="middle" class="ig-text-small">Secure data transmission</text>
+          <text x="180" y="155" text-anchor="middle" class="ig-text-small">• Identify device identity</text>
+          <text x="180" y="172" text-anchor="middle" class="ig-text-small">• Configure &amp; control devices</text>
+          <text x="180" y="189" text-anchor="middle" class="ig-text-small">• Monitor &amp; diagnose</text>
+          <text x="180" y="206" text-anchor="middle" class="ig-text-small">• Update &amp; maintain software</text>
+          <text x="180" y="223" text-anchor="middle" class="ig-text-small">• Assign device IDs</text>
+          <text x="180" y="245" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">Goal: trusted device, reliable data</text>
+
+          <rect x="330" y="90" width="240" height="180" rx="10" class="ig-purple-box"/>
+          <text x="450" y="115" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">User Mgmt</text>
+          <text x="450" y="135" text-anchor="middle" class="ig-text-small">Control users who access IoT</text>
+          <text x="450" y="155" text-anchor="middle" class="ig-text-small">• Identify users</text>
+          <text x="450" y="172" text-anchor="middle" class="ig-text-small">• Set user roles (owner, guest)</text>
+          <text x="450" y="189" text-anchor="middle" class="ig-text-small">• Set access levels</text>
+          <text x="450" y="206" text-anchor="middle" class="ig-text-small">• Control specific info access</text>
+          <text x="450" y="223" text-anchor="middle" class="ig-text-small">• Add/remove users, settings</text>
+          <text x="450" y="245" text-anchor="middle" class="ig-text-small" style="fill:#a78bfa">Goal: principle of least privilege</text>
+
+          <rect x="600" y="90" width="240" height="180" rx="10" class="ig-danger-box"/>
+          <text x="720" y="115" text-anchor="middle" class="ig-text-title" style="fill:#f87171">Security Monitoring</text>
+          <text x="720" y="135" text-anchor="middle" class="ig-text-small">Detect breaches early</text>
+          <text x="720" y="155" text-anchor="middle" class="ig-text-small">• Log &amp; analyze commands</text>
+          <text x="720" y="172" text-anchor="middle" class="ig-text-small">• Monitor user actions</text>
+          <text x="720" y="189" text-anchor="middle" class="ig-text-small">• Store actions in cloud</text>
+          <text x="720" y="206" text-anchor="middle" class="ig-text-small">• Identify malicious patterns</text>
+          <text x="720" y="223" text-anchor="middle" class="ig-text-small">• Store &amp; compare samples</text>
+          <text x="720" y="245" text-anchor="middle" class="ig-text-small" style="fill:#f87171">Goal: anomaly detection &amp; response</text>
+
+          <!-- Connecting lines -->
+          <path d="M 200 70 L 180 90" stroke="#22d3ee" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <path d="M 450 70 L 450 90" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <path d="M 700 70 L 720 90" stroke="#f87171" stroke-width="1.5" stroke-dasharray="3,2"/>
+        </svg>
+        <div class="infographic-caption">Gambar 10. Tiga pilar IoT System Management — Device, User, dan Security Monitoring yang saling melengkapi.</div>
+      </div>
+
+      <h3 class="sub-title">8.2 Detail Setiap Pilar</h3>
+      <dl class="def-list">
+        <div class="def-item">
+          <dt>Device Management</dt>
+          <dd>
+            Memastikan transmisi data yang aman untuk interaksi halus antar perangkat dan menjamin fungsi perangkat yang tepat:
+            <ul>
+              <li><strong>Identify identity of devices</strong> — pastikan trusted device dengan software genuine yang transmit reliable data.</li>
+              <li><strong>Configure &amp; control</strong> perangkat sesuai kebutuhan sistem (contoh: beri ID untuk device).</li>
+              <li><strong>Monitor &amp; diagnose</strong> untuk smooth &amp; secure functioning.</li>
+              <li><strong>Update &amp; maintain software</strong> — tambah fungsi, fix bug, address vulnerabilities.</li>
+            </ul>
+          </dd>
+        </div>
+        <div class="def-item">
+          <dt>User Management</dt>
+          <dd>
+            Memberikan kontrol atas pengguna yang mengakses sistem IoT:
+            <ul>
+              <li>Identifikasi pengguna, set peran (owner, guest, dll).</li>
+              <li>Set access levels dan kontrol akses ke informasi spesifik.</li>
+              <li>Set user ownership dan add/remove pengguna.</li>
+              <li>Manage user settings dan izin operasi tertentu (contoh: control &amp; record user activities).</li>
+            </ul>
+          </dd>
+        </div>
+        <div class="def-item">
+          <dt>Security Monitoring</dt>
+          <dd>
+            Untuk address security breach di tahap awal dan mencegah malicious attack:
+            <ul>
+              <li><strong>Log &amp; analyze commands</strong> yang dikirim control applications ke things.</li>
+              <li><strong>Monitor actions of users</strong> dan simpan semua di cloud.</li>
+              <li><strong>Identify patterns of malicious behavior</strong> secara proaktif.</li>
+              <li><strong>Store samples of malicious activity</strong> dan bandingkan dengan log IoT system untuk avoid serangan &amp; dampaknya.</li>
+            </ul>
+          </dd>
+        </div>
+      </dl>
+
+      <div class="info-box info-tip">
+        <strong>Best Practice:</strong> Tiga pilar ini harus diintegrasikan, bukan terpisah. Device
+        Management tanpa Security Monitoring = buta terhadap serangan. User Management tanpa Device
+        Management = tidak tahu device mana yang melakukan apa. Integrasi adalah kunci.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 9: STACK-WISE SECURITY ============= -->
+    <section id="stack-wise">
+      <div class="section-header">
+        <span class="section-tag">Bagian 09</span>
+        <h2>Prinsip Stack-wise IoT Security</h2>
+        <p>Untuk solusi IoT end-to-end, keempat lapisan — Device, Communication, Cloud, dan Process — harus diamankan secara konsisten.</p>
+      </div>
+
+      <p>
+        Banyak perangkat IoT terhubung ke jaringan dan akhirnya ke cloud, yang menyebabkan kerentanan
+        terhadap banyak <em>threat vector</em>. Untuk mengembangkan solusi IoT <strong>end-to-end (E2E)</strong>,
+        lapisan device, communication, cloud, dan process harus diamankan. Berikut adalah prinsip
+        stack-wise IoT security yang harus diimplementasikan di setiap lapisan.
+      </p>
+
+      <h3 class="sub-title">9.1 Visualisasi Stack-wise Security</h3>
+      <div class="infographic">
+        <div class="ig-title">Stack-wise IoT Security — 4 Lapisan Pertahanan Terintegrasi</div>
+        <svg viewBox="0 0 900 420" width="900" height="420" aria-label="Stack-wise security">
+          <defs>
+            <linearGradient id="grad-sw1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#22d3ee" stop-opacity="0.05"/>
+            </linearGradient>
+            <linearGradient id="grad-sw2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#34d399" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#34d399" stop-opacity="0.05"/>
+            </linearGradient>
+            <linearGradient id="grad-sw3" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#a78bfa" stop-opacity="0.05"/>
+            </linearGradient>
+            <linearGradient id="grad-sw4" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#fbbf24" stop-opacity="0.05"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Layer 4: Process (top) -->
+          <rect x="40" y="20" width="820" height="80" rx="12" fill="url(#grad-sw4)" stroke="#fbbf24" stroke-width="2"/>
+          <text x="60" y="45" class="ig-text-title" style="fill:#fbbf24">④ Process Layer — Security of Remote Control &amp; Updates</text>
+          <text x="60" y="62" class="ig-text-small">Remote diagnostics, new configurations, file retrieval — harus dengan secure bi-directional connection</text>
+          <text x="60" y="78" class="ig-text-small">Key: incoming connections to device DISALLOWED · device establishes secure channel to cloud · message switch as comm channel</text>
+
+          <!-- Layer 3: Cloud -->
+          <rect x="40" y="110" width="820" height="80" rx="12" fill="url(#grad-sw3)" stroke="#a78bfa" stroke-width="2"/>
+          <text x="60" y="135" class="ig-text-title" style="fill:#a78bfa">③ Cloud Layer — Identification, Authentication, Encryption for Machines</text>
+          <text x="60" y="152" class="ig-text-small">Machines menggunakan digital certificates, BUKAN user ID + password</text>
+          <text x="60" y="168" class="ig-text-small">Certificates tidak hanya authenticate transactions tapi juga encrypt channel device → cloud sebelum transaksi</text>
+          <text x="60" y="184" class="ig-text-small">Cryptographic identification oleh certificate tidak bisa dicapai dengan user ID + password</text>
+
+          <!-- Layer 2: Communication -->
+          <rect x="40" y="200" width="820" height="80" rx="12" fill="url(#grad-sw2)" stroke="#34d399" stroke-width="2"/>
+          <text x="60" y="225" class="ig-text-title" style="fill:#34d399">② Communication Layer — Initiate Connection TO Cloud, NOT FROM Cloud</text>
+          <text x="60" y="242" class="ig-text-small">IoT device HARUS connect ke cloud (bukan internet langsung). Incoming connections harus disallowed.</text>
+          <text x="60" y="258" class="ig-text-small">Connection ke cloud = bi-directional channel untuk remote control. Lightweight message-based protocols.</text>
+          <text x="60" y="274" class="ig-text-small">Inherent security of message: double encryption, filtering, queuing, proper labeling.</text>
+
+          <!-- Layer 1: Device (bottom) -->
+          <rect x="40" y="290" width="820" height="120" rx="12" fill="url(#grad-sw1)" stroke="#22d3ee" stroke-width="2"/>
+          <text x="60" y="315" class="ig-text-title">① Device Layer — Device Intelligence &amp; Edge Processing</text>
+          <text x="60" y="332" class="ig-text-small">Most IoT devices powered by microprocessors — unable to handle complexity of internet connectivity</text>
+          <text x="60" y="348" class="ig-text-small">Smart devices SECURE &amp; ROBUST: embedded security, handle encryption, authentication, dll. → use for front-line duty.</text>
+
+          <g class="ig-text-small">
+            <rect x="60" y="360" width="380" height="40" rx="8" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="250" y="377" text-anchor="middle" class="ig-text-strong">Smart Device</text>
+            <text x="250" y="390" text-anchor="middle" style="font-size:10px">edge processing: process data locally → pack → send securely</text>
+
+            <rect x="460" y="360" width="380" height="40" rx="8" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="650" y="377" text-anchor="middle" class="ig-text-strong">Edge Advantage</text>
+            <text x="650" y="390" text-anchor="middle" style="font-size:10px">reduces data to cloud → keeps sensitive info local → enhances security</text>
+          </g>
+        </svg>
+        <div class="infographic-caption">Gambar 11. Stack-wise security — setiap lapisan memiliki prinsip khusus yang harus diimplementasikan secara konsisten.</div>
+      </div>
+
+      <h3 class="sub-title">9.2 Prinsip Detail per Lapisan</h3>
+      <div class="two-col">
+        <div class="col-box left">
+          <h4><span class="ico">①</span>Device Layer</h4>
+          <ul class="checklist">
+            <li><strong>Need device intelligence</strong> untuk handle complex security tasks — most IoT devices (microprocessor) tidak mampu handle internet complexity</li>
+            <li>Gunakan <strong>smart devices</strong> untuk front-line duty — secure, robust, embedded security</li>
+            <li>Smart devices handle encryption, authentication secara native</li>
+            <li><strong>Edge processing advantage:</strong> process data locally sebelum kirim cloud — eliminates forwarding large data quantity</li>
+            <li>Edge enhances security: process → pack → send securely</li>
+            <li>Memungkinkan <strong>keep sensitive information local</strong> (privacy by design)</li>
+          </ul>
+        </div>
+        <div class="col-box right">
+          <h4><span class="ico">②</span>Communication Layer</h4>
+          <ul class="checklist">
+            <li><strong>Initiate connection TO cloud, NOT FROM cloud</strong> — incoming connections disallowed</li>
+            <li>Connection ke cloud = bi-directional channel untuk remote control</li>
+            <li>Gunakan <strong>lightweight message-based protocols</strong> untuk IoT device</li>
+            <li>Protokol harus support: double encryption, filtering, queuing, proper labeling</li>
+            <li><strong>Double encryption</strong> secure client data saat pass through message switch</li>
+            <li>Proper labeling memastikan messages handled securely</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="col-box left">
+          <h4><span class="ico" style="background:var(--purple-bg);color:var(--purple)">③</span>Cloud Layer</h4>
+          <ul class="checklist">
+            <li><strong>Identification, authentication, encryption for machines</strong> — bukan human</li>
+            <li>Human: password + occasional 2FA (password + OTP)</li>
+            <li>Machines: <strong>digital certificates</strong> saat akses cloud services</li>
+            <li>Certificates tidak hanya authenticate transactions tapi juga encrypt channel device → cloud</li>
+            <li>Cryptographic identification certificate <strong>tidak bisa dicapai</strong> dengan user ID + password</li>
+          </ul>
+        </div>
+        <div class="col-box right">
+          <h4><span class="ico" style="background:var(--warn-bg);color:var(--warn)">④</span>Process Layer</h4>
+          <ul class="checklist">
+            <li><strong>Security of remote control &amp; updates</strong> — kunci untuk IoT yang dapat di-maintain</li>
+            <li>Remote control: diagnostics, set new configurations, retrieve files</li>
+            <li>Key: <strong>incoming connections to device disallowed</strong></li>
+            <li>Device harus establish secure bi-directional connection with cloud</li>
+            <li>Gunakan message switch sebagai communication channel</li>
+            <li>Secure updates = secure OTA (Over-The-Air) firmware update</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-box info-tip">
+        <strong>Insight Penting:</strong> Prinsip stack-wise mengajarkan bahwa IoT security
+        <strong>tidak bisa dilakukan di satu lapisan saja</strong>. Mengamankan cloud tanpa mengamankan
+        device = sia-sia. Mengamankan communication tanpa process layer = update tidak aman. Semua
+        lapisan harus konsisten — weakest link menentukan kekuatan keseluruhan.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 10: FRAMEWORK SECURITY IoT ============= -->
+    <section id="framework">
+      <div class="section-header">
+        <span class="section-tag">Bagian 10</span>
+        <h2>Pertimbangan Keamanan IoT Framework</h2>
+        <p>Empat komponen framework IoT — Edge, Gateway, Cloud Platform, dan Mobile — masing-masing dengan kebutuhan keamanan unik.</p>
+      </div>
+
+      <p>
+        Untuk merancang perangkat IoT yang aman dan terlindungi, isu keamanan harus dipertimbangkan
+        dengan tepat. Salah satu pertimbangan terpenting adalah pengembangan <strong>secure IoT framework</strong>
+        untuk membangun perangkat. Idealnya, framework dirancang sedemikian rupa sehingga memberikan
+        <em>default security</em>, sehingga developer tidak perlu memikirkannya kemudian.
+      </p>
+
+      <p>
+        Kriteria evaluasi keamanan untuk IoT framework dibagi menjadi <strong>empat bagian</strong>.
+        Setiap bagian memiliki concern keamanan terkait yang dibahas dalam kriteria evaluasi masing-masing.
+      </p>
+
+      <h3 class="sub-title">10.1 Visualisasi 4 Komponen IoT Framework</h3>
+      <div class="infographic">
+        <div class="ig-title">4 Komponen Framework IoT — Edge · Gateway · Cloud · Mobile</div>
+        <svg viewBox="0 0 900 440" width="900" height="440" aria-label="4 framework components">
+          <!-- Edge (bottom) -->
+          <rect x="40" y="320" width="820" height="100" rx="12" class="ig-accent-box"/>
+          <text x="60" y="345" class="ig-text-title">EDGE — Physical IoT Device</text>
+          <text x="60" y="362" class="ig-text-small">Main physical device: sensors, actuators, OS, hardware, network, comm capabilities. Heterogeneous, deployable anywhere.</text>
+          <g class="ig-text-small">
+            <rect x="60" y="375" width="120" height="35" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="120" y="392" text-anchor="middle" class="ig-text-strong">Comm encrypt</text>
+            <text x="120" y="404" text-anchor="middle" style="font-size:9px">TLS/DTLS</text>
+
+            <rect x="190" y="375" width="120" height="35" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="250" y="392" text-anchor="middle" class="ig-text-strong">Storage encrypt</text>
+            <text x="250" y="404" text-anchor="middle" style="font-size:9px">AES-256 at rest</text>
+
+            <rect x="320" y="375" width="120" height="35" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="380" y="392" text-anchor="middle" class="ig-text-strong">Update comps</text>
+            <text x="380" y="404" text-anchor="middle" style="font-size:9px">OTA firmware</text>
+
+            <rect x="450" y="375" width="160" height="35" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="530" y="392" text-anchor="middle" class="ig-text-strong">No default passwords</text>
+            <text x="530" y="404" text-anchor="middle" style="font-size:9px">unique per device</text>
+
+            <rect x="620" y="375" width="220" height="35" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="730" y="392" text-anchor="middle" class="ig-text-strong">Strong passwords, latest components</text>
+            <text x="730" y="404" text-anchor="middle" style="font-size:9px">cross-platform framework</text>
+          </g>
+
+          <!-- Gateway (middle) -->
+          <rect x="40" y="220" width="820" height="80" rx="12" class="ig-purple-box"/>
+          <text x="60" y="245" class="ig-text-title" style="fill:#a78bfa">GATEWAY — Communication Aggregator</text>
+          <text x="60" y="262" class="ig-text-small">First step for edge into Internet. Connects smart devices to cloud. Communication aggregator for secure local + untrusted public network.</text>
+          <g class="ig-text-small">
+            <rect x="60" y="275" width="200" height="20" rx="6" fill="#0d1320" stroke="#a78bfa"/>
+            <text x="160" y="289" text-anchor="middle">Multi-directional encrypted comm</text>
+
+            <rect x="280" y="275" width="220" height="20" rx="6" fill="#0d1320" stroke="#a78bfa"/>
+            <text x="390" y="289" text-anchor="middle">Strong authentication all components</text>
+
+            <rect x="520" y="275" width="160" height="20" rx="6" fill="#0d1320" stroke="#a78bfa"/>
+            <text x="600" y="289" text-anchor="middle">Automatic updates</text>
+
+            <rect x="700" y="275" width="140" height="20" rx="6" fill="#0d1320" stroke="#a78bfa"/>
+            <text x="770" y="289" text-anchor="middle">Trusted comm edge↔cloud</text>
+          </g>
+
+          <!-- Cloud Platform (top) -->
+          <rect x="40" y="120" width="820" height="80" rx="12" class="ig-success-box"/>
+          <text x="60" y="145" class="ig-text-title" style="fill:#34d399">CLOUD PLATFORM — Central Aggregation &amp; Data Management</text>
+          <text x="60" y="162" class="ig-text-small">Central point of data aggregation. Higher risk. Includes C2 (command &amp; control) component for extensions &amp; updates.</text>
+          <g class="ig-text-small">
+            <rect x="60" y="175" width="140" height="20" rx="6" fill="#0d1320" stroke="#34d399"/>
+            <text x="130" y="189" text-anchor="middle">Encrypted communications</text>
+
+            <rect x="220" y="175" width="140" height="20" rx="6" fill="#0d1320" stroke="#34d399"/>
+            <text x="290" y="189" text-anchor="middle">Secure web interface</text>
+
+            <rect x="380" y="175" width="120" height="20" rx="6" fill="#0d1320" stroke="#34d399"/>
+            <text x="440" y="189" text-anchor="middle">Authentication</text>
+
+            <rect x="520" y="175" width="140" height="20" rx="6" fill="#0d1320" stroke="#34d399"/>
+            <text x="590" y="189" text-anchor="middle">Encrypted storage</text>
+
+            <rect x="680" y="175" width="160" height="20" rx="6" fill="#0d1320" stroke="#34d399"/>
+            <text x="760" y="189" text-anchor="middle">Automatic updates</text>
+          </g>
+
+          <!-- Mobile (side) -->
+          <rect x="40" y="20" width="820" height="80" rx="12" class="ig-warn-box"/>
+          <text x="60" y="45" class="ig-text-title" style="fill:#fbbf24">MOBILE — User Interface to Edge</text>
+          <text x="60" y="62" class="ig-text-small">Akses &amp; interaksi dengan edge di rumah/tempat kerja dari jauh. Beberapa apps beri limited data, lainnya allow full manipulation.</text>
+          <g class="ig-text-small">
+            <rect x="60" y="75" width="160" height="20" rx="6" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="140" y="89" text-anchor="middle">Local storage security</text>
+
+            <rect x="240" y="75" width="180" height="20" rx="6" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="330" y="89" text-anchor="middle">Encrypted communication channels</text>
+
+            <rect x="440" y="75" width="180" height="20" rx="6" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="530" y="89" text-anchor="middle">Multi-factor authentication</text>
+
+            <rect x="640" y="75" width="200" height="20" rx="6" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="740" y="89" text-anchor="middle">Account lockout mechanism</text>
+          </g>
+        </svg>
+        <div class="infographic-caption">Gambar 12. 4 komponen IoT framework dengan masing-masing 4-5 kontrol keamanan yang harus diimplementasikan.</div>
+      </div>
+
+      <h3 class="sub-title">10.2 Detail Setiap Komponen</h3>
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">E</div>Edge</div>
+          <p>Device fisik utama yang berinteraksi dengan sekitarnya — berisi sensor, aktuator, OS, hardware, jaringan, dan kapabilitas komunikasi. <strong>Heterogeneous</strong> dan dapat di-deploy di mana saja dalam kondisi apa pun.</p>
+          <p>Framework ideal: cross-platform components untuk deployment di kondisi fisik apa pun. Pertimbangan: communication &amp; storage encryption, no default credentials, strong passwords, latest up-to-date components.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">G</div>Gateway</div>
+          <p>Langkah pertama edge ke Internet — menghubungkan smart device ke cloud. <em>Communication aggregator</em> yang memungkinkan komunikasi dengan jaringan lokal aman + koneksi aman ke jaringan publik tidak terpercaya.</p>
+          <p>Layer security untuk semua device yang terhubung. Framework ideal: strong encryption untuk secure comm antar endpoint, authentication mechanism sekuat komponen lain, <strong>multi-directional authentication</strong>, automatic updates.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">C</div>Cloud Platform</div>
+          <p>Central aggregation &amp; data management point. Akses harus dibatasi. <strong>Risiko lebih tinggi</strong> karena titik pusat agregasi data. Termasuk <em>command and control (C2) component</em> — komputer terpusat yang issue commands untuk distribusi extensions &amp; updates.</p>
+          <p>Framework secure: encrypted communications, strong authentication credentials, secure web interface, encrypted storage, automatic updates.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">M</div>Mobile</div>
+          <p>Mobile interface penting untuk pengumpulan &amp; pengelolaan data. Pengguna dapat akses &amp; interaksi dengan edge dari jauh. Beberapa apps berikan limited data dari specific edge device, lainnya allow <strong>full manipulation</strong> edge component.</p>
+          <p>Prone ke berbagai cyber-attack. Framework ideal: proper authentication mechanism, account lockout setelah failed attempts, local storage security, encrypted communication channels, security of data transmitted.</p>
+        </div>
+      </div>
+
+      <div class="info-box info-warn">
+        <strong>Default Security Principle:</strong> Framework IoT yang ideal memberikan
+        <strong>default security</strong> — keamanan sudah tertanam di framework, bukan tanggungan
+        developer belakangan. Ini mengikuti prinsip <em>Secure by Design</em> yang direkomendasikan
+        oleh NIST, ENISA, dan IoT Security Foundation.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 11: DEVICE MANAGEMENT ============= -->
+    <section id="device-mgmt">
+      <div class="section-header">
+        <span class="section-tag">Bagian 11</span>
+        <h2>IoT Device Management</h2>
+        <p>Solusi untuk track, monitor, dan manage physical IoT device dari lokasi remote — onboarding, organizing, hingga decommissioning.</p>
+      </div>
+
+      <p>
+        <strong>IoT device management</strong> membantu profesional keamanan untuk track, monitor,
+        dan manage perangkat IoT fisik dari lokasi remote. Solusi seperti Azure IoT Central, Oracle
+        IoT Asset Monitoring Cloud, dan Predix memungkinkan <strong>update firmware remote</strong>,
+        memberikan izin, dan meningkatkan kapabilitas keamanan untuk proteksi terhadap berbagai
+        kerentanan. Device management sangat mendukung pencegahan serangan IoT.
+      </p>
+
+      <h3 class="sub-title">11.1 Empat Kapabilitas Device Management</h3>
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">1</div>Proper Authentication</div>
+          <p>Hanya perangkat <strong>trusted dan secure dengan proper credentials</strong> yang di-enroll. Mencegah rogue device masuk ke ekosistem IoT. Menggunakan certificate-based authentication atau token yang diputar secara reguler.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">2</div>Accurate Configuration</div>
+          <p>Mengontrol perangkat untuk memastikan fungsi yang tepat dan performa yang ditingkatkan. <strong>Reset factory settings</strong> selama device decommissioning — penting untuk mencegah data leak dari device yang sudah tidak dipakai.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">3</div>Proper Monitoring</div>
+          <p>Mendeteksi flaws dan mendiagnosa <em>operational issues</em> dan <em>software bugs</em> melalui <strong>program logs</strong>. Real-time alert untuk anomaly, otomatis trigger investigasi.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">4</div>Secure Maintenance</div>
+          <p>Secure maintenance perangkat remote dan <strong>frequent device updates</strong> dengan latest security patches. Termasuk rollback mechanism jika update gagal — critical untuk availability.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">11.2 Lifecycle IoT Device Management</h3>
+      <div class="infographic">
+        <div class="ig-title">Lifecycle IoT Device — Dari Onboarding hingga Decommissioning</div>
+        <svg viewBox="0 0 900 240" width="900" height="240" aria-label="Device lifecycle">
+          <defs>
+            <linearGradient id="grad-life" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#22d3ee"/>
+              <stop offset="100%" stop-color="#f87171"/>
+            </linearGradient>
+            <marker id="arr-life" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/>
+            </marker>
+          </defs>
+
+          <path d="M 80 120 L 820 120" stroke="url(#grad-life)" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- Step 1: Onboarding -->
+          <circle cx="120" cy="120" r="32" fill="#161d2e" stroke="#22d3ee" stroke-width="2.5"/>
+          <text x="120" y="118" text-anchor="middle" class="ig-text-title">1</text>
+          <text x="120" y="133" text-anchor="middle" class="ig-text-small">Onboard</text>
+          <rect x="50" y="170" width="140" height="50" rx="8" class="ig-accent-box"/>
+          <text x="120" y="190" text-anchor="middle" class="ig-text-strong">Authentication</text>
+          <text x="120" y="205" text-anchor="middle" class="ig-text-small">verify credentials</text>
+          <text x="120" y="217" text-anchor="middle" class="ig-text-small">enroll to platform</text>
+
+          <!-- Step 2: Configuration -->
+          <circle cx="280" cy="120" r="32" fill="#161d2e" stroke="#34d399" stroke-width="2.5"/>
+          <text x="280" y="118" text-anchor="middle" class="ig-text-title" style="fill:#34d399">2</text>
+          <text x="280" y="133" text-anchor="middle" class="ig-text-small">Configure</text>
+          <rect x="210" y="170" width="140" height="50" rx="8" class="ig-success-box"/>
+          <text x="280" y="190" text-anchor="middle" class="ig-text-strong">Configuration</text>
+          <text x="280" y="205" text-anchor="middle" class="ig-text-small">set policies</text>
+          <text x="280" y="217" text-anchor="middle" class="ig-text-small">assign IDs</text>
+
+          <!-- Step 3: Monitoring -->
+          <circle cx="440" cy="120" r="32" fill="#161d2e" stroke="#fbbf24" stroke-width="2.5"/>
+          <text x="440" y="118" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">3</text>
+          <text x="440" y="133" text-anchor="middle" class="ig-text-small">Monitor</text>
+          <rect x="370" y="170" width="140" height="50" rx="8" class="ig-warn-box"/>
+          <text x="440" y="190" text-anchor="middle" class="ig-text-strong">Monitoring</text>
+          <text x="440" y="205" text-anchor="middle" class="ig-text-small">detect flaws</text>
+          <text x="440" y="217" text-anchor="middle" class="ig-text-small">diagnose bugs</text>
+
+          <!-- Step 4: Maintenance -->
+          <circle cx="600" cy="120" r="32" fill="#161d2e" stroke="#a78bfa" stroke-width="2.5"/>
+          <text x="600" y="118" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">4</text>
+          <text x="600" y="133" text-anchor="middle" class="ig-text-small">Maintain</text>
+          <rect x="530" y="170" width="140" height="50" rx="8" class="ig-purple-box"/>
+          <text x="600" y="190" text-anchor="middle" class="ig-text-strong">Maintenance</text>
+          <text x="600" y="205" text-anchor="middle" class="ig-text-small">patch firmware</text>
+          <text x="600" y="217" text-anchor="middle" class="ig-text-small">update security</text>
+
+          <!-- Step 5: Decommission -->
+          <circle cx="760" cy="120" r="32" fill="#161d2e" stroke="#f87171" stroke-width="2.5"/>
+          <text x="760" y="118" text-anchor="middle" class="ig-text-title" style="fill:#f87171">5</text>
+          <text x="760" y="133" text-anchor="middle" class="ig-text-small">Decom</text>
+          <rect x="690" y="170" width="140" height="50" rx="8" class="ig-danger-box"/>
+          <text x="760" y="190" text-anchor="middle" class="ig-text-strong">Decommission</text>
+          <text x="760" y="205" text-anchor="middle" class="ig-text-small">factory reset</text>
+          <text x="760" y="217" text-anchor="middle" class="ig-text-small">revoke credentials</text>
+
+          <text x="120" y="80" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">Day 0</text>
+          <text x="760" y="80" text-anchor="middle" class="ig-text-small" style="fill:#f87171">End of Life</text>
+        </svg>
+        <div class="infographic-caption">Gambar 13. Lifecycle IoT device management — 5 fase dari onboarding hingga decommissioning yang aman.</div>
+      </div>
+
+      <h3 class="sub-title">11.3 Solusi IoT Device Management</h3>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="ico">A</div>
+          <div class="info">
+            <div class="name">Azure IoT Central</div>
+            <div class="desc">Hosted, extensible SaaS platform yang simplifies setup IoT solution. Connect, monitor, manage IoT assets at scale. Reduces management burden, operational cost, dan overhead typical IoT project.</div>
+            <span class="url">azure.microsoft.com</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="ico">O</div>
+          <div class="info">
+            <div class="name">Oracle IoT Asset Monitoring Cloud</div>
+            <div class="desc">Asset monitoring terintegrasi ekosistem Oracle Cloud. Real-time visibility ke condition &amp; location asset IoT.</div>
+            <span class="url">oracle.com</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="ico">P</div>
+          <div class="info">
+            <div class="name">Predix (GE)</div>
+            <div class="desc">Platform IoT industrial dari General Electric. Fokus pada industrial IoT (IIoT) untuk predictive maintenance dan asset performance management.</div>
+            <span class="url">ge.com</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="ico">G</div>
+          <div class="info">
+            <div class="name">Cloud IoT Core (Google)</div>
+            <div class="desc">Fully managed service untuk connect, manage, dan ingest data dari device IoT skala global. Terintegrasi BigQuery, Pub/Sub, Dataflow.</div>
+            <span class="url">cloud.google.com</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="ico">I</div>
+          <div class="info">
+            <div class="name">IBM Watson IoT Platform</div>
+            <div class="desc">Platform IoT dengan kemampuan AI/ML Watson. Real-time data streaming, device management, dan advanced analytics untuk cognitive IoT.</div>
+            <span class="url">ibm.com</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="ico">A</div>
+          <div class="info">
+            <div class="name">AT&amp;T IoT Connectivity Management</div>
+            <div class="desc">Manajemen konektivitas IoT global dengan SIM/eSIM. Coverage control, data plan management, dan security monitoring.</div>
+            <span class="url">business.att.com</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 12: BEST PRACTICES ============= -->
+    <section id="best-practice">
+      <div class="section-header">
+        <span class="section-tag">Bagian 12</span>
+        <h2>Best Practices &amp; Panduan Keamanan IoT</h2>
+        <p>21+ praktik terbaik keamanan IoT yang harus diimplementasikan di setiap deployment — dari otentikasi hingga enkripsi, dari fisik hingga logika.</p>
+      </div>
+
+      <h3 class="sub-title">12.1 Delapan Best Practices Utama</h3>
+      <div class="infographic">
+        <div class="ig-title">8 Pillar Best Practices IoT Security</div>
+        <svg viewBox="0 0 900 320" width="900" height="320" aria-label="8 best practices">
+          <g>
+            <rect x="40" y="20" width="200" height="80" rx="10" class="ig-accent-box"/>
+            <text x="140" y="45" text-anchor="middle" class="ig-text-title">1</text>
+            <text x="140" y="65" text-anchor="middle" class="ig-text-strong">Disable "guest" &amp; "demo"</text>
+            <text x="140" y="82" text-anchor="middle" class="ig-text-small">user accounts</text>
+
+            <rect x="260" y="20" width="200" height="80" rx="10" class="ig-accent-box"/>
+            <text x="360" y="45" text-anchor="middle" class="ig-text-title">2</text>
+            <text x="360" y="65" text-anchor="middle" class="ig-text-strong">Lock Out feature</text>
+            <text x="360" y="82" text-anchor="middle" class="ig-text-small">excessive invalid attempts</text>
+
+            <rect x="480" y="20" width="200" height="80" rx="10" class="ig-accent-box"/>
+            <text x="580" y="45" text-anchor="middle" class="ig-text-title">3</text>
+            <text x="580" y="65" text-anchor="middle" class="ig-text-strong">Strong authentication</text>
+            <text x="580" y="82" text-anchor="middle" class="ig-text-small">mechanisms (MFA)</text>
+
+            <rect x="700" y="20" width="160" height="80" rx="10" class="ig-accent-box"/>
+            <text x="780" y="45" text-anchor="middle" class="ig-text-title">4</text>
+            <text x="780" y="65" text-anchor="middle" class="ig-text-strong">Firewall isolation</text>
+            <text x="780" y="82" text-anchor="middle" class="ig-text-small">control system separate</text>
+
+            <rect x="40" y="120" width="200" height="80" rx="10" class="ig-success-box"/>
+            <text x="140" y="145" text-anchor="middle" class="ig-text-title" style="fill:#34d399">5</text>
+            <text x="140" y="165" text-anchor="middle" class="ig-text-strong">IPS &amp; IDS</text>
+            <text x="140" y="182" text-anchor="middle" class="ig-text-small">in the network</text>
+
+            <rect x="260" y="120" width="200" height="80" rx="10" class="ig-success-box"/>
+            <text x="360" y="145" text-anchor="middle" class="ig-text-title" style="fill:#34d399">6</text>
+            <text x="360" y="165" text-anchor="middle" class="ig-text-strong">E2E encryption</text>
+            <text x="360" y="182" text-anchor="middle" class="ig-text-small">+ PKI infrastructure</text>
+
+            <rect x="480" y="120" width="200" height="80" rx="10" class="ig-success-box"/>
+            <text x="580" y="145" text-anchor="middle" class="ig-text-title" style="fill:#34d399">7</text>
+            <text x="580" y="165" text-anchor="middle" class="ig-text-strong">VPN architecture</text>
+            <text x="580" y="182" text-anchor="middle" class="ig-text-small">secure communication</text>
+
+            <rect x="700" y="120" width="160" height="80" rx="10" class="ig-success-box"/>
+            <text x="780" y="145" text-anchor="middle" class="ig-text-title" style="fill:#34d399">8</text>
+            <text x="780" y="165" text-anchor="middle" class="ig-text-strong">Unified security</text>
+            <text x="780" y="182" text-anchor="middle" class="ig-text-small">integrated system</text>
+
+          </g>
+
+          <text x="450" y="240" text-anchor="middle" class="ig-text-strong">Pilar tambahan:</text>
+          <text x="450" y="265" text-anchor="middle" class="ig-text-small">Allow only trusted IP · Disable Telnet (port 23) · Disable UPnP port on routers · Protect vs physical tampering</text>
+          <text x="450" y="285" text-anchor="middle" class="ig-text-small">Patch vulnerabilities &amp; update firmware regularly · Monitor port 48101 (Mirai indicator)</text>
+          <text x="450" y="305" text-anchor="middle" class="ig-text-small">Verify position of mobile nodes (one vehicle = one identity) · Data privacy, authentication, confidentiality</text>
+        </svg>
+        <div class="infographic-caption">Gambar 14. 8 pilar utama best practices IoT + pilar tambahan yang harus diimplementasikan bersamaan.</div>
+      </div>
+
+      <h3 class="sub-title">12.2 Checklist Lengkap Best Practices</h3>
+      <div class="two-col">
+        <div class="col-box left">
+          <h4><span class="ico">🔐</span>Authentication &amp; Access</h4>
+          <ul class="checklist">
+            <li>Disable "guest" dan "demo" user accounts jika enabled</li>
+            <li>Gunakan "Lock Out" feature untuk lockout akun setelah excessive invalid login attempts</li>
+            <li>Implement strong authentication mechanism (MFA, certificate-based)</li>
+            <li>Password policy: minimal 8–10 karakter, kombinasi huruf/angka/special</li>
+            <li>Use CAPTCHA dan account lockout policy untuk avoid brute-force attacks</li>
+            <li>Allow only trusted IP addresses access device from Internet</li>
+            <li>Data privacy: user's account/identity harus protected &amp; hidden dari user lain</li>
+            <li>Data authentication untuk confirm identity original source node</li>
+          </ul>
+        </div>
+        <div class="col-box right">
+          <h4><span class="ico">🛡</span>Network &amp; Encryption</h4>
+          <ul class="checklist">
+            <li>Locate control system networks &amp; devices behind firewalls, isolate dari business network</li>
+            <li>Implement IPS dan IDS in the network</li>
+            <li>Implement end-to-end encryption &amp; gunakan Public Key Infrastructure (PKI)</li>
+            <li>Use VPN architecture untuk secure communication</li>
+            <li>Deploy security as unified, integrated system (silo = bahaya)</li>
+            <li>Disable telnet (port 23)</li>
+            <li>Disable UPnP port on routers</li>
+            <li>Maintain data confidentiality menggunakan symmetric key encryption</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="col-box left">
+          <h4><span class="ico">⚙</span>Hardening &amp; Maintenance</h4>
+          <ul class="checklist">
+            <li>Protect devices against physical tampering (tamper-evident seals, secure enclosures)</li>
+            <li>Patch vulnerabilities &amp; update device firmware regularly</li>
+            <li>Monitor traffic di port 48101 — infected devices attempt spread via port 48101</li>
+            <li>Verify position of mobile nodes — one physical node = one vehicle identity only</li>
+            <li>Use devices dari manufacturer dengan track record security awareness</li>
+            <li>Isolate IoT devices pada protected networks (segmentasi)</li>
+          </ul>
+        </div>
+        <div class="col-box right">
+          <h4><span class="ico">📡</span>Monitoring &amp; Response</h4>
+          <ul class="checklist">
+            <li>Real-time log &amp; analyze commands dari control applications ke things</li>
+            <li>Monitor &amp; store semua user actions di cloud</li>
+            <li>Identify patterns of malicious behavior secara proaktif</li>
+            <li>Store samples of malicious activity, compare dengan logs untuk avoid serangan</li>
+            <li>Network appliances yang monitor semua ports &amp; protocols untuk advanced threats</li>
+            <li>Security software check network traffic antara router dan connected devices</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-box info-success">
+        <strong>Framework Acuan:</strong> Best practices di atas sejalan dengan framework internasional:
+        <strong>NIST IR 8259</strong> (IoT Device Cybersecurity Capability), <strong>ENISA Baseline Security Recommendations for IoT</strong>,
+        <strong>IoT Security Foundation Best Practice Guidelines</strong>, dan <strong>GSMA IoT Security Guidelines</strong>.
+        Compliance ke salah satu framework ini menaikkan trust level IoT deployment signifikan.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 13: TOOLS KEAMANAN IoT ============= -->
+    <section id="tools">
+      <div class="section-header">
+        <span class="section-tag">Bagian 13</span>
+        <h2>Tools Keamanan IoT</h2>
+        <p>Solusi simulasi, certificate, NAC, threat defense, dan AI-driven security untuk melindungi ekosistem IoT dari berbagai jenis serangan.</p>
+      </div>
+
+      <p>
+        IoT bukan hanya rentang perangkat yang terhubung ke internet, tetapi juga teknologi yang
+        sangat kompleks dan berkembang pesat. Untuk memahami dan menganalisis berbagai faktor risiko,
+        solusi keamanan yang tepat harus diintegrasikan untuk melindungi perangkat IoT. Penggunaan
+        <strong>IoT security tools</strong> membantu organisasi membatasi vulnerabilities secara
+        signifikan, melindungi perangkat dan jaringan IoT dari berbagai jenis serangan.
+      </p>
+
+      <h3 class="sub-title">13.1 Landscape Vendor IoT Security</h3>
+      <div class="infographic">
+        <div class="ig-title">Landscape Tools Keamanan IoT — 5 Kategori</div>
+        <svg viewBox="0 0 900 320" width="900" height="320" aria-label="Vendor landscape">
+          <line x1="450" y1="20" x2="450" y2="300" class="ig-line" stroke-width="1.5"/>
+          <line x1="40" y1="160" x2="860" y2="160" class="ig-line" stroke-width="1.5"/>
+
+          <text x="245" y="40" text-anchor="middle" class="ig-text-title" style="fill:#22d3ee">Simulation &amp; Testing</text>
+          <text x="655" y="40" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">Certificate &amp; Identity</text>
+          <text x="245" y="180" text-anchor="middle" class="ig-text-title" style="fill:#34d399">Network Access Control</text>
+          <text x="655" y="180" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">AI/ML Threat Detection</text>
+
+          <!-- Q1 -->
+          <rect x="80" y="55" width="160" height="22" rx="11" class="ig-accent-box"/>
+          <text x="160" y="70" text-anchor="middle" class="ig-text" style="font-size:10px">Bevywise IoT Simulator</text>
+          <rect x="250" y="55" width="170" height="22" rx="11" class="ig-accent-box"/>
+          <text x="335" y="70" text-anchor="middle" class="ig-text" style="font-size:10px">MQTT Spy/Paho Client</text>
+          <rect x="80" y="85" width="340" height="22" rx="11" class="ig-accent-box"/>
+          <text x="250" y="100" text-anchor="middle" class="ig-text" style="font-size:10px">IoT Pentest Tools (Kali Linux modules)</text>
+
+          <!-- Q2 -->
+          <rect x="490" y="55" width="160" height="22" rx="11" class="ig-purple-box"/>
+          <text x="570" y="70" text-anchor="middle" class="ig-text" style="font-size:10px">DigiCert IoT Solutions</text>
+          <rect x="660" y="55" width="180" height="22" rx="11" class="ig-purple-box"/>
+          <text x="750" y="70" text-anchor="middle" class="ig-text" style="font-size:10px">GlobalSign IoT Identity</text>
+          <rect x="490" y="85" width="340" height="22" rx="11" class="ig-purple-box"/>
+          <text x="660" y="100" text-anchor="middle" class="ig-text" style="font-size:10px">Let's Encrypt + ACME for IoT</text>
+
+          <!-- Q3 -->
+          <rect x="80" y="195" width="160" height="22" rx="11" class="ig-success-box"/>
+          <text x="160" y="210" text-anchor="middle" class="ig-text" style="font-size:10px">FortiNAC (Fortinet)</text>
+          <rect x="250" y="195" width="170" height="22" rx="11" class="ig-success-box"/>
+          <text x="335" y="210" text-anchor="middle" class="ig-text" style="font-size:10px">Cisco ISE / TrustSec</text>
+          <rect x="80" y="225" width="340" height="22" rx="11" class="ig-success-box"/>
+          <text x="250" y="240" text-anchor="middle" class="ig-text" style="font-size:10px">Forescout eyeSight (device visibility)</text>
+
+          <!-- Q4 -->
+          <rect x="490" y="195" width="160" height="22" rx="11" class="ig-warn-box"/>
+          <text x="570" y="210" text-anchor="middle" class="ig-text" style="font-size:10px">Darktrace AI</text>
+          <rect x="660" y="195" width="180" height="22" rx="11" class="ig-warn-box"/>
+          <text x="750" y="210" text-anchor="middle" class="ig-text" style="font-size:10px">Cisco IoT Threat Defense</text>
+          <rect x="490" y="225" width="340" height="22" rx="11" class="ig-warn-box"/>
+          <text x="660" y="240" text-anchor="middle" class="ig-text" style="font-size:10px">Palo Alto IoT Security (with Zingbox)</text>
+
+          <!-- Bottom: SeaCat.io -->
+          <rect x="80" y="270" width="760" height="22" rx="11" class="ig-box" stroke="#22d3ee"/>
+          <text x="450" y="285" text-anchor="middle" class="ig-text" style="font-size:10px">SeaCat.io (TeskaLabs) — secure gateway &amp; SDK for IoT communication</text>
+        </svg>
+        <div class="infographic-caption">Gambar 15. Landscape vendor IoT security — 4 kategori utama + secure gateway platform.</div>
+      </div>
+
+      <h3 class="sub-title">13.2 Detail Tools Utama</h3>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="ico">B</div>
+          <div class="info">
+            <div class="name">Bevywise IoT Simulator</div>
+            <div class="desc">Simulation tool intelligible untuk simulate puluhan ribu MQTT clients dalam single box. Develop, test, demonstrate IoT servers &amp; managers. Configure real-time messages dalam range/random values berdasarkan waktu &amp; client. Simulate dynamic messages dalam format TXT &amp; JSON seperti real-world IoT device. Support 4 dynamic values: timestamp, client identifier, random, range, linear, constant. IoT events dapat dikonfigurasi dengan predefined dataset via CSV upload.</div>
+            <span class="url">bevywise.com</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="ico">S</div>
+          <div class="info">
+            <div class="name">SeaCat.io (TeskaLabs)</div>
+            <div class="desc">Secure gateway &amp; SDK untuk komunikasi IoT end-to-end. Provide encrypted channel antara IoT device dan backend. Tamper-resistant storage, secure key management, dan threat intelligence terintegrasi.</div>
+            <span class="url">teskalabs.com</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="ico">D</div>
+          <div class="info">
+            <div class="name">DigiCert IoT Security Solutions</div>
+            <div class="desc">Certificate-based identity untuk IoT device. Manage lifecycle sertifikat IoT — issue, rotate, revoke. PKI terintegrasi dengan manajemen device identity skala besar. Support mTLS, code signing firmware.</div>
+            <span class="url">digicert.com</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="ico">F</div>
+          <div class="info">
+            <div class="name">FortiNAC (Fortinet)</div>
+            <div class="desc">Network Access Control untuk visibility, control, dan automated response. Auto-discover IoT device, profile, dan apply policy berbasis risk. Segmentasi otomatis untuk device tidak dikenal.</div>
+            <span class="url">fortinet.com</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="ico">D</div>
+          <div class="info">
+            <div class="name">Darktrace</div>
+            <div class="desc">AI/ML-driven cyber defense. Self-learning cyber AI yang memahami pattern normal device IoT, deteksi anomaly real-time. Autonomous response dengan Antigena — menghentikan threat tanpa human intervention.</div>
+            <span class="url">darktrace.com</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="ico">C</div>
+          <div class="info">
+            <div class="name">Cisco IoT Threat Defense</div>
+            <div class="desc">Architecture keamanan terintegrasi untuk IoT — dari device ke cloud. Network segmentation, secure connectivity, dan threat intelligence. Terintegrasi dengan Cisco Talos untuk IoC real-time.</div>
+            <span class="url">cisco.com</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box info-tip">
+        <strong>Rekomendasi:</strong> Untuk organisasi yang baru memulai, kombinasikan
+        <em>Bevywise IoT Simulator</em> (testing) + <em>DigiCert certificate</em> (identity) +
+        <em>FortiNAC</em> (network control). Untuk mature deployment, tambahkan <em>Darktrace</em>
+        (AI detection) dan <em>Cisco IoT Threat Defense</em> (architecture). Untuk research/pentest:
+        <em>SeaCat.io</em> SDK + Kali Linux IoT modules + Wireshark.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 14: PRAKTIKUM ============= -->
+    <section id="praktikum">
+      <div class="practicum-banner">
+        <span class="section-tag" style="margin-bottom:8px">Bagian 14 · Hands-on Lab</span>
+        <h2>Modul Praktikum IoT</h2>
+        <p>Empat sesi praktik hands-on: simulasi MQTT dengan Bevywise, audit keamanan perangkat IoT di rumah, analisis firmware, dan analisis traffic jaringan IoT.</p>
+      </div>
+
+      <h3 class="sub-title">14.1 Tujuan Praktikum</h3>
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">1</div>Simulasi Ekosistem IoT</div>
+          <p>Menggunakan Bevywise IoT Simulator untuk membangun ekosistem IoT virtual dengan MQTT, memahami pola komunikasi device-to-cloud dan device-to-device.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">2</div>Audit Perangkat IoT</div>
+          <p>Melakukan audit keamanan pada perangkat IoT di rumah/kampus: identifikasi perangkat, cek default credentials, cek firmware version, cek services yang aktif.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">3</div>Analisis Firmware</div>
+          <p>Menganalisis firmware perangkat IoT — ekstrak filesystem, identifikasi credentials hardcoded, cek vulnerability seperti default password dan backdoor.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">4</div>Capture &amp; Analisis Traffic</div>
+          <p>Melakukan capture dan analisis traffic jaringan IoT menggunakan Wireshark — identifikasi protokol yang digunakan, cek apakah traffic terenkripsi, deteksi anomaly.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">14.2 Alat dan Bahan</h3>
+      <div class="two-col">
+        <div class="col-box left">
+          <h4><span class="ico">💻</span>Perangkat Keras</h4>
+          <ul class="checklist">
+            <li>Laptop/PC dengan Wi-Fi adapter (untuk capture jaringan)</li>
+            <li>Optional: Raspberry Pi 4 (untuk simulasi gateway IoT)</li>
+            <li>Perangkat IoT rumah: smart bulb, smart plug, IP camera, smart speaker (boleh minimal 1)</li>
+            <li>Router Wi-Fi dengan akses admin (untuk audit konfigurasi)</li>
+            <li>Kabel USB (untuk ESP32/Arduino jika tersedia)</li>
+          </ul>
+        </div>
+        <div class="col-box right">
+          <h4><span class="ico">🧰</span>Perangkat Lunak</h4>
+          <ul class="checklist">
+            <li><strong>Bevywise IoT Simulator</strong> (free trial) untuk simulasi MQTT</li>
+            <li><strong>Wireshark</strong> untuk capture &amp; analisis paket jaringan</li>
+            <li><strong>binwalk</strong> untuk analisis firmware (extract filesystem)</li>
+            <li><strong>nmap</strong> untuk scan port &amp; services perangkat IoT</li>
+            <li><strong>MQTT.fx</strong> atau <strong>MQTT Explorer</strong> untuk subscribe/publish MQTT topic</li>
+            <li><strong>Fing</strong> (mobile) untuk discover perangkat di jaringan</li>
+            <li><strong>Hydra</strong> (di Kali Linux) untuk test brute-force resistance</li>
+            <li>Python 3 + library <code>paho-mqtt</code> untuk skrip kustom</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-box info-warn">
+        <strong>Catatan Hukum &amp; Etika:</strong> Lakukan praktik HANYA pada perangkat yang Anda miliki
+        atau punya izin tertulis. <strong>Jangan</strong> scan/audit perangkat orang lain tanpa izin —
+        dapat melanggar UU ITE Pasal 30 &amp; 33. Untuk firmware analisis, gunakan firmware yang
+        publicly tersedia atau perangkat Anda sendiri.
+      </div>
+
+      <h3 class="sub-title">14.3 Langkah Praktikum</h3>
+
+      <h4 class="mini-title">Sesi 1 — Simulasi Ekosistem IoT dengan Bevywise MQTT</h4>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h5>Install &amp; Konfigurasi Bevywise IoT Simulator</h5>
+            <p>Download Bevywise IoT Simulator dari <code>bevywise.com</code>. Extract dan jalankan server MQTT di localhost:1883. Verifikasi dengan <code>netstat -an | grep 1883</code>.</p>
+            <ul>
+              <li>Di Linux/Mac: <code>tar -xzf iot-simulator.tar.gz &amp;&amp; cd iot-simulator &amp;&amp; ./start.sh</code></li>
+              <li>Di Windows: jalankan <code>start.bat</code> sebagai Administrator</li>
+            </ul>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h5>Konfigurasi Simulasi 1000 Virtual Devices</h5>
+            <p>Edit <code>conf/simulator.conf</code> untuk membuat 1000 virtual device MQTT dengan topik <code>sensor/temp/{device_id}</code>, <code>sensor/humidity/{device_id}</code>, dan <code>actuator/command/{device_id}</code>. Set interval publish 5 detik, format JSON.</p>
+            <ul>
+              <li>Set payload template: <code>{"device_id":"{client_id}","ts":"{timestamp}","temp":{random(20,35)},"humidity":{random(40,80)}}</code></li>
+              <li>Upload CSV untuk dataset yang lebih realistis (opsional)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h5>Subscribe &amp; Capture dengan MQTT.fx</h5>
+            <p>Buka MQTT.fx, connect ke broker localhost:1883. Subscribe ke topic <code>sensor/temp/#</code> (wildcard). Amati pesan yang masuk. Capture minimal 50 pesan, simpan ke file JSON untuk analisis.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h5>Simulasi Device-to-Cloud Communication</h5>
+            <p>Buat Python script sederhana dengan <code>paho-mqtt</code> yang simulate cloud consumer — subscribe ke semua topik, hitung rata-rata suhu &amp; humidity per 30 detik, log ke file. Jalankan 5 menit, dokumentasikan output.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h5>Analisis &amp; Dokumentasi</h5>
+            <p>Buat laporan: skenario yang disimulasikan, jumlah pesan/detik, latency rata-rata, observasi tentang beban jaringan. Diskusikan implikasi keamanan: apa yang terjadi jika broker tidak menggunakan TLS? Jika credential device bocor?</p>
+          </div>
+        </div>
+      </div>
+
+      <h4 class="mini-title">Sesi 2 — Audit Keamanan Perangkat IoT Rumah</h4>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h5>Discover Semua Perangkat IoT di Jaringan</h5>
+            <p>Install Fing di smartphone atau jalankan <code>nmap -sn 192.168.1.0/24</code> di laptop. Catat: IP address, MAC address (untuk identifikasi vendor via OUI lookup), hostname. Buat tabel inventaris.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h5>Port Scan &amp; Service Identification</h5>
+            <p>Untuk setiap perangkat IoT, jalankan <code>nmap -sV -p- &lt;ip&gt;</code> (atau <code>-p 1-65535</code> jika lengkap). Catat: port terbuka, service, version. Perhatikan port berbahaya: 23 (Telnet), 48101 (Mirai indicator), 2323 (alternate Telnet), 7547 (TR-069/CWMP).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h5>Test Default Credentials</h5>
+            <p>Cari default credentials di <code>routerpasswords.com</code> atau <code>defaultpassword.in</code>. <strong>Untuk perangkat yang Anda miliki</strong>, coba login via web interface. Catat hasil: apakah default password masih aktif? Apakah ada "guest"/"demo" account?</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h5>Cek Firmware Version &amp; Update Availability</h5>
+            <p>Login ke admin interface setiap perangkat IoT, catat firmware version. Cek di website vendor apakah ada update. Catat tanggal release firmware yang terpasang vs yang terbaru. Perangkat dengan firmware &gt;1 tahun = risiko tinggi.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h5>Hardening &amp; Laporan</h5>
+            <p>Untuk setiap perangkat: ubah password default, disable Telnet/UPnP jika tersedia, enable auto-update, pertimbangkan pindahkan ke VLAN IoT terpisah. Buat laporan audit dengan kategori Risiko: Tinggi/Sedang/Rendah per perangkat.</p>
+          </div>
+        </div>
+      </div>
+
+      <h4 class="mini-title">Sesi 3 — Analisis Firmware dengan binwalk</h4>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h5>Dapatkan Sample Firmware</h5>
+            <p>Download firmware yang publicly tersedia dari vendor (banyak vendor menyediakan firmware update file untuk download). Alternatif: gunakan firmware image dari perangkat yang Anda miliki (ekstrak via JTAG/UART jika ahli). Simpan dengan ekstensi .bin atau .img.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h5>Ekstrak dengan binwalk</h5>
+            <p>Jalankan <code>binwalk -e firmware.bin</code>. Tool akan mendeteksi signature filesystem (SquashFS, JFFS2, CramFS, UbiFS) dan mengekstrak ke direktori <code>_firmware.bin.extracted/</code>. Jelajahi struktur direktori hasil ekstrak.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h5>Cari Hardcoded Credentials</h5>
+            <p>Di direktori hasil ekstrak, cari file konfigurasi: <code>etc/passwd</code>, <code>etc/shadow</code>, <code>etc/conf</code>, <code>etc/config/*</code>. Gunakan <code>grep -ri "password\|admin\|root\|1234" etc/</code>. Catat semua credentials yang ditemukan — ini menunjukkan risiko jika firmware bocor.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h5>Identifikasi Services &amp; Versi</h5>
+            <p>Cek binary di <code>usr/sbin/</code>, <code>usr/bin/</code>, <code>bin/</code>. Gunakan <code>strings binary | grep -i "version\|dropbear\|busybox\|lighttpd"</code>. Catat versi BusyBox, dropbear, web server — bandingkan dengan CVE database di <code>cvedetails.com</code>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h5>Laporan Kerentanan</h5>
+            <p>Buat laporan: struktur firmware, credentials yang ditemukan, services &amp; versi, CVE yang relevan. Rekomendasi mitigasi: ganti credentials, update firmware, disable service yang tidak perlu. <strong>Wajib responsible disclosure ke vendor jika menemukan kerentanan serius.</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <h4 class="mini-title">Sesi 4 — Capture &amp; Analisis Traffic IoT dengan Wireshark</h4>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h5>Setup Capture Environment</h5>
+            <p>Pastikan laptop terhubung ke jaringan Wi-Fi yang sama dengan perangkat IoT. Aktifkan monitor mode di adapter Wi-Fi (jika support) atau gunakan port mirror di switch. Mulai Wireshark capture di interface yang sesuai.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h5>Trigger Aktivitas IoT</h5>
+            <p>Nyalakan/perikan smart bulb, trigger motion sensor IP camera, putar musik ke smart speaker. Biarkan Wireshark capture selama 5 menit. Filter: <code>ip.addr == &lt;ip_iot&gt;</code> untuk fokus pada satu perangkat.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h5>Identifikasi Protokol &amp; Endpoint</h5>
+            <p>Di Wireshark, lihat Statistics → Protocol Hierarchy. Catat protokol yang digunakan: MQTT (port 1883/8883), HTTP/HTTPS, DNS, mDNS, SSDP, NTP, ARP. Identifikasi endpoint: cloud server vendor, NTP server, DNS server. Apakah ada traffic ke IP yang tidak dikenal?</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h5>Cek Enkripsi &amp; Plaintext</h5>
+            <p>Filter <code>http</code> — apakah ada traffic HTTP plaintext? Filter <code>mqtt</code> dan cek apakah MQTT menggunakan TLS (port 8883) atau plaintext (port 1883). <strong>Traffic plaintext = kerentanan kritis.</strong> Cek juga credentials yang terlihat di paket (right-click → Follow → TCP Stream).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h5>Deteksi Anomali &amp; Laporan</h5>
+            <p>Cek: (a) traffic volume tidak biasa (potensi DDoS participation), (b) koneksi ke IP luar negeri (geo-IP lookup), (c) komunikasi yang tidak diharapkan (mis. smart bulb ngobrol dengan server iklan). Buat laporan: protokol, endpoint, status enkripsi, anomali, rekomendasi (segmentasi, firewall, VPN).</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub-title">14.4 Lembar Kerja / Tugas</h3>
+      <p>Jawab pertanyaan berdasarkan hasil praktikum. Setiap jawaban minimal 3-5 kalimat.</p>
+
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">Q1</div>Simulasi MQTT</div>
+          <p>Dari Sesi 1, jelaskan perbedaan topik <code>sensor/temp/#</code> vs <code>sensor/temp/+</code> dalam MQTT. Mengapa wildcard penting untuk skalabilitas IoT? Apa risiko keamanan jika broker MQTT tidak menggunakan autentikasi?</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">Q2</div>Inventaris IoT</div>
+          <p>Dari Sesi 2, sebutkan 3 perangkat IoT yang teridentifikasi. Untuk setiap perangkat, analisis: port yang terbuka, service yang berjalan, dan tingkat risiko. Manakah yang paling rentan dan mengapa?</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">Q3</div>Default Credentials</div>
+          <p>Berdasarkan Sesi 2 langkah 3, jelaskan mengapa default credentials menjadi vektor serangan #1 IoT. Hubungkan dengan kasus Mirai botnet 2016. Apa mitigasi yang harus dilakukan manufacturer dan user?</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">Q4</div>Analisis Firmware</div>
+          <p>Dari Sesi 3, credentials apa yang Anda temukan di firmware? Apa implikasinya jika seseorang mendapatkan akses ke file firmware tersebut? Bagaimana cara manufacturer seharusnya menyimpan credentials?</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">Q5</div>Traffic IoT</div>
+          <p>Berdasarkan Sesi 4, identifikasi protokol yang digunakan perangkat IoT Anda. Apakah semua traffic terenkripsi? Apa risiko traffic plaintext? Bagaimana VPN atau TLS bisa memitigasi risiko ini?</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">Q6</div>Stack-wise Security</div>
+          <p>Pilih satu perangkat IoT dari praktikum. Analisis postur keamanannya berdasarkan 4 lapisan stack-wise security (Device, Communication, Cloud, Process). Di lapisan mana perangkat ini paling lemah dan apa rekomendasinya?</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">14.5 Checklist Evaluasi</h3>
+      <p>Praktikum dinyatakan <strong>lulus</strong> jika minimal 10 dari 12 kriteria berikut terpenuhi:</p>
+      <ul class="checklist">
+        <li>Bevywise IoT Simulator berjalan &amp; menghasilkan 1000+ virtual device</li>
+        <li>Python script consumer berhasil subscribe &amp; hitung rata-rata sensor</li>
+        <li>Inventaris minimal 5 perangkat IoT dengan tabel IP/MAC/vendor</li>
+        <li>Port scan lengkap untuk minimal 3 perangkat IoT</li>
+        <li>Identifikasi minimal 1 perangkat dengan default credentials aktif</li>
+        <li>Cek firmware version minimal 3 perangkat dengan dokumentasi tanggal release</li>
+        <li>Hardening: ubah password default + disable 1 service yang tidak perlu</li>
+        <li>binwalk berhasil mengekstrak filesystem firmware</li>
+        <li>Temukan minimal 1 hardcoded credential di firmware</li>
+        <li>Identifikasi minimal 3 CVE relevan dengan services di firmware</li>
+        <li>Wireshark capture minimal 5 menit dengan analisis protokol</li>
+        <li>Identifikasi minimal 1 anomali traffic (unencrypted, IP asing, dll)</li>
+      </ul>
+
+      <div class="info-box info-success">
+        <strong>Bonus:</strong> Mahasiswa yang dapat mendemonstrasikan: (a) eksploitasi CVE spesifik
+        di perangkat IoT yang dimiliki (dengan laporan responsible disclosure), (b) implementasi
+        segmentasi VLAN IoT yang berhasil membatasi lateral movement, atau (c) kontribusi pertama
+        ke IoT Security Foundation atau CVE database — akan mendapat nilai tambahan.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 15: RINGKASAN ============= -->
+    <section id="ringkasan">
+      <div class="section-header">
+        <span class="section-tag">Bagian 15</span>
+        <h2>Ringkasan Modul</h2>
+        <p>Rangkuman poin-poin kritis yang telah dibahas dalam Modul 09 IoT Device Security.</p>
+      </div>
+
+      <div class="summary-box">
+        <h3>📋 Yang Telah Dipelajari</h3>
+
+        <!-- Summary journey infographic -->
+        <div class="infographic" style="margin-bottom:24px">
+          <div class="ig-title">Perjalanan Pembelajaran Modul 09 — Dari Konsep ke Pertahanan IoT</div>
+          <svg viewBox="0 0 900 180" width="900" height="180" aria-label="Recap journey">
+            <defs>
+              <linearGradient id="grad-recap-iot" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#22d3ee"/>
+                <stop offset="100%" stop-color="#34d399"/>
+              </linearGradient>
+            </defs>
+
+            <path d="M 60 90 Q 220 30 380 90 T 700 90 T 840 90" stroke="url(#grad-recap-iot)" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+            <g>
+              <circle cx="60" cy="90" r="10" fill="#22d3ee" stroke="#0a0e1a" stroke-width="2"/>
+              <text x="60" y="115" text-anchor="middle" class="ig-text-small">Konsep IoT</text>
+
+              <circle cx="220" cy="55" r="10" fill="#22d3ee" stroke="#0a0e1a" stroke-width="2"/>
+              <text x="220" y="35" text-anchor="middle" class="ig-text-small">8 Sectors</text>
+
+              <circle cx="380" cy="90" r="10" fill="#34d399" stroke="#0a0e1a" stroke-width="2"/>
+              <text x="380" y="115" text-anchor="middle" class="ig-text-small">4-Layer Arch</text>
+
+              <circle cx="540" cy="55" r="10" fill="#fbbf24" stroke="#0a0e1a" stroke-width="2"/>
+              <text x="540" y="35" text-anchor="middle" class="ig-text-small">4 Comm Models</text>
+
+              <circle cx="700" cy="90" r="10" fill="#a78bfa" stroke="#0a0e1a" stroke-width="2"/>
+              <text x="700" y="115" text-anchor="middle" class="ig-text-small">Stack-wise Sec</text>
+
+              <circle cx="840" cy="90" r="12" fill="#34d399" stroke="#0a0e1a" stroke-width="3"/>
+              <text x="840" y="95" text-anchor="middle" style="font-size:14px;fill:#0a0e1a;font-weight:800">✓</text>
+              <text x="840" y="115" text-anchor="middle" class="ig-text-small" style="fill:#34d399">Praktikum</text>
+            </g>
+
+            <rect x="60" y="140" width="780" height="30" rx="15" fill="#161d2e" stroke="#22d3ee" stroke-width="1"/>
+            <text x="450" y="160" text-anchor="middle" class="ig-text-strong" style="fill:#22d3ee">IoT Security = Stack-wise Defense + Device Lifecycle + Vendor Collaboration</text>
+          </svg>
+          <div class="infographic-caption">Gambar 16. Ringkasan perjalanan Modul 09 — dari konsep IoT hingga praktikum hands-on.</div>
+        </div>
+
+        <ul class="checklist">
+          <li>Konsep IoT dan mengapa organisasi memilih lingkungan IoT-enabled — konektivitas 3D plane (Place × Thing × Time), 4 komponen utama (sensor, gateway, cloud, mobile app).</li>
+          <li>8 area aplikasi IoT — Buildings, Energy, Consumer/Home, Healthcare, Transportation, Industrial, Retail, Public Safety, IT/Networks dengan contoh device di tiap sektor.</li>
+          <li>Arsitektur 4-layer IoT (Device, Communication, Cloud, Process) dan 9 building blocks (gateways, cloud gateways, streaming processors, data lakes, warehouses, analytics, ML, control apps, user apps).</li>
+          <li>4 model komunikasi IoT (D2D, D2C, D2G, C2C) dengan karakteristik &amp; use case masing-masing.</li>
+          <li>Keamanan IoT-enabled environment — 5 pilar (manufacturer, network, multi-layer, collaboration, endpoint) + lateral movement threat.</li>
+          <li>3 pilar manajemen sistem IoT (Device, User, Security Monitoring) yang saling melengkapi.</li>
+          <li>Prinsip stack-wise security — Device (edge processing), Communication (initiate to cloud), Cloud (machine certificate), Process (secure remote control).</li>
+          <li>Framework security IoT — Edge, Gateway, Cloud Platform, Mobile dengan kontrol masing-masing.</li>
+          <li>IoT device management lifecycle — onboarding → configuration → monitoring → maintenance → decommissioning + 6 solusi enterprise.</li>
+          <li>21+ best practices IoT security yang sejalan dengan NIST IR 8259, ENISA, IoT SF, GSMA.</li>
+          <li>6 tools IoT security dari 5 kategori — simulator, identity, NAC, AI, secure gateway.</li>
+          <li>4 sesi praktikum hands-on: MQTT simulation, audit device IoT, firmware analysis, traffic capture.</li>
+        </ul>
+      </div>
+
+      <div class="info-box info-tip" style="margin-top:24px">
+        <strong>Key Takeaway:</strong> Keamanan IoT jauh lebih kompleks dari mobile security karena
+        <strong>skala (milyaran device), keragaman (8+ sektor), keterbatasan resource (MCU), dan
+        lifecycle panjang (10-20 tahun)</strong>. Strategi yang berhasil adalah
+        <em>defense-in-depth</em> berlapis di 4 stack layer + <em>secure by design</em> dari manufacturer
+        + <em>shared responsibility</em> antara vendor, integrator, dan user akhir.
+      </div>
+    </section>
+
+    <footer>
+      <p><strong>Modul 09: IoT Device Security</strong> · Network Defense Essentials</p>
+      <p>Disusun sebagai materi pembelajaran — bebas digunakan untuk tujuan edukasi.</p>
+      <div class="next-modul">
+        <span>Modul Selanjutnya →</span>
+        <strong>Modul 10: Cryptography &amp; PKI Concepts</strong>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // ===== TOC auto-highlight on scroll =====
+  (function(){
+    const tocLinks = document.querySelectorAll('#toc a');
+    const sections = Array.from(tocLinks).map(a => {
+      const id = a.getAttribute('href').slice(1);
+      return document.getElementById(id);
+    }).filter(Boolean);
+
+    function setActive(){
+      const scrollY = window.scrollY + 100;
+      let currentIdx = 0;
+      for(let i=0;i<sections.length;i++){
+        if(sections[i].offsetTop <= scrollY) currentIdx = i;
+      }
+      tocLinks.forEach((a, i) => a.classList.toggle('active', i === currentIdx));
+    }
+    setActive();
+    window.addEventListener('scroll', setActive, {passive:true});
+
+    // Smooth scroll with offset
+    tocLinks.forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = a.getAttribute('href').slice(1);
+        const target = document.getElementById(id);
+        if(target){
+          const offset = 80;
+          const top = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({top, behavior:'smooth'});
+          document.querySelector('.sidebar').classList.remove('open');
+        }
+      });
+    });
+  })();
+</script>
+</body>
+</html>
