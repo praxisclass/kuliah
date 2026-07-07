@@ -1,0 +1,2928 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modul 01: Network Security Fundamentals — Network Defense Essentials</title>
+<meta name="description" content="Ebook &amp; Modul Praktikum Network Security Fundamentals - Network Defense Essentials">
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --bg-2:#0d1320;
+    --bg-elevated:#131a2a;
+    --bg-card:#161d2e;
+    --bg-card-hover:#1b2438;
+    --border:#242c40;
+    --border-strong:#344057;
+    --text:#e6edf3;
+    --text-2:#a8b3cf;
+    --text-muted:#6b7591;
+    --accent:#22d3ee;
+    --accent-2:#06b6d4;
+    --accent-glow:rgba(34,211,238,.15);
+    --accent-dim:rgba(34,211,238,.08);
+    --warn:#fbbf24;
+    --warn-bg:rgba(251,191,36,.08);
+    --danger:#f87171;
+    --danger-bg:rgba(248,113,113,.08);
+    --success:#34d399;
+    --success-bg:rgba(52,211,153,.08);
+    --purple:#a78bfa;
+    --purple-bg:rgba(167,139,250,.08);
+    --pink:#f472b6;
+    --shadow:0 4px 24px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:24px}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.7;
+    font-size:15px;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% 0%,rgba(34,211,238,.08),transparent),
+      radial-gradient(ellipse 60% 40% at 80% 100%,rgba(167,139,250,.06),transparent);
+    background-attachment:fixed;
+  }
+  h1,h2,h3,h4{font-family:'Space Grotesk','Inter',sans-serif;font-weight:700;line-height:1.3;letter-spacing:-.01em}
+  code,pre,.mono{font-family:'JetBrains Mono','Consolas','Monaco',monospace}
+  a{color:var(--accent);text-decoration:none}
+
+  /* Layout */
+  .layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+  .sidebar{
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+    background:var(--bg-2);
+    border-right:1px solid var(--border);
+    padding:24px 20px;
+    z-index:10;
+  }
+  .sidebar-brand{
+    display:flex;align-items:center;gap:12px;padding-bottom:20px;
+    border-bottom:1px solid var(--border);margin-bottom:20px;
+  }
+  .brand-logo{
+    width:40px;height:40px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;color:#0a0e1a;font-size:18px;
+    box-shadow:0 0 24px var(--accent-glow);
+  }
+  .brand-text{font-size:13px;color:var(--text-2);line-height:1.4}
+  .brand-text strong{display:block;color:var(--text);font-size:14px;font-weight:600}
+  .toc-title{
+    font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--text-muted);margin:16px 0 12px;font-weight:600;
+  }
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:2px}
+  .toc-list a{
+    display:block;padding:8px 12px;color:var(--text-2);
+    font-size:13.5px;border-radius:6px;border-left:2px solid transparent;
+    transition:all .15s ease;line-height:1.4;
+  }
+  .toc-list a:hover{background:var(--bg-card);color:var(--text)}
+  .toc-list a.active{
+    background:var(--accent-dim);color:var(--accent);
+    border-left-color:var(--accent);font-weight:500;
+  }
+  .toc-list a .num{
+    display:inline-block;width:24px;color:var(--text-muted);font-size:12px;
+  }
+  .toc-list a.active .num{color:var(--accent)}
+  .toc-sub{padding-left:14px;font-size:12.5px;color:var(--text-muted)}
+  .toc-sub a{padding:6px 12px;font-size:12.5px}
+
+  /* Content */
+  .content{max-width:980px;padding:0 56px 80px;min-width:0}
+  @media (max-width:1024px){
+    .layout{grid-template-columns:1fr}
+    .sidebar{position:fixed;left:-300px;width:280px;transition:left .25s ease}
+    .sidebar.open{left:0}
+    .content{padding:0 24px 60px}
+    .menu-toggle{display:flex!important}
+  }
+  .menu-toggle{
+    display:none;position:fixed;top:16px;right:16px;z-index:50;
+    width:44px;height:44px;border-radius:10px;
+    background:var(--bg-elevated);border:1px solid var(--border);
+    color:var(--text);align-items:center;justify-content:center;
+    cursor:pointer;font-size:20px;
+  }
+
+  /* Hero / Cover */
+  .hero{
+    position:relative;padding:80px 0 60px;
+    border-bottom:1px solid var(--border);margin-bottom:48px;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+    background-image:
+      linear-gradient(rgba(34,211,238,.04) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(34,211,238,.04) 1px,transparent 1px);
+    background-size:48px 48px;
+    mask-image:radial-gradient(ellipse 60% 70% at 50% 40%,#000 30%,transparent 75%);
+    -webkit-mask-image:radial-gradient(ellipse 60% 70% at 50% 40%,#000 30%,transparent 75%);
+    pointer-events:none;
+  }
+  .hero-content{position:relative;z-index:1}
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 14px;border-radius:999px;
+    background:var(--accent-dim);border:1px solid rgba(34,211,238,.3);
+    color:var(--accent);font-size:12px;font-weight:600;
+    letter-spacing:.08em;text-transform:uppercase;margin-bottom:24px;
+  }
+  .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+  .hero h1{
+    font-size:clamp(36px,5vw,56px);margin-bottom:16px;
+    background:linear-gradient(135deg,#fff 30%,var(--accent) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero-sub{
+    font-size:18px;color:var(--text-2);max-width:680px;margin-bottom:32px;
+  }
+  .hero-meta{
+    display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;
+  }
+  .meta-chip{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:10px 16px;background:var(--bg-card);
+    border:1px solid var(--border);border-radius:8px;
+    font-size:13px;color:var(--text-2);
+  }
+  .meta-chip strong{color:var(--text);font-weight:600}
+  .meta-chip svg{width:16px;height:16px;color:var(--accent)}
+
+  /* Section base */
+  section{margin-bottom:64px;scroll-margin-top:24px}
+  .section-header{margin-bottom:28px}
+  .section-tag{
+    display:inline-block;font-size:11px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.12em;
+    color:var(--accent);margin-bottom:8px;
+  }
+  .section-header h2{
+    font-size:30px;margin-bottom:8px;color:var(--text);
+  }
+  .section-header p{color:var(--text-2);font-size:15px;max-width:720px}
+  h3.sub-title{
+    font-size:20px;color:var(--text);margin:32px 0 14px;
+    padding-left:12px;border-left:3px solid var(--accent);
+  }
+  h4.mini-title{
+    font-size:15px;color:var(--accent);margin:20px 0 10px;
+    font-weight:600;text-transform:uppercase;letter-spacing:.05em;
+  }
+  p{margin-bottom:14px;color:var(--text-2)}
+  p strong{color:var(--text);font-weight:600}
+  ul,ol{margin:12px 0 20px;padding-left:24px;color:var(--text-2)}
+  ul li,ol li{margin-bottom:6px}
+  ul li::marker{color:var(--accent)}
+  ol li::marker{color:var(--accent);font-weight:600}
+
+  /* Card grid */
+  .card-grid{display:grid;gap:16px;margin:20px 0}
+  .grid-2{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:768px){
+    .grid-2,.grid-3{grid-template-columns:1fr}
+  }
+  .card{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:12px;padding:20px;transition:all .2s ease;
+  }
+  .card:hover{
+    border-color:var(--border-strong);background:var(--bg-card-hover);
+    transform:translateY(-2px);
+  }
+  .card-title{
+    display:flex;align-items:center;gap:10px;
+    font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px;
+  }
+  .card-icon{
+    width:32px;height:32px;border-radius:8px;
+    background:var(--accent-dim);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;flex-shrink:0;
+  }
+  .card p{font-size:13.5px;color:var(--text-2);margin:0}
+  .card .meta{
+    margin-top:10px;padding-top:10px;border-top:1px solid var(--border);
+    font-size:12px;color:var(--text-muted);display:flex;gap:12px;flex-wrap:wrap;
+  }
+  .card .meta span{display:inline-flex;align-items:center;gap:4px}
+
+  /* Info boxes */
+  .info-box{
+    border-left:3px solid;padding:14px 18px;border-radius:8px;
+    margin:16px 0;font-size:14px;
+  }
+  .info-tip{background:var(--accent-dim);border-color:var(--accent);color:var(--text)}
+  .info-tip strong{color:var(--accent)}
+  .info-warn{background:var(--warn-bg);border-color:var(--warn);color:var(--text)}
+  .info-warn strong{color:var(--warn)}
+  .info-danger{background:var(--danger-bg);border-color:var(--danger);color:var(--text)}
+  .info-danger strong{color:var(--danger)}
+  .info-success{background:var(--success-bg);border-color:var(--success);color:var(--text)}
+  .info-success strong{color:var(--success)}
+
+  /* Definition list */
+  .def-list{display:flex;flex-direction:column;gap:14px;margin:16px 0}
+  .def-item{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:10px;padding:16px 20px;
+  }
+  .def-item dt{
+    font-weight:600;color:var(--accent);font-size:14.5px;
+    margin-bottom:6px;display:flex;align-items:center;gap:8px;
+  }
+  .def-item dt::before{
+    content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);
+  }
+  .def-item dd{color:var(--text-2);font-size:14px;margin-left:14px}
+
+  /* Comparison table */
+  .table-wrap{overflow-x:auto;margin:20px 0;border-radius:12px;border:1px solid var(--border)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--bg-card)}
+  th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--border)}
+  th{background:var(--bg-elevated);color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+  td{color:var(--text-2)}
+  td strong{color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--bg-card-hover)}
+
+  /* Checklist */
+  .checklist{list-style:none;padding:0;margin:16px 0;display:flex;flex-direction:column;gap:8px}
+  .checklist li{
+    display:flex;gap:12px;padding:10px 14px;
+    background:var(--bg-card);border:1px solid var(--border);border-radius:8px;
+    font-size:14px;color:var(--text-2);line-height:1.5;
+  }
+  .checklist li::before{
+    content:'✓';flex-shrink:0;width:20px;height:20px;border-radius:50%;
+    background:var(--success-bg);color:var(--success);
+    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+  }
+  .checklist.warn li::before{background:var(--warn-bg);color:var(--warn)}
+  .checklist.danger li::before{content:'!';background:var(--danger-bg);color:var(--danger)}
+
+  /* Pill / badge */
+  .pill{
+    display:inline-block;padding:2px 10px;border-radius:999px;
+    font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-2);
+  }
+  .pill.accent{background:var(--accent-dim);color:var(--accent);border-color:rgba(34,211,238,.3)}
+  .pill.warn{background:var(--warn-bg);color:var(--warn);border-color:rgba(251,191,36,.3)}
+  .pill.danger{background:var(--danger-bg);color:var(--danger);border-color:rgba(248,113,113,.3)}
+  .pill.success{background:var(--success-bg);color:var(--success);border-color:rgba(52,211,153,.3)}
+  .pill.purple{background:var(--purple-bg);color:var(--purple);border-color:rgba(167,139,250,.3)}
+
+  /* Two column */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
+  @media (max-width:768px){.two-col{grid-template-columns:1fr}}
+  .col-box{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:12px;
+    padding:22px;
+  }
+  .col-box h4{
+    display:flex;align-items:center;gap:10px;
+    font-size:15px;color:var(--text);margin-bottom:14px;
+    padding-bottom:12px;border-bottom:1px solid var(--border);
+  }
+  .col-box h4 .ico{
+    width:28px;height:28px;border-radius:7px;display:flex;
+    align-items:center;justify-content:center;font-size:14px;
+  }
+  .col-box.left h4 .ico{background:var(--accent-dim);color:var(--accent)}
+  .col-box.right h4 .ico{background:var(--purple-bg);color:var(--purple)}
+
+  /* Steps */
+  .steps{position:relative;padding-left:32px;margin:24px 0}
+  .steps::before{
+    content:'';position:absolute;left:11px;top:8px;bottom:8px;
+    width:2px;background:var(--border-strong);
+  }
+  .step{position:relative;margin-bottom:24px}
+  .step-num{
+    position:absolute;left:-32px;top:0;width:24px;height:24px;border-radius:50%;
+    background:var(--bg-elevated);border:2px solid var(--accent);
+    color:var(--accent);font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;z-index:1;
+  }
+  .step-content{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+    padding:16px 20px;
+  }
+  .step-content h5{font-size:14px;color:var(--accent);margin-bottom:6px;font-weight:600}
+  .step-content p{font-size:13.5px;color:var(--text-2);margin:0}
+  .step-content ul{margin:8px 0 0;padding-left:18px;font-size:13px}
+
+  /* Practicum box */
+  .practicum-banner{
+    background:linear-gradient(135deg,var(--purple-bg),var(--accent-dim));
+    border:1px solid var(--border-strong);border-radius:16px;
+    padding:32px;margin:24px 0;text-align:center;
+  }
+  .practicum-banner h2{
+    font-size:28px;background:linear-gradient(135deg,var(--accent),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px;
+  }
+  .practicum-banner p{color:var(--text-2);max-width:600px;margin:0 auto}
+
+  /* Lab tools grid */
+  .tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px 0}
+  @media (max-width:600px){.tools-grid{grid-template-columns:1fr}}
+  .tool-card{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+    padding:14px 16px;display:flex;align-items:flex-start;gap:12px;
+  }
+  .tool-card .ico{
+    width:36px;height:36px;border-radius:8px;flex-shrink:0;
+    background:var(--bg-elevated);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;
+    color:var(--accent);
+  }
+  .tool-card .info{flex:1;min-width:0}
+  .tool-card .name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px}
+  .tool-card .desc{font-size:12.5px;color:var(--text-2);line-height:1.5}
+  .tool-card .url{font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace;margin-top:4px;display:block}
+
+  /* Summary */
+  .summary-box{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:14px;padding:28px;margin-top:24px;
+  }
+  .summary-box h3{
+    font-size:18px;color:var(--accent);margin-bottom:16px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .summary-box ul{margin:0;padding-left:20px}
+
+  /* Footer */
+  footer{
+    border-top:1px solid var(--border);padding:32px 0;
+    text-align:center;color:var(--text-muted);font-size:13px;
+  }
+  footer .next-modul{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:12px 20px;background:var(--bg-card);
+    border:1px solid var(--border);border-radius:10px;
+    color:var(--text-2);margin-top:16px;font-size:13px;
+  }
+  footer .next-modul strong{color:var(--accent)}
+
+  /* ===== INFOGRAPHICS / SVG STYLING ===== */
+  .infographic{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:14px;padding:24px;margin:24px 0;overflow:hidden;
+  }
+  .infographic-caption{
+    text-align:center;font-size:12.5px;color:var(--text-muted);
+    margin-top:12px;font-style:italic;
+  }
+  .infographic svg{display:block;margin:0 auto;max-width:100%;height:auto}
+  .ig-title{
+    font-size:13px;font-weight:600;color:var(--accent);
+    text-transform:uppercase;letter-spacing:.08em;
+    text-align:center;margin-bottom:16px;
+  }
+  .ig-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+  .ig-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:4px 10px;border-radius:6px;
+    font-size:11.5px;font-weight:500;
+    background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-2);
+  }
+  .ig-badge .dot{width:8px;height:8px;border-radius:50%}
+  .ig-badge.cyan{border-color:rgba(34,211,238,.4);color:var(--accent);background:var(--accent-dim)}
+  .ig-badge.cyan .dot{background:var(--accent)}
+  .ig-badge.purple{border-color:rgba(167,139,250,.4);color:var(--purple);background:var(--purple-bg)}
+  .ig-badge.purple .dot{background:var(--purple)}
+  .ig-badge.warn{border-color:rgba(251,191,36,.4);color:var(--warn);background:var(--warn-bg)}
+  .ig-badge.warn .dot{background:var(--warn)}
+  .ig-badge.danger{border-color:rgba(248,113,113,.4);color:var(--danger);background:var(--danger-bg)}
+  .ig-badge.danger .dot{background:var(--danger)}
+  .ig-badge.success{border-color:rgba(52,211,153,.4);color:var(--success);background:var(--success-bg)}
+  .ig-badge.success .dot{background:var(--success)}
+
+  /* Stat block */
+  .stat-row{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:24px 0;
+  }
+  @media (max-width:768px){.stat-row{grid-template-columns:repeat(2,1fr)}}
+  .stat-box{
+    background:linear-gradient(135deg,var(--bg-card),var(--bg-elevated));
+    border:1px solid var(--border);border-radius:12px;
+    padding:20px;text-align:center;position:relative;overflow:hidden;
+  }
+  .stat-box::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,var(--accent),var(--purple));
+  }
+  .stat-num{
+    font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    line-height:1;margin-bottom:6px;
+  }
+  .stat-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+  .stat-desc{font-size:12px;color:var(--text-2);margin-top:8px;line-height:1.4}
+
+  /* SVG text */
+  svg .ig-text{font-family:'Inter',sans-serif;font-size:11px;fill:var(--text-2)}
+  svg .ig-text-strong{font-family:'Inter',sans-serif;font-size:12px;fill:var(--text);font-weight:600}
+  svg .ig-text-title{font-family:'Space Grotesk',sans-serif;font-size:14px;fill:var(--accent);font-weight:700}
+  svg .ig-text-small{font-family:'Inter',sans-serif;font-size:10px;fill:var(--text-muted)}
+  svg .ig-line{stroke:var(--border-strong);fill:none}
+  svg .ig-accent-line{stroke:var(--accent);fill:none}
+  svg .ig-box{fill:var(--bg-elevated);stroke:var(--border-strong);stroke-width:1}
+  svg .ig-accent-box{fill:var(--accent-dim);stroke:var(--accent);stroke-width:1.5}
+  svg .ig-danger-box{fill:var(--danger-bg);stroke:var(--danger);stroke-width:1.5}
+  svg .ig-warn-box{fill:var(--warn-bg);stroke:var(--warn);stroke-width:1.5}
+  svg .ig-success-box{fill:var(--success-bg);stroke:var(--success);stroke-width:1.5}
+  svg .ig-purple-box{fill:var(--purple-bg);stroke:var(--purple);stroke-width:1.5}
+
+  /* Print */
+  @media print{
+    .sidebar,.menu-toggle{display:none}
+    .layout{grid-template-columns:1fr}
+    .content{padding:0 20px}
+    body{background:#fff;color:#000}
+    .hero h1{color:#000!important;-webkit-text-fill-color:#000}
+    .card,.col-box,.step-content,.tool-card,.summary-box,.info-box{
+      background:#f7f7f7;border-color:#ccc;color:#000;break-inside:avoid;
+    }
+  }
+
+  /* Anchor heading offset */
+  section[id],h3[id],h4[id]{scroll-margin-top:80px}
+</style>
+</head>
+<body>
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">☰</button>
+
+<div class="layout">
+
+  <!-- ===== SIDEBAR / TOC ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">M01</div>
+      <div class="brand-text">
+        <strong>Network Security Fundamentals</strong>
+        Network Defense Essentials
+      </div>
+    </div>
+
+    <div class="toc-title">Daftar Isi</div>
+    <ul class="toc-list" id="toc">
+      <li><a href="#cover"><span class="num">00</span>Cover</a></li>
+      <li><a href="#tujuan"><span class="num">01</span>Tujuan Pembelajaran</a></li>
+      <li><a href="#fundamentals"><span class="num">02</span>Fundamentals Network Security</a></li>
+      <li><a href="#goal"><span class="num">03</span>Goal of Network Defense</a></li>
+      <li><a href="#ia-principles"><span class="num">04</span>IA Principles (CIA+)</a></li>
+      <li><a href="#benefits"><span class="num">05</span>Benefits &amp; Challenges</a></li>
+      <li><a href="#approaches"><span class="num">06</span>4 Defense Approaches</a></li>
+      <li><a href="#controls"><span class="num">07</span>Security Controls</a></li>
+      <li><a href="#physical"><span class="num">08</span>Physical Controls</a></li>
+      <li><a href="#technical"><span class="num">09</span>Technical Controls</a></li>
+      <li><a href="#protocols-overview"><span class="num">10</span>Protocols Overview</a></li>
+      <li><a href="#radius"><span class="num">11</span>RADIUS</a></li>
+      <li><a href="#tacacs"><span class="num">12</span>TACACS+</a></li>
+      <li><a href="#kerberos"><span class="num">13</span>Kerberos</a></li>
+      <li><a href="#pgp-smime"><span class="num">14</span>PGP &amp; S/MIME</a></li>
+      <li><a href="#https-tls"><span class="num">15</span>HTTPS, SSL &amp; TLS</a></li>
+      <li><a href="#ipsec"><span class="num">16</span>IPsec</a></li>
+      <li><a href="#praktikum"><span class="num">17</span>Modul Praktikum</a></li>
+      <li><a href="#ringkasan"><span class="num">18</span>Ringkasan</a></li>
+    </ul>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="content">
+
+    <!-- ============= HERO / COVER ============= -->
+    <section id="cover" class="hero">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          Module 01 · Network Defense Essentials
+        </div>
+        <h1>Network Security Fundamentals</h1>
+        <p class="hero-sub">
+          Ebook &amp; Modul Praktikum — fondasi keamanan jaringan: dari tiga elemen inti (Controls,
+          Protocols, Devices), prinsip Information Assurance (CIA+), 4 pendekatan defense,
+          klasifikasi kontrol (Admin/Physical/Technical), hingga protokol keamanan esensial
+          (RADIUS, TACACS+, Kerberos, PGP, S/MIME, HTTPS, TLS, IPsec).
+        </p>
+        <div class="hero-meta">
+          <div class="meta-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <span><strong>Target:</strong> Mahasiswa</span>
+          </div>
+          <div class="meta-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <span><strong>Durasi:</strong> 4-5 jam</span>
+          </div>
+          <div class="meta-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+            <span><strong>Level:</strong> Foundation</span>
+          </div>
+          <div class="meta-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <span><strong>19</strong> Bagian</span>
+          </div>
+        </div>
+
+        <!-- Hero Stats Infographic -->
+        <div class="stat-row" style="margin-top:48px">
+          <div class="stat-box">
+            <div class="stat-num">3</div>
+            <div class="stat-label">Elemen Inti</div>
+            <div class="stat-desc">Controls · Protocols · Devices — pondasi network security</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">5</div>
+            <div class="stat-label">IA Principles</div>
+            <div class="stat-desc">Confidentiality, Integrity, Availability, Non-repudiation, Authentication</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">4</div>
+            <div class="stat-label">Defense Approaches</div>
+            <div class="stat-desc">Preventive · Reactive · Retrospective · Proactive</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">9</div>
+            <div class="stat-label">Security Protocols</div>
+            <div class="stat-desc">RADIUS, TACACS+, Kerberos, PGP, S/MIME, S-HTTP, HTTPS, TLS, IPsec</div>
+          </div>
+        </div>
+
+        <!-- Module Flow Infographic -->
+        <div class="infographic" style="margin-top:32px">
+          <div class="ig-title">Alur Pembelajaran Modul 01</div>
+          <svg viewBox="0 0 920 280" width="920" height="280" aria-label="Module flow diagram">
+            <defs>
+              <marker id="arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/>
+              </marker>
+              <linearGradient id="grad-flow" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.2"/>
+                <stop offset="100%" stop-color="#a78bfa" stop-opacity="0.2"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Row 1 -->
+            <rect x="20" y="30" width="140" height="60" rx="10" class="ig-accent-box"/>
+            <text x="90" y="55" text-anchor="middle" class="ig-text-title">1</text>
+            <text x="90" y="75" text-anchor="middle" class="ig-text-strong">Fundamentals</text>
+            <text x="90" y="88" text-anchor="middle" class="ig-text">3 Elements</text>
+            <path d="M160 60 L205 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+
+            <rect x="210" y="30" width="140" height="60" rx="10" class="ig-accent-box"/>
+            <text x="280" y="55" text-anchor="middle" class="ig-text-title">2</text>
+            <text x="280" y="75" text-anchor="middle" class="ig-text-strong">Goal &amp; IA</text>
+            <text x="280" y="88" text-anchor="middle" class="ig-text">Defense-in-Depth</text>
+            <path d="M350 60 L395 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+
+            <rect x="400" y="30" width="140" height="60" rx="10" class="ig-accent-box"/>
+            <text x="470" y="55" text-anchor="middle" class="ig-text-title">3</text>
+            <text x="470" y="75" text-anchor="middle" class="ig-text-strong">Benefits &amp;</text>
+            <text x="470" y="88" text-anchor="middle" class="ig-text">Challenges</text>
+            <path d="M540 60 L585 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+
+            <rect x="590" y="30" width="140" height="60" rx="10" class="ig-warn-box"/>
+            <text x="660" y="55" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">4</text>
+            <text x="660" y="75" text-anchor="middle" class="ig-text-strong">Defense</text>
+            <text x="660" y="88" text-anchor="middle" class="ig-text">Approaches</text>
+
+            <path d="M660 95 L660 145" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+
+            <!-- Row 2 -->
+            <rect x="590" y="150" width="140" height="60" rx="10" class="ig-purple-box"/>
+            <text x="660" y="175" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">5</text>
+            <text x="660" y="195" text-anchor="middle" class="ig-text-strong">Security</text>
+            <text x="660" y="208" text-anchor="middle" class="ig-text">Controls</text>
+            <path d="M585 180 L540 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+
+            <rect x="400" y="150" width="140" height="60" rx="10" class="ig-purple-box"/>
+            <text x="470" y="175" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">6</text>
+            <text x="470" y="195" text-anchor="middle" class="ig-text-strong">Physical &amp;</text>
+            <text x="470" y="208" text-anchor="middle" class="ig-text">Technical</text>
+            <path d="M395 180 L350 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+
+            <rect x="210" y="150" width="140" height="60" rx="10" class="ig-success-box"/>
+            <text x="280" y="175" text-anchor="middle" class="ig-text-title" style="fill:#34d399">7</text>
+            <text x="280" y="195" text-anchor="middle" class="ig-text-strong">Security</text>
+            <text x="280" y="208" text-anchor="middle" class="ig-text">Protocols</text>
+            <path d="M205 180 L160 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+
+            <rect x="20" y="150" width="140" height="60" rx="10" class="ig-success-box"/>
+            <text x="90" y="175" text-anchor="middle" class="ig-text-title" style="fill:#34d399">8</text>
+            <text x="90" y="195" text-anchor="middle" class="ig-text-strong">AAA + Crypto</text>
+            <text x="90" y="208" text-anchor="middle" class="ig-text">Protocols</text>
+
+            <!-- Bottom badge -->
+            <rect x="380" y="230" width="160" height="40" rx="10" fill="url(#grad-flow)" stroke="#22d3ee" stroke-width="1.5"/>
+            <text x="460" y="248" text-anchor="middle" class="ig-text-title">LAB</text>
+            <text x="460" y="262" text-anchor="middle" class="ig-text-small">Modul Praktikum</text>
+            <path d="M90 215 L90 250 L375 250" class="ig-accent-line" stroke-width="2" stroke-dasharray="4,3" fill="none"/>
+            <path d="M280 215 L280 245 L375 245" class="ig-accent-line" stroke-width="1.5" stroke-dasharray="3,3" fill="none" opacity="0.5"/>
+            <path d="M470 215 L470 225" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <path d="M660 215 L660 245 L545 245" class="ig-accent-line" stroke-width="1.5" stroke-dasharray="3,3" fill="none" opacity="0.5"/>
+          </svg>
+          <div class="infographic-caption">Gambar 1. Alur pembelajaran Modul 01 — dari konsep dasar hingga praktikum hands-on protokol keamanan.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= TUJUAN PEMBELAJARAN ============= -->
+    <section id="tujuan">
+      <div class="section-header">
+        <span class="section-tag">Bagian 01</span>
+        <h2>Tujuan Pembelajaran</h2>
+        <p>Mengapa network security fundamentals adalah fondasi wajib sebelum mempelajari topik keamanan lanjutan.</p>
+      </div>
+      <p>
+        Dengan meningkatnya penggunaan teknologi emerging, menjadi semakin penting untuk mengamankan
+        informasi dan data yang diproses secara online. Saat internet dan jaringan komputer terus
+        berkembang, <strong>network security</strong> menjadi tantangan serius bagi organisasi.
+        Setiap organisasi membutuhkan arsitektur network security yang stabil dan efisien untuk
+        melindungi aset kritis dan sistem informasi dari ancaman yang terus berevolusi.
+      </p>
+      <p>
+        Modul ini dimulai dengan overview network security dan network defense, memberikan wawasan
+        tentang berbagai jenis pendekatan network defense, lalu membahas jenis-jenis network security
+        controls, dan diakhiri dengan pembahasan network security protocols esensial.
+      </p>
+      <p>Setelah menyelesaikan modul ini, Anda akan mampu:</p>
+
+      <!-- Learning outcomes Bloom-style infographic -->
+      <div class="infographic" style="margin:24px 0">
+        <div class="ig-title">Capaian Pembelajaran — Progresi Taksonomi Bloom</div>
+        <svg viewBox="0 0 900 200" width="900" height="200" aria-label="Learning outcomes">
+          <defs>
+            <linearGradient id="grad-bloom" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.6"/>
+              <stop offset="100%" stop-color="#a78bfa" stop-opacity="0.6"/>
+            </linearGradient>
+          </defs>
+          <g>
+            <rect x="20" y="140" width="130" height="40" rx="6" fill="url(#grad-bloom)" stroke="#22d3ee"/>
+            <text x="85" y="158" text-anchor="middle" class="ig-text-strong">Pahami</text>
+            <text x="85" y="173" text-anchor="middle" class="ig-text-small">goal network defense</text>
+
+            <rect x="160" y="120" width="130" height="60" rx="6" fill="url(#grad-bloom)" stroke="#22d3ee"/>
+            <text x="225" y="143" text-anchor="middle" class="ig-text-strong">Jelaskan</text>
+            <text x="225" y="158" text-anchor="middle" class="ig-text-small">IA principles</text>
+            <text x="225" y="172" text-anchor="middle" class="ig-text-small">(CIA+)</text>
+
+            <rect x="300" y="100" width="130" height="80" rx="6" fill="url(#grad-bloom)" stroke="#34d399"/>
+            <text x="365" y="123" text-anchor="middle" class="ig-text-strong">Bandingkan</text>
+            <text x="365" y="138" text-anchor="middle" class="ig-text-small">4 defense</text>
+            <text x="365" y="152" text-anchor="middle" class="ig-text-small">approaches</text>
+
+            <rect x="440" y="80" width="130" height="100" rx="6" fill="url(#grad-bloom)" stroke="#fbbf24"/>
+            <text x="505" y="103" text-anchor="middle" class="ig-text-strong">Analisis</text>
+            <text x="505" y="118" text-anchor="middle" class="ig-text-small">benefits &amp;</text>
+            <text x="505" y="132" text-anchor="middle" class="ig-text-small">challenges</text>
+            <text x="505" y="146" text-anchor="middle" class="ig-text-small">network defense</text>
+
+            <rect x="580" y="60" width="130" height="120" rx="6" fill="url(#grad-bloom)" stroke="#a78bfa"/>
+            <text x="645" y="83" text-anchor="middle" class="ig-text-strong">Klasifikasi</text>
+            <text x="645" y="98" text-anchor="middle" class="ig-text-small">security controls</text>
+            <text x="645" y="112" text-anchor="middle" class="ig-text-small">Admin/Physical/</text>
+            <text x="645" y="126" text-anchor="middle" class="ig-text-small">Technical</text>
+
+            <rect x="720" y="20" width="160" height="160" rx="6" fill="url(#grad-bloom)" stroke="#f87171"/>
+            <text x="800" y="43" text-anchor="middle" class="ig-text-strong">Terapkan</text>
+            <text x="800" y="58" text-anchor="middle" class="ig-text-small">security protocols</text>
+            <text x="800" y="72" text-anchor="middle" class="ig-text-small">RADIUS, Kerberos,</text>
+            <text x="800" y="86" text-anchor="middle" class="ig-text-small">TLS, IPsec</text>
+            <text x="800" y="100" text-anchor="middle" class="ig-text-small">via Wireshark &amp;</text>
+            <text x="800" y="114" text-anchor="middle" class="ig-text-small">OpenSSL praktikum</text>
+          </g>
+          <path d="M 20 195 L 880 195" stroke="#22d3ee" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <text x="20" y="183" class="ig-text-small" style="fill:#22d3ee">← lower-order thinking</text>
+          <text x="880" y="183" text-anchor="end" class="ig-text-small" style="fill:#f87171">higher-order thinking →</text>
+        </svg>
+        <div class="infographic-caption">Gambar 2. Capaian pembelajaran berjenjang — dari pemahaman konsep hingga praktikum protokol keamanan.</div>
+      </div>
+
+      <div class="card-grid grid-2" style="margin-top:20px">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">1</div>Goal Network Defense</div>
+          <p>Memahami tujuan network defense — prediction, protection, monitoring, detection, response terhadap aktivitas tidak sah.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">2</div>IA Principles</div>
+          <p>Mendeskripsikan prinsip Information Assurance: Confidentiality, Integrity, Availability, Non-repudiation, Authentication.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">3</div>Defense Approaches</div>
+          <p>Mendeskripsikan 4 jenis pendekatan network defense: Preventive, Reactive, Retrospective, Proactive.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">4</div>Benefits &amp; Challenges</div>
+          <p>Memahami manfaat (profit, produktivitas, compliance, client trust) dan tantangan network defense modern.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">5</div>Security Controls</div>
+          <p>Menjelaskan jenis-jenis network security controls: Administrative, Physical, Technical — beserta sub-kategorinya.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">6</div>Security Protocols</div>
+          <p>Menjelaskan berbagai network security protocols di layer transport, network, dan aplikasi.</p>
+        </div>
+      </div>
+    </section>
+    <!-- ============= BAGIAN 2: FUNDAMENTALS ============= -->
+    <section id="fundamentals">
+      <div class="section-header">
+        <span class="section-tag">Bagian 02</span>
+        <h2>Fundamentals of Network Security</h2>
+        <p>Tiga elemen inti yang membentuk network security yang kokoh: Controls, Protocols, dan Devices.</p>
+      </div>
+
+      <p>
+        <strong>Network security</strong> membantu organisasi dalam mengimplementasikan langkah
+        pencegahan yang diperlukan untuk melindungi infrastruktur IT dari penyalahgunaan, akses
+        tidak sah, pengungkapan informasi, modifikasi data dalam transit, perusakan, dan lain-lain —
+        sehingga menyediakan lingkungan yang aman bagi pengguna, komputer, dan program untuk
+        menjalankan fungsi reguler mereka.
+      </p>
+
+      <p>
+        Sebuah jaringan yang sepenuhnya aman dan robust dapat dirancang dengan implementasi dan
+        konfigurasi yang tepat dari elemen-elemen network security. Network security bertumpu pada
+        <strong>tiga elemen utama</strong> yang saling melengkapi:
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">3 Elemen Inti Network Security — Controls + Protocols + Devices</div>
+        <svg viewBox="0 0 900 340" width="900" height="340" aria-label="3 elements">
+          <defs>
+            <radialGradient id="grad-center-ns" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Center -->
+          <circle cx="450" cy="170" r="180" fill="url(#grad-center-ns)"/>
+          <circle cx="450" cy="170" r="55" fill="#161d2e" stroke="#22d3ee" stroke-width="2"/>
+          <text x="450" y="165" text-anchor="middle" class="ig-text-strong">Network</text>
+          <text x="450" y="180" text-anchor="middle" class="ig-text-strong">Security</text>
+          <text x="450" y="195" text-anchor="middle" class="ig-text-small">3 pillars</text>
+
+          <!-- 1: Controls (top) -->
+          <rect x="330" y="20" width="240" height="80" rx="12" class="ig-accent-box"/>
+          <text x="450" y="42" text-anchor="middle" class="ig-text-title">① Network Security Controls</text>
+          <text x="450" y="60" text-anchor="middle" class="ig-text-small">Security features yang dikonfigurasi &amp; diimplementasikan</text>
+          <text x="450" y="76" text-anchor="middle" class="ig-text-small">untuk memastikan network security</text>
+          <text x="450" y="92" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">→ Identity-based access restriction</text>
+          <line x1="450" y1="100" x2="450" y2="115" stroke="#22d3ee" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+          <!-- 2: Protocols (left) -->
+          <rect x="40" y="130" width="260" height="80" rx="12" class="ig-purple-box"/>
+          <text x="170" y="152" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">② Network Security Protocols</text>
+          <text x="170" y="170" text-anchor="middle" class="ig-text-small">Implementasikan security operations untuk</text>
+          <text x="170" y="186" text-anchor="middle" class="ig-text-small">security &amp; integrity data in transit</text>
+          <text x="170" y="202" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">→ Encryption + cryptographic techniques</text>
+          <line x1="300" y1="170" x2="395" y2="170" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+          <!-- 3: Devices (right) -->
+          <rect x="600" y="130" width="260" height="80" rx="12" class="ig-success-box"/>
+          <text x="730" y="152" text-anchor="middle" class="ig-text-title" style="fill:#34d399">③ Network Security Devices</text>
+          <text x="730" y="170" text-anchor="middle" class="ig-text-small">Appliances untuk melindungi jaringan dari</text>
+          <text x="730" y="186" text-anchor="middle" class="ig-text-small">unwanted traffic &amp; threats</text>
+          <text x="730" y="202" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">→ Active, Passive, Preventive, UTM</text>
+          <line x1="600" y1="170" x2="505" y2="170" stroke="#34d399" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+          <!-- Bottom: 4 device categories -->
+          <rect x="40" y="240" width="820" height="80" rx="12" class="ig-box"/>
+          <text x="60" y="262" class="ig-text-strong">Kategori Network Security Devices:</text>
+          <g class="ig-text-small">
+            <rect x="60" y="275" width="170" height="35" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="145" y="292" text-anchor="middle" class="ig-text-strong">Active</text>
+            <text x="145" y="304" text-anchor="middle" style="font-size:9px">Firewall, IPS, UTM</text>
+
+            <rect x="245" y="275" width="170" height="35" rx="6" fill="#0d1320" stroke="#34d399"/>
+            <text x="330" y="292" text-anchor="middle" class="ig-text-strong">Passive</text>
+            <text x="330" y="304" text-anchor="middle" style="font-size:9px">IDS, sniffer, syslog</text>
+
+            <rect x="430" y="275" width="170" height="35" rx="6" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="515" y="292" text-anchor="middle" class="ig-text-strong">Preventive</text>
+            <text x="515" y="304" text-anchor="middle" style="font-size:9px">UTM, NGFW, Anti-DDoS</text>
+
+            <rect x="615" y="275" width="240" height="35" rx="6" fill="#0d1320" stroke="#a78bfa"/>
+            <text x="735" y="292" text-anchor="middle" class="ig-text-strong">UTM (Unified Threat Management)</text>
+            <text x="735" y="304" text-anchor="middle" style="font-size:9px">All-in-one: FW + IDS + AV + VPN</text>
+          </g>
+        </svg>
+        <div class="infographic-caption">Gambar 3. Tiga pilar network security — Controls + Protocols + Devices yang saling melengkapi.</div>
+      </div>
+
+      <h3 class="sub-title">2.1 Detail Tiga Elemen</h3>
+      <div class="card-grid grid-3">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">1</div>Network Security Controls</div>
+          <p>Fitur keamanan yang harus dikonfigurasi dan diimplementasikan dengan tepat untuk memastikan network security. Ini adalah <strong>cornerstones</strong> disiplin keamanan sistematis. Kontrol ini bekerja sama untuk mengizinkan atau membatasi akses ke sumber daya organisasi berdasarkan <em>identity management</em>.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">2</div>Network Security Protocols</div>
+          <p>Mengimplementasikan operasi terkait keamanan untuk memastikan <strong>security dan integrity data in transit</strong>. Mereka memastikan keamanan data yang melewati jaringan, membatasi user tidak sah mengakses jaringan, menggunakan enkripsi dan teknik kriptografi.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">3</div>Network Security Devices</div>
+          <p>Appliances yang di-deploy untuk melindungi jaringan komputer dari <em>unwanted traffic</em> dan ancaman. Dikategorikan menjadi <strong>active devices</strong> (firewall, IPS), <strong>passive devices</strong> (IDS, sniffer), <strong>preventive devices</strong> (UTM, anti-DDoS), dan <strong>UTM</strong> yang menggabungkan fitur semua kategori.</p>
+        </div>
+      </div>
+
+      <div class="info-box info-tip">
+        <strong>Insight Penting:</strong> Ketiga elemen ini bersifat <em>complementary</em> —
+        kontrol tanpa protokol = tidak ada enforcement di jaringan; protokol tanpa devices = tidak
+        ada titik enforcement fisik; devices tanpa kontrol = konfigurasi ad-hoc yang sulit dikelola.
+        Integrasi ketiganya adalah kunci arsitektur keamanan yang efektif.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 3: GOAL OF NETWORK DEFENSE ============= -->
+    <section id="goal">
+      <div class="section-header">
+        <span class="section-tag">Bagian 03</span>
+        <h2>Goal of Network Defense</h2>
+        <p>Mengapa sekadar deploy firewall tidak cukup — pentingnya defense-in-depth yang komprehensif.</p>
+      </div>
+
+      <p>
+        Berbagai jenis aktivitas tidak sah atau ilegal dapat mencakup <em>interruption, damaging,
+        exploitation, atau restriction of access</em> ke jaringan atau sumber daya komputasi serta
+        pencurian data dan informasi dari jaringan. Implementasi banyak langkah keamanan dengan
+        sendirinya <strong>tidak menjamin network security</strong>. Sebagai contoh, banyak organisasi
+        mengasumsikan bahwa deploy satu atau beberapa firewall di jaringan sudah cukup untuk
+        melindungi infrastruktur dari berbagai ancaman. Namun, penyerang dapat mem-bypass langkah
+        keamanan tersebut untuk mendapatkan akses ke sistem.
+      </p>
+
+      <p>
+        Oleh karena itu, penting untuk memastikan <strong>comprehensive network defense</strong>
+        untuk mencegah dan memitigasi berbagai jenis ancaman. Tujuan comprehensive network defense
+        adalah deploy <em>continual and defense-in-depth security</em>, yang melibatkan:
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">Defense-in-Depth — 6 Aktivitas Berkelanjutan Network Defense</div>
+        <svg viewBox="0 0 900 280" width="900" height="280" aria-label="Defense-in-depth">
+          <defs>
+            <linearGradient id="grad-did" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#22d3ee"/>
+              <stop offset="100%" stop-color="#a78bfa"/>
+            </linearGradient>
+            <marker id="arr-did" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/>
+            </marker>
+          </defs>
+
+          <path d="M 60 140 L 840 140" stroke="url(#grad-did)" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- 6 phases -->
+          <circle cx="120" cy="140" r="32" fill="#161d2e" stroke="#22d3ee" stroke-width="2.5"/>
+          <text x="120" y="138" text-anchor="middle" class="ig-text-title">1</text>
+          <text x="120" y="153" text-anchor="middle" class="ig-text-small">Predict</text>
+          <rect x="50" y="190" width="140" height="60" rx="8" class="ig-accent-box"/>
+          <text x="120" y="210" text-anchor="middle" class="ig-text-strong">Prediction</text>
+          <text x="120" y="225" text-anchor="middle" class="ig-text-small">threat intel,</text>
+          <text x="120" y="238" text-anchor="middle" class="ig-text-small">risk assessment</text>
+          <text x="120" y="100" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">proactive</text>
+
+          <circle cx="264" cy="140" r="32" fill="#161d2e" stroke="#34d399" stroke-width="2.5"/>
+          <text x="264" y="138" text-anchor="middle" class="ig-text-title" style="fill:#34d399">2</text>
+          <text x="264" y="153" text-anchor="middle" class="ig-text-small">Protect</text>
+          <rect x="194" y="190" width="140" height="60" rx="8" class="ig-success-box"/>
+          <text x="264" y="210" text-anchor="middle" class="ig-text-strong">Protection</text>
+          <text x="264" y="225" text-anchor="middle" class="ig-text-small">firewall, encryption,</text>
+          <text x="264" y="238" text-anchor="middle" class="ig-text-small">access control</text>
+
+          <circle cx="408" cy="140" r="32" fill="#161d2e" stroke="#fbbf24" stroke-width="2.5"/>
+          <text x="408" y="138" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">3</text>
+          <text x="408" y="153" text-anchor="middle" class="ig-text-small">Monitor</text>
+          <rect x="338" y="190" width="140" height="60" rx="8" class="ig-warn-box"/>
+          <text x="408" y="210" text-anchor="middle" class="ig-text-strong">Monitoring</text>
+          <text x="408" y="225" text-anchor="middle" class="ig-text-small">SIEM, log analysis,</text>
+          <text x="408" y="238" text-anchor="middle" class="ig-text-small">IDS/IPS sensors</text>
+
+          <circle cx="552" cy="140" r="32" fill="#161d2e" stroke="#fbbf24" stroke-width="2.5"/>
+          <text x="552" y="138" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">4</text>
+          <text x="552" y="153" text-anchor="middle" class="ig-text-small">Analyze</text>
+          <rect x="482" y="190" width="140" height="60" rx="8" class="ig-warn-box"/>
+          <text x="552" y="210" text-anchor="middle" class="ig-text-strong">Analysis</text>
+          <text x="552" y="225" text-anchor="middle" class="ig-text-small">traffic analytics,</text>
+          <text x="552" y="238" text-anchor="middle" class="ig-text-small">forensics</text>
+
+          <circle cx="696" cy="140" r="32" fill="#161d2e" stroke="#a78bfa" stroke-width="2.5"/>
+          <text x="696" y="138" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">5</text>
+          <text x="696" y="153" text-anchor="middle" class="ig-text-small">Detect</text>
+          <rect x="626" y="190" width="140" height="60" rx="8" class="ig-purple-box"/>
+          <text x="696" y="210" text-anchor="middle" class="ig-text-strong">Detection</text>
+          <text x="696" y="225" text-anchor="middle" class="ig-text-small">anomaly, signature,</text>
+          <text x="696" y="238" text-anchor="middle" class="ig-text-small">IOC matching</text>
+
+          <circle cx="820" cy="140" r="32" fill="#161d2e" stroke="#f87171" stroke-width="2.5"/>
+          <text x="820" y="138" text-anchor="middle" class="ig-text-title" style="fill:#f87171">6</text>
+          <text x="820" y="153" text-anchor="middle" class="ig-text-small">Respond</text>
+          <rect x="750" y="190" width="140" height="60" rx="8" class="ig-danger-box"/>
+          <text x="820" y="210" text-anchor="middle" class="ig-text-strong">Response</text>
+          <text x="820" y="225" text-anchor="middle" class="ig-text-small">IR playbooks,</text>
+          <text x="820" y="238" text-anchor="middle" class="ig-text-small">containment, recovery</text>
+          <text x="820" y="100" text-anchor="middle" class="ig-text-small" style="fill:#f87171">reactive</text>
+        </svg>
+        <div class="infographic-caption">Gambar 4. Defense-in-Depth — siklus 6 aktivitas berkelanjutan dari Predict ke Respond. Loop ini berjalan terus-menerus.</div>
+      </div>
+
+      <p>
+        Tujuan comprehensive network defense adalah deploy continual dan defense-in-depth security,
+        yang melibatkan <strong>predicting, protecting, monitoring, analyzing, detecting, dan
+        responding</strong> terhadap aktivitas tidak sah seperti unauthorized access, misuse,
+        modification, service denial, dan degradasi/disruption jaringan — untuk menjamin keamanan
+        overall jaringan. Organisasi bergantung pada prinsip <em>Information Assurance (IA)</em>
+        untuk mencapai defense-in-depth security.
+      </p>
+
+      <div class="info-box info-warn">
+        <strong>Kesalahpahaman Umum:</strong> Banyak organisasi percaya bahwa deploy firewall
+        (bahkan multiple) sudah cukup. <strong>Salah.</strong> Firewall adalah satu lapisan defense.
+        Penyerang menggunakan teknik bypass seperti tunneling, encryption, social engineering, dan
+        insider threats. Defense-in-depth menempatkan multiple controls di multiple layer sehingga
+        kegagalan satu lapisan tidak menggagalkan seluruh pertahanan.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 4: IA PRINCIPLES ============= -->
+    <section id="ia-principles">
+      <div class="section-header">
+        <span class="section-tag">Bagian 04</span>
+        <h2>Information Assurance (IA) Principles</h2>
+        <p>Lima prinsip yang menjadi enabler aktivitas keamanan organisasi: Confidentiality, Integrity, Availability, Non-repudiation, Authentication.</p>
+      </div>
+
+      <p>
+        <strong>Information Assurance (IA) principles</strong> bertindak sebagai <em>enabler</em>
+        untuk aktivitas keamanan organisasi dalam melindungi dan mempertahankan jaringan dari
+        serangan. Mereka memfasilitasi adopsi countermeasure yang tepat dan tindakan response saat
+        threat alert atau detection terjadi. Operator jaringan harus menggunakan prinsip IA untuk
+        mengidentifikasi data yang sensitif dan menangkal event yang mungkin memiliki implikasi
+        keamanan bagi jaringan.
+      </p>
+
+      <p>
+        Prinsip IA membantu dalam mengidentifikasi <strong>network security vulnerabilities</strong>,
+        memantau jaringan untuk setiap upaya intrusion atau aktivitas malicious, dan mempertahankan
+        jaringan dengan mitigasi kerentanan. Aktivitas network defense harus mengikuti prinsip IA
+        berikut untuk mencapai defense-in-depth network security.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">5 Prinsip Information Assurance (CIA + Non-Rep + Auth)</div>
+        <svg viewBox="0 0 900 380" width="900" height="380" aria-label="5 IA principles">
+          <defs>
+            <radialGradient id="grad-cia" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <!-- CIA Triad (top) - 3 circles overlapping -->
+          <circle cx="320" cy="120" r="90" fill="#22d3ee" opacity="0.15" stroke="#22d3ee" stroke-width="2"/>
+          <circle cx="460" cy="120" r="90" fill="#34d399" opacity="0.15" stroke="#34d399" stroke-width="2"/>
+          <circle cx="390" cy="240" r="90" fill="#fbbf24" opacity="0.15" stroke="#fbbf24" stroke-width="2"/>
+
+          <text x="280" y="90" text-anchor="middle" class="ig-text-title" style="fill:#22d3ee">C</text>
+          <text x="280" y="108" text-anchor="middle" class="ig-text-small">Confidentiality</text>
+
+          <text x="500" y="90" text-anchor="middle" class="ig-text-title" style="fill:#34d399">I</text>
+          <text x="500" y="108" text-anchor="middle" class="ig-text-small">Integrity</text>
+
+          <text x="390" y="285" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">A</text>
+          <text x="390" y="303" text-anchor="middle" class="ig-text-small">Availability</text>
+
+          <text x="390" y="155" text-anchor="middle" class="ig-text-strong" style="fill:#a78bfa">CIA</text>
+          <text x="390" y="170" text-anchor="middle" class="ig-text-small" style="fill:#a78bfa">Triad</text>
+
+          <!-- Right side: Non-repudiation + Authentication -->
+          <rect x="640" y="40" width="240" height="120" rx="12" class="ig-purple-box"/>
+          <text x="760" y="65" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">Non-Repudiation</text>
+          <text x="760" y="85" text-anchor="middle" class="ig-text-small">Validasi integritas digital signature</text>
+          <text x="760" y="100" text-anchor="middle" class="ig-text-small">dari origin → destination</text>
+          <text x="760" y="120" text-anchor="middle" class="ig-text-small">→ Buktikan pengirim adalah pengirim sebenarnya</text>
+          <text x="760" y="138" text-anchor="middle" class="ig-text-small">→ Pengirim tidak dapat menyangkal</text>
+          <text x="760" y="153" text-anchor="middle" class="ig-text-small" style="font-style:italic">Contoh: PGP signature, eIDAS</text>
+
+          <rect x="640" y="180" width="240" height="120" rx="12" class="ig-accent-box"/>
+          <text x="760" y="205" text-anchor="middle" class="ig-text-title">Authentication</text>
+          <text x="760" y="225" text-anchor="middle" class="ig-text-small">Otorisasi user dengan credentials yang</text>
+          <text x="760" y="240" text-anchor="middle" class="ig-text-small">diberikan, dibandingkan dengan database</text>
+          <text x="760" y="260" text-anchor="middle" class="ig-text-small">→ Berikan akses ke network</text>
+          <text x="760" y="278" text-anchor="middle" class="ig-text-small">→ Garansi file/data passing safe</text>
+          <text x="760" y="293" text-anchor="middle" class="ig-text-small" style="font-style:italic">3 faktor: something you know/have/are</text>
+
+          <!-- Bottom: definition of each -->
+          <rect x="40" y="340" width="820" height="35" rx="8" class="ig-box"/>
+          <text x="60" y="358" class="ig-text-small">
+            <tspan style="fill:#22d3ee">C</tspan>: only authorized access ·
+            <tspan style="fill:#34d399">I</tspan>: no unauthorized modification ·
+            <tspan style="fill:#fbbf24">A</tspan>: ready when needed ·
+            <tspan style="fill:#a78bfa">NR</tspan>: cannot deny sending ·
+            <tspan style="fill:#22d3ee">Auth</tspan>: verify identity
+          </text>
+        </svg>
+        <div class="infographic-caption">Gambar 5. Lima prinsip Information Assurance — CIA Triad (saling tumpang tindih) + Non-Repudiation + Authentication.</div>
+      </div>
+
+      <h3 class="sub-title">4.1 Detail Setiap Prinsip</h3>
+      <dl class="def-list">
+        <div class="def-item">
+          <dt>Confidentiality (Kerahasiaan)</dt>
+          <dd>
+            Mengizinkan hanya <strong>authorized users</strong> untuk access, use, atau copy informasi.
+            <em>Authentication</em> sangat penting untuk confidentiality — jika user tidak sah mengakses
+            informasi yang dilindungi, ini berarti <strong>breach of confidentiality</strong> telah
+            terjadi. Contoh kontrol: enkripsi data at rest &amp; in transit, access control list (ACL),
+            data classification, need-to-know basis.
+          </dd>
+        </div>
+        <div class="def-item">
+          <dt>Integrity (Integritas)</dt>
+          <dd>
+            Melindungi data dan tidak mengizinkan <strong>modifikasi, deletion, atau corruption</strong>
+            data tanpa otorisasi yang tepat. Prinsip IA ini juga bergantung pada authentication untuk
+            berfungsi dengan baik. Contoh kontrol: hash function (SHA-256), digital signature,
+            versioning, change management, checksum pada transmisi data.
+          </dd>
+        </div>
+        <div class="def-item">
+          <dt>Availability (Ketersediaan)</dt>
+          <dd>
+            Proses melindungi sistem informasi atau jaringan yang menyimpan data sensitif, untuk
+            membuatnya <strong>tersedia bagi end user</strong> kapan pun mereka request akses.
+            Contoh kontrol: redundant system (HA cluster), backup reguler, DDoS protection,
+            UPS &amp; generator, disaster recovery plan, capacity planning.
+          </dd>
+        </div>
+        <div class="def-item">
+          <dt>Non-Repudiation (Non-Penyangkalan)</dt>
+          <dd>
+            Service yang memvalidasi integritas transmisi <strong>digital signature</strong>, mulai
+            dari asal hingga tujuan. Non-repudiation memberikan akses ke informasi yang dilindungi
+            dengan memvalidasi bahwa digital signature berasal dari pihak yang dimaksud. Pengirim
+            tidak dapat menyangkal telah mengirim pesan. Contoh: PGP signature, eIDAS regulation
+            EU, dokumen legal digital.
+          </dd>
+        </div>
+        <div class="def-item">
+          <dt>Authentication (Otentikasi)</dt>
+          <dd>
+            Proses mengotorisasi user dengan credentials yang diberikan, dengan membandingkannya
+            dengan yang ada di database <em>authorized users</em> di authentication server, untuk
+            memberikan akses ke jaringan. Menjamin bahwa file atau data yang melewati jaringan
+            aman. Tiga faktor authentication: <strong>something you know</strong> (password),
+            <strong>something you have</strong> (token), <strong>something you are</strong> (biometric).
+          </dd>
+        </div>
+      </dl>
+
+      <div class="info-box info-success">
+        <strong>CIA Triad sebagai Pondasi:</strong> Lima prinsip ini sering disebut
+        <strong>"CIA Triad + Non-Repudiation + Authentication"</strong> atau singkatnya "CIA+".
+        Setiap keputusan security control harus dapat dipetakan ke salah satu prinsip ini. Jika
+        sebuah kontrol tidak meningkatkan C, I, A, NR, atau Auth — kontrol itu mungkin tidak perlu.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 5: BENEFITS & CHALLENGES ============= -->
+    <section id="benefits">
+      <div class="section-header">
+        <span class="section-tag">Bagian 05</span>
+        <h2>Benefits &amp; Challenges Network Defense</h2>
+        <p>Manfaat bisnis dari network security dan tantangan yang dihadapi network defender modern.</p>
+      </div>
+
+      <p>
+        <strong>Network security</strong> sangat penting bagi semua organisasi, terlepas dari ukuran.
+        Ini melindungi sistem, file, data, dan informasi personal serta melindunginya dari akses
+        tidak sah. Selain memastikan proteksi terhadap hacking attempts dan virus attacks, network
+        security memberikan manfaat tidak langsung berikut.
+      </p>
+
+      <h3 class="sub-title">5.1 Empat Manfaat Network Defense</h3>
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">$</div>Increased Profits</div>
+          <p>Menjaga jaringan komputer tetap aman kritis bagi organisasi. Dengan deployment comprehensive network defense, organisasi dapat mencegah threats, attacks, dan vulnerabilities yang bisa menyebabkan kerugian signifikan. Network security secara tidak langsung mendukung profit organisasi. Juga memberi <strong>competitive edge</strong> via layanan yang lebih aman.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">📈</div>Improved Productivity</div>
+          <p>Network security meningkatkan produktivitas. Contoh: mencegah karyawan menghabiskan waktu untuk aktivitas tidak produktif di internet seperti browsing konten dewasa, gaming, dan gosip saat jam kerja. Aktivitas ini dapat dibatasi dengan <em>safe browsing techniques</em>, sehingga produktivitas meningkat.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">⚖</div>Enhanced Compliance</div>
+          <p>Network security membantu organisasi menghindari penalti atas ketidakpatuhan. <strong>Real-time monitoring data flows</strong> membantu organisasi meningkatkan postur compliance. Acuan: GDPR, HIPAA, PCI DSS, SOX, ISO 27001, UU PDP Indonesia.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🤝</div>Client Confidence</div>
+          <p>Pengetahuan bahwa sistem dan data organisasi terlindungi dan aman meningkatkan <strong>kepercayaan dan trust klien</strong> pada organisasi. Ini dapat berubah menjadi pembelian layanan lain di masa depan — trust adalah aset bisnis yang sulit dibeli.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">5.2 Tantangan Network Defense</h3>
+      <div class="infographic">
+        <div class="ig-title">3 Tantangan Utama + 7 Tantangan Operasional Network Defender</div>
+        <svg viewBox="0 0 900 440" width="900" height="440" aria-label="Challenges">
+          <!-- Top: 3 broad challenges -->
+          <text x="450" y="25" text-anchor="middle" class="ig-text-strong">3 Tantangan Utama (Broad):</text>
+
+          <rect x="40" y="40" width="260" height="100" rx="10" class="ig-danger-box"/>
+          <text x="60" y="65" class="ig-text-title" style="fill:#f87171">Distributed Computing</text>
+          <text x="60" y="85" class="ig-text-small">Jaringan menjadi vast &amp; complex</text>
+          <text x="60" y="100" class="ig-text-small">untuk meet business requirements.</text>
+          <text x="60" y="115" class="ig-text-small">Serious security vulnerabilities.</text>
+          <text x="60" y="130" class="ig-text-small" style="font-style:italic">→ Cloud, edge, multi-cloud, IoT</text>
+
+          <rect x="320" y="40" width="260" height="100" rx="10" class="ig-danger-box"/>
+          <text x="340" y="65" class="ig-text-title" style="fill:#f87171">Emerging Threats</text>
+          <text x="340" y="85" class="ig-text-small">Potential threats evolve daily.</text>
+          <text x="340" y="100" class="ig-text-small">Attacks becoming technically more</text>
+          <text x="340" y="115" class="ig-text-small">sophisticated &amp; better organized.</text>
+          <text x="340" y="130" class="ig-text-small" style="font-style:italic">→ AI-powered, supply chain, APT</text>
+
+          <rect x="600" y="40" width="260" height="100" rx="10" class="ig-danger-box"/>
+          <text x="620" y="65" class="ig-text-title" style="fill:#f87171">Lack of Security Skills</text>
+          <text x="620" y="85" class="ig-text-small">Organisasi gagal defend terhadap</text>
+          <text x="620" y="100" class="ig-text-small">rapidly increasing network attacks</text>
+          <text x="620" y="115" class="ig-text-small">karena lack of network security skills.</text>
+          <text x="620" y="130" class="ig-text-small" style="font-style:italic">→ Talent gap, upskilling urgent</text>
+
+          <!-- Bottom: 7 operational challenges -->
+          <line x1="40" y1="170" x2="860" y2="170" class="ig-line"/>
+          <text x="450" y="195" text-anchor="middle" class="ig-text-strong">7 Tantangan Operasional Network Defender:</text>
+
+          <rect x="40" y="210" width="200" height="60" rx="8" class="ig-warn-box"/>
+          <text x="140" y="230" text-anchor="middle" class="ig-text-strong" style="fill:#fbbf24">① Internet Protection</text>
+          <text x="140" y="248" text-anchor="middle" class="ig-text-small">Protect network dari attacks</text>
+          <text x="140" y="261" text-anchor="middle" class="ig-text-small">via Internet (DMZ, WAF, IPS)</text>
+
+          <rect x="260" y="210" width="200" height="60" rx="8" class="ig-warn-box"/>
+          <text x="360" y="230" text-anchor="middle" class="ig-text-strong" style="fill:#fbbf24">② Public Servers</text>
+          <text x="360" y="248" text-anchor="middle" class="ig-text-small">Protect web, email, DNS</text>
+          <text x="360" y="261" text-anchor="middle" class="ig-text-small">servers exposed to internet</text>
+
+          <rect x="480" y="210" width="180" height="60" rx="8" class="ig-warn-box"/>
+          <text x="570" y="230" text-anchor="middle" class="ig-text-strong" style="fill:#fbbf24">③ Damage Containment</text>
+          <text x="570" y="248" text-anchor="middle" class="ig-text-small">Contain damage ketika</text>
+          <text x="570" y="261" text-anchor="middle" class="ig-text-small">network/system compromised</text>
+
+          <rect x="680" y="210" width="180" height="60" rx="8" class="ig-warn-box"/>
+          <text x="770" y="230" text-anchor="middle" class="ig-text-strong" style="fill:#fbbf24">④ Internal Attacks</text>
+          <text x="770" y="248" text-anchor="middle" class="ig-text-small">Prevent internal attacks</text>
+          <text x="770" y="261" text-anchor="middle" class="ig-text-small">against the network</text>
+
+          <rect x="40" y="290" width="200" height="60" rx="8" class="ig-warn-box"/>
+          <text x="140" y="310" text-anchor="middle" class="ig-text-strong" style="fill:#fbbf24">⑤ Sensitive Info</text>
+          <text x="140" y="328" text-anchor="middle" class="ig-text-small">Protect customer DB, financial,</text>
+          <text x="140" y="341" text-anchor="middle" class="ig-text-small">trade secrets</text>
+
+          <rect x="260" y="290" width="200" height="60" rx="8" class="ig-warn-box"/>
+          <text x="360" y="310" text-anchor="middle" class="ig-text-strong" style="fill:#fbbf24">⑥ Guidelines</text>
+          <text x="360" y="328" text-anchor="middle" class="ig-text-small">Develop guidelines untuk</text>
+          <text x="360" y="341" text-anchor="middle" class="ig-text-small">network defenders secure ops</text>
+
+          <rect x="480" y="290" width="380" height="60" rx="8" class="ig-warn-box"/>
+          <text x="670" y="310" text-anchor="middle" class="ig-text-strong" style="fill:#fbbf24">⑦ Intrusion Detection &amp; Logging</text>
+          <text x="670" y="328" text-anchor="middle" class="ig-text-small">Enable intrusion detection &amp; logging capabilities</text>
+          <text x="670" y="341" text-anchor="middle" class="ig-text-small">→ audit trail, real-time alerting, retention policy</text>
+
+          <text x="450" y="395" text-anchor="middle" class="ig-text-small" style="font-style:italic">Total = 3 broad + 7 operasional = 10 tantangan yang harus dimitigasi network defender modern.</text>
+          <text x="450" y="415" text-anchor="middle" class="ig-text-small" style="fill:#f87171">Setiap tantangan = 1 area di mana network security dapat gagal.</text>
+        </svg>
+        <div class="infographic-caption">Gambar 6. 3 tantangan utama (red) + 7 tantangan operasional (yellow) yang dihadapi network defender modern.</div>
+      </div>
+
+      <p>
+        Selain kategori tantangan broad di atas, seorang network defender dapat menghadapi tantangan
+        berikut dalam memelihara keamanan jaringan: <strong>(1)</strong> melindungi jaringan dari
+        serangan via Internet, <strong>(2)</strong> melindungi server publik seperti web, email, dan
+        DNS, <strong>(3)</strong> containment damage saat network/system compromised, <strong>(4)</strong>
+        mencegah internal attacks terhadap jaringan, <strong>(5)</strong> melindungi informasi
+        penting dan sensitif seperti customer database, financial records, trade secrets,
+        <strong>(6)</strong> mengembangkan guidelines untuk network defender menangani jaringan
+        dengan aman, dan <strong>(7)</strong> mengaktifkan intrusion detection dan logging capabilities.
+      </p>
+
+      <div class="info-box info-warn">
+        <strong>Realitas Industri:</strong> Talent gap cybersecurity global diperkirakan mencapai
+        <strong>3,5 juta posisi unfilled di 2025</strong> (menurut Cybersecurity Ventures).
+        Sementara itu, serangan rata-rata organisasi mengalami <strong>1.200+ serangan per minggu</strong>
+        (Check Point Research 2024). Tanpa otomatisasi + AI + talent, network defense akan kewalahan.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 6: 4 DEFENSE APPROACHES ============= -->
+    <section id="approaches">
+      <div class="section-header">
+        <span class="section-tag">Bagian 06</span>
+        <h2>4 Pendekatan Network Defense</h2>
+        <p>Empat klasifikasi teknik defense untuk identifikasi dan pencegahan threats &amp; attacks di jaringan.</p>
+      </div>
+
+      <p>
+        Ada <strong>empat klasifikasi utama</strong> teknik security defense yang digunakan untuk
+        identifikasi dan pencegahan threats dan attacks di jaringan. Setiap pendekatan beroperasi
+        di fase berbeda dari security lifecycle — preventive dan proactive terjadi sebelum attack,
+        reactive terjadi saat attack, retrospective terjadi setelah attack. Kombinasi keempatnya
+        menghasilkan defense-in-depth yang sebenarnya.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">4 Pendekatan Network Defense — Timeline Lifecycle</div>
+        <svg viewBox="0 0 900 380" width="900" height="380" aria-label="4 approaches timeline">
+          <defs>
+            <linearGradient id="grad-timeline" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#34d399"/>
+              <stop offset="33%" stop-color="#fbbf24"/>
+              <stop offset="66%" stop-color="#a78bfa"/>
+              <stop offset="100%" stop-color="#22d3ee"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Timeline arrow -->
+          <path d="M 60 200 L 840 200" stroke="url(#grad-timeline)" stroke-width="4" stroke-linecap="round"/>
+          <text x="60" y="180" class="ig-text-small" style="fill:#34d399">← Before Attack</text>
+          <text x="450" y="180" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">During Attack</text>
+          <text x="840" y="180" text-anchor="end" class="ig-text-small" style="fill:#22d3ee">After Attack →</text>
+
+          <!-- 4 approaches -->
+          <!-- Proactive -->
+          <rect x="40" y="40" width="200" height="120" rx="12" class="ig-accent-box"/>
+          <text x="140" y="65" text-anchor="middle" class="ig-text-title">① Proactive</text>
+          <text x="140" y="85" text-anchor="middle" class="ig-text-small">Inform decision making</text>
+          <text x="140" y="100" text-anchor="middle" class="ig-text-small">untuk counter future attacks</text>
+          <text x="140" y="120" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">Methods:</text>
+          <text x="140" y="135" text-anchor="middle" class="ig-text-small">• Threat intelligence</text>
+          <text x="140" y="150" text-anchor="middle" class="ig-text-small">• Risk assessment</text>
+
+          <!-- Preventive -->
+          <rect x="260" y="40" width="200" height="120" rx="12" class="ig-success-box"/>
+          <text x="360" y="65" text-anchor="middle" class="ig-text-title" style="fill:#34d399">② Preventive</text>
+          <text x="360" y="85" text-anchor="middle" class="ig-text-small">Prevent threats/attacks</text>
+          <text x="360" y="100" text-anchor="middle" class="ig-text-small">in target network</text>
+          <text x="360" y="120" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">Methods:</text>
+          <text x="360" y="135" text-anchor="middle" class="ig-text-small">• Firewall, NAC, NAP</text>
+          <text x="360" y="150" text-anchor="middle" class="ig-text-small">• IPsec, SSL, biometric</text>
+
+          <!-- Reactive -->
+          <rect x="480" y="40" width="200" height="120" rx="12" class="ig-warn-box"/>
+          <text x="580" y="65" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">③ Reactive</text>
+          <text x="580" y="85" text-anchor="middle" class="ig-text-small">Address attacks yang gagal</text>
+          <text x="580" y="100" text-anchor="middle" class="ig-text-small">dicegah preventive</text>
+          <text x="580" y="120" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">Methods:</text>
+          <text x="580" y="135" text-anchor="middle" class="ig-text-small">• IDS, IPS, SIMS</text>
+          <text x="580" y="150" text-anchor="middle" class="ig-text-small">• TRS (Threat Response)</text>
+
+          <!-- Retrospective -->
+          <rect x="700" y="40" width="160" height="120" rx="12" class="ig-purple-box"/>
+          <text x="780" y="65" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">④ Retrospective</text>
+          <text x="780" y="85" text-anchor="middle" class="ig-text-small">Examine causes</text>
+          <text x="780" y="100" text-anchor="middle" class="ig-text-small">untuk attacks</text>
+          <text x="780" y="120" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">Methods:</text>
+          <text x="780" y="135" text-anchor="middle" class="ig-text-small">• Protocol analyzer</text>
+          <text x="780" y="150" text-anchor="middle" class="ig-text-small">• CSIRT, CERT</text>
+
+          <!-- Below: techniques detail -->
+          <text x="450" y="245" text-anchor="middle" class="ig-text-strong">Detail Teknik per Pendekatan:</text>
+
+          <rect x="40" y="260" width="820" height="100" rx="8" class="ig-box"/>
+          <text x="60" y="282" class="ig-text-strong" style="fill:#34d399">Preventive (lanjutan):</text>
+          <text x="60" y="298" class="ig-text-small">• Access control: firewall (network layer), RBAC/ABAC (app layer), MFA</text>
+          <text x="60" y="312" class="ig-text-small">• Admission control: NAC (Cisco ISE, Aruba ClearPass), NAP (Microsoft)</text>
+          <text x="60" y="326" class="ig-text-small">• Cryptographic: IPsec (VPN site-to-site), SSL/TLS (HTTPS), SSH (admin)</text>
+          <text x="60" y="340" class="ig-text-small">• Biometric: fingerprint, facial recognition, voice recognition, iris scan</text>
+          <text x="60" y="354" class="ig-text-small" style="fill:#fbbf24">Retrospective (lanjutan): fault finding (protocol analyzer, traffic monitor), forensics (CSIRT, CERT), post-mortem (risk + legal assessment)</text>
+        </svg>
+        <div class="infographic-caption">Gambar 7. 4 pendekatan network defense berdasarkan timeline attack — Proactive &amp; Preventive (sebelum), Reactive (saat), Retrospective (sesudah).</div>
+      </div>
+
+      <h3 class="sub-title">6.1 Detail Setiap Pendekatan</h3>
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">P</div>Preventive Approach</div>
+          <p>Pendekatan yang pada dasarnya terdiri dari metode/teknik yang dapat dengan mudah <strong>mencegah threats atau attacks</strong> di jaringan target. Termasuk: access control (firewall), admission control (NAC, NAP), cryptographic applications (IPsec, SSL), biometric techniques (speech, facial recognition).</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">R</div>Reactive Approach</div>
+          <p>Pendekatan yang <strong>komplementer</strong> terhadap preventive. Menangani attacks dan threats yang gagal dicegah preventive, seperti DoS dan DDoS attacks. <em>Wajib</em> implementasi keduanya. Termasuk security monitoring: IDS, SIMS (Security Info Mgmt Systems), TRS (Threat Response Systems), IPS.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">R</div>Retrospective Approach</div>
+          <p>Memeriksa <strong>penyebab attacks</strong> di jaringan. Termasuk: fault finding mechanisms (protocol analyzers, traffic monitors), security forensics (CSIRT — Computer Security Incident Response Team, CERT — Computer Emergency Response Team), post-mortem analysis (risk &amp; legal assessments).</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">P</div>Proactive Approach</div>
+          <p>Metode/teknik yang digunakan untuk <strong>inform decision making</strong> dalam menangkal future attacks. <em>Threat intelligence</em> dan <em>risk assessment</em> adalah contoh metode. Memfasilitasi implementasi preemptive security actions terhadap potensial incidents.</p>
+        </div>
+      </div>
+
+      <div class="info-box info-tip">
+        <strong>Kombinasi Optimal:</strong> Defense-in-depth yang efektif menggunakan
+        <strong>keempat pendekatan secara bersamaan</strong>. Preventive = reduce attack surface;
+        Reactive = detect &amp; contain saat attack; Retrospective = learn dari incident; Proactive =
+        anticipate attack berikutnya. Skip salah satu = meninggalkan celah yang akan dieksploitasi.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 7: SECURITY CONTROLS ============= -->
+    <section id="controls">
+      <div class="section-header">
+        <span class="section-tag">Bagian 07</span>
+        <h2>Network Security Controls</h2>
+        <p>Tiga klasifikasi utama security controls: Administrative, Physical, dan Technical.</p>
+      </div>
+
+      <p>
+        <strong>Network security controls</strong> diklasifikasikan ke dalam tiga kategori utama
+        yang mencakup seluruh spektrum pertahanan — dari kebijakan manusia (administrative),
+        perlindungan fisik (physical), hingga kontrol teknis (technical). Setiap kategori memiliki
+        komponen unik yang harus dikonfigurasi dan dikelola secara terintegrasi.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">3 Klasifikasi Network Security Controls</div>
+        <svg viewBox="0 0 900 360" width="900" height="360" aria-label="3 controls">
+          <defs>
+            <linearGradient id="grad-ctrl" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#22d3ee" stop-opacity="0.05"/>
+            </linearGradient>
+          </defs>
+
+          <!-- 3 boxes side by side -->
+          <rect x="40" y="20" width="270" height="320" rx="12" fill="url(#grad-ctrl)" stroke="#22d3ee" stroke-width="2"/>
+          <text x="175" y="50" text-anchor="middle" class="ig-text-title">① Administrative</text>
+          <text x="175" y="68" text-anchor="middle" class="ig-text-small">Management limitations, operational</text>
+          <text x="175" y="82" text-anchor="middle" class="ig-text-small">&amp; accountability procedures</text>
+
+          <text x="60" y="110" class="ig-text-strong" style="fill:#22d3ee">Components:</text>
+          <g class="ig-text-small">
+            <text x="60" y="130">• Regulatory framework compliance</text>
+            <text x="60" y="148">• Security policy</text>
+            <text x="60" y="166">• Employee monitoring &amp; supervising</text>
+            <text x="60" y="184">• Information classification</text>
+            <text x="60" y="202">• Separation of duties</text>
+            <text x="60" y="220">• Principle of least privileges</text>
+            <text x="60" y="238">• Security awareness &amp; training</text>
+          </g>
+
+          <text x="60" y="270" class="ig-text-strong" style="fill:#fbbf24">Goal:</text>
+          <text x="60" y="288" class="ig-text-small">Ensure authorization &amp;</text>
+          <text x="60" y="302" class="ig-text-small">authentication of personnel</text>
+          <text x="60" y="316" class="ig-text-small">at all levels.</text>
+
+          <!-- Physical -->
+          <rect x="325" y="20" width="270" height="320" rx="12" fill="url(#grad-ctrl)" stroke="#34d399" stroke-width="2"/>
+          <text x="460" y="50" text-anchor="middle" class="ig-text-title" style="fill:#34d399">② Physical</text>
+          <text x="460" y="68" text-anchor="middle" class="ig-text-small">Physical protection of information,</text>
+          <text x="460" y="82" text-anchor="middle" class="ig-text-small">buildings &amp; physical assets</text>
+
+          <text x="345" y="110" class="ig-text-strong" style="fill:#34d399">Sub-categories:</text>
+          <g class="ig-text-small">
+            <text x="345" y="130">• Prevention Controls</text>
+            <text x="345" y="145" style="font-size:9px">  fences, locks, biometrics, mantraps</text>
+            <text x="345" y="166">• Deterrence Controls</text>
+            <text x="345" y="181" style="font-size:9px">  security guards, warning signs</text>
+            <text x="345" y="202">• Detection Controls</text>
+            <text x="345" y="217" style="font-size:9px">  CCTV, alarms, motion sensors</text>
+          </g>
+
+          <text x="345" y="250" class="ig-text-strong" style="fill:#fbbf24">Goal:</text>
+          <text x="345" y="268" class="ig-text-small">Reduce chances of attacks</text>
+          <text x="345" y="282" class="ig-text-small">and risks via physical</text>
+          <text x="345" y="296" class="ig-text-small">barriers. Defense-in-depth</text>
+          <text x="345" y="310" class="ig-text-small">starts at the perimeter.</text>
+
+          <!-- Technical -->
+          <rect x="610" y="20" width="250" height="320" rx="12" fill="url(#grad-ctrl)" stroke="#a78bfa" stroke-width="2"/>
+          <text x="735" y="50" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">③ Technical</text>
+          <text x="735" y="68" text-anchor="middle" class="ig-text-small">Restricting access to devices</text>
+          <text x="735" y="82" text-anchor="middle" class="ig-text-small">to protect integrity of data</text>
+
+          <text x="630" y="110" class="ig-text-strong" style="fill:#a78bfa">Components:</text>
+          <g class="ig-text-small">
+            <text x="630" y="130">• System access controls</text>
+            <text x="630" y="145" style="font-size:9px">  data sensitivity, clearance, ACL</text>
+            <text x="630" y="166">• Network access controls</text>
+            <text x="630" y="181" style="font-size:9px">  router/switch ACL, 802.1X</text>
+            <text x="630" y="202">• Authentication &amp; authorization</text>
+            <text x="630" y="217" style="font-size:9px">  SSO, RBAC, MFA</text>
+            <text x="630" y="238">• Encryption &amp; Protocols</text>
+            <text x="630" y="253" style="font-size:9px">  TLS, IPsec, SSH</text>
+            <text x="630" y="274">• Network security devices</text>
+            <text x="630" y="289" style="font-size:9px">  firewall, IDS, IPS</text>
+            <text x="630" y="310">• Auditing</text>
+            <text x="630" y="325" style="font-size:9px">  tracking &amp; examining activities</text>
+          </g>
+        </svg>
+        <div class="infographic-caption">Gambar 8. 3 klasifikasi security controls — Administrative (policy/human), Physical (barrier), Technical (technology).</div>
+      </div>
+
+      <h3 class="sub-title">7.1 Administrative Security Controls</h3>
+      <p>
+        <strong>Administrative security controls</strong> adalah management limitations, operational
+        dan accountability procedures, dan controls lain yang memastikan keamanan organisasi.
+        Prosedur yang ditetapkan dalam administrative security control memastikan
+        <em>authorization dan authentication</em> personnel di semua level. Komponennya meliputi:
+      </p>
+      <div class="card-grid grid-3">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">⚖</div>Regulatory Compliance</div>
+          <p>Kepatuhan terhadap kerangka regulasi — GDPR, HIPAA, PCI DSS, SOX, ISO 27001, UU PDP Indonesia. Compliance bukan opsional, itu baseline.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">📋</div>Security Policy</div>
+          <p>Dokumen kebijakan keamanan yang mengatur acceptable use, data handling, incident response, access policy. Harus <em>living document</em> yang diupdate.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">👁</div>Employee Monitoring</div>
+          <p>Pemantauan dan supervisi karyawan — UEM/MDM logs, web filter, DLP. Imbangi dengan privasi &amp; consent sesuai regulasi ketenagakerjaan.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🏷</div>Information Classification</div>
+          <p>Klasifikasi informasi: Public, Internal, Confidential, Restricted. Menentukan level kontrol yang sesuai untuk setiap tipe data.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🔀</div>Separation of Duties</div>
+          <p>Pemisahan tugas — satu orang tidak boleh memiliki kontrol penuh atas transaksi sensitif. Contoh: developer tidak boleh deploy ke produksi sendiri.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🎓</div>Awareness &amp; Training</div>
+          <p>Security awareness training berkala untuk semua karyawan. Human adalah weakest link — phishing test, security drill, onboarding security session.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 8: PHYSICAL CONTROLS ============= -->
+    <section id="physical">
+      <div class="section-header">
+        <span class="section-tag">Bagian 08</span>
+        <h2>Physical Security Controls</h2>
+        <p>Tiga sub-kategori physical controls: Prevention, Deterrence, dan Detection — bekerja berlapis dari perimeter.</p>
+      </div>
+
+      <p>
+        <strong>Physical security controls</strong> yang tepat dapat mengurangi peluang attacks dan
+        risks di organisasi. Physical security controls memberikan <em>physical protection</em>
+        terhadap informasi, bangunan, dan semua aset fisik lain dari organisasi. Physical controls
+        dikategorikan menjadi tiga sub-kategori yang bekerja berlapis dari perimeter luar hingga
+        ke aset paling sensitif.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">3 Sub-Kategori Physical Security Controls — Layered Perimeter</div>
+        <svg viewBox="0 0 900 380" width="900" height="380" aria-label="Physical controls">
+          <!-- Outer perimeter: Deterrence -->
+          <rect x="40" y="40" width="820" height="80" rx="12" class="ig-warn-box"/>
+          <text x="60" y="65" class="ig-text-title" style="fill:#fbbf24">① Deterrence Controls (Outer)</text>
+          <text x="60" y="83" class="ig-text-small">Discourage violation of security policies — psychological barrier</text>
+          <g class="ig-text-small">
+            <rect x="60" y="95" width="120" height="20" rx="6" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="120" y="109" text-anchor="middle">🚨 Warning signs</text>
+            <rect x="190" y="95" width="120" height="20" rx="6" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="250" y="109" text-anchor="middle">👮 Security guards</text>
+            <rect x="320" y="95" width="120" height="20" rx="6" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="380" y="109" text-anchor="middle">🐕 Guard dogs</text>
+            <rect x="450" y="95" width="120" height="20" rx="6" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="510" y="109" text-anchor="middle">💡 Bright lighting</text>
+            <rect x="580" y="95" width="120" height="20" rx="6" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="640" y="109" text-anchor="middle">📷 Visible CCTV</text>
+            <rect x="710" y="95" width="140" height="20" rx="6" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="780" y="109" text-anchor="middle">📜 Posted policies</text>
+          </g>
+
+          <!-- Middle: Prevention -->
+          <rect x="80" y="140" width="740" height="80" rx="12" class="ig-accent-box"/>
+          <text x="100" y="165" class="ig-text-title">② Prevention Controls (Middle)</text>
+          <text x="100" y="183" class="ig-text-small">Prevent unwanted/unauthorized access — physical barrier</text>
+          <g class="ig-text-small">
+            <rect x="100" y="195" width="120" height="20" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="160" y="209" text-anchor="middle">🚧 Fences</text>
+            <rect x="230" y="195" width="120" height="20" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="290" y="209" text-anchor="middle">🔒 Locks</text>
+            <rect x="360" y="195" width="120" height="20" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="420" y="209" text-anchor="middle">🔑 Biometric</text>
+            <rect x="490" y="195" width="120" height="20" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="550" y="209" text-anchor="middle">🚪 Mantraps</text>
+            <rect x="620" y="195" width="180" height="20" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="710" y="209" text-anchor="middle">🛂 Smartcard access</text>
+          </g>
+
+          <!-- Inner: Detection -->
+          <rect x="120" y="240" width="660" height="80" rx="12" class="ig-danger-box"/>
+          <text x="140" y="265" class="ig-text-title" style="fill:#f87171">③ Detection Controls (Inner)</text>
+          <text x="140" y="283" class="ig-text-small">Detect unauthorized access attempts — alert &amp; respond</text>
+          <g class="ig-text-small">
+            <rect x="140" y="295" width="120" height="20" rx="6" fill="#0d1320" stroke="#f87171"/>
+            <text x="200" y="309" text-anchor="middle">📹 CCTV cameras</text>
+            <rect x="270" y="295" width="120" height="20" rx="6" fill="#0d1320" stroke="#f87171"/>
+            <text x="330" y="309" text-anchor="middle">🚨 Alarms</text>
+            <rect x="400" y="295" width="140" height="20" rx="6" fill="#0d1320" stroke="#f87171"/>
+            <text x="470" y="309" text-anchor="middle">📡 Motion sensors</text>
+            <rect x="550" y="295" width="140" height="20" rx="6" fill="#0d1320" stroke="#f87171"/>
+            <text x="620" y="309" text-anchor="middle">🌡 Environmental</text>
+            <rect x="700" y="295" width="80" height="20" rx="6" fill="#0d1320" stroke="#f87171"/>
+            <text x="740" y="309" text-anchor="middle">🛑 Duress</text>
+          </g>
+
+          <!-- Center: asset -->
+          <circle cx="450" cy="355" r="20" fill="#161d2e" stroke="#a78bfa" stroke-width="2"/>
+          <text x="450" y="360" text-anchor="middle" class="ig-text-small">💎 Asset</text>
+        </svg>
+        <div class="infographic-caption">Gambar 9. Physical controls berlapis — Deterrence (luar), Prevention (tengah), Detection (dalam) melindungi aset inti.</div>
+      </div>
+
+      <div class="card-grid grid-3">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">⚠</div>Prevention Controls</div>
+          <p>Digunakan untuk <strong>mencegah</strong> unwanted/unauthorized access ke resources. Termasuk access controls seperti fences, locks, biometrics, dan mantraps. Barrier fisik yang harus di-bypass dengan usaha signifikan.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">👁</div>Deterrence Controls</div>
+          <p>Digunakan untuk <strong>discourage</strong> violation of security policies. Termasuk access controls seperti security guards dan warning signs. Psychological barrier yang membuat penyerang berpikir dua kali.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">📡</div>Detection Controls</div>
+          <p>Digunakan untuk <strong>detect</strong> unauthorized access attempts. Termasuk access controls seperti CCTV dan alarms. Memberi alert real-time saat prevention &amp; deterrence gagal.</p>
+        </div>
+      </div>
+
+      <div class="info-box info-success">
+        <strong>Prinsip Layered Defense:</strong> Tiga sub-kategori ini bekerja secara berlapis.
+        Penyerang harus melewati deterrence (psychological), prevention (physical barrier), dan
+        terdeteksi oleh detection (alert). <strong>Satu lapisan yang gagal tidak menggagalkan
+        semuanya</strong> — ini esensi defense-in-depth yang diterapkan di dunia fisik.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 9: TECHNICAL CONTROLS ============= -->
+    <section id="technical">
+      <div class="section-header">
+        <span class="section-tag">Bagian 09</span>
+        <h2>Technical Security Controls</h2>
+        <p>Enam komponen technical controls — dari system access hingga auditing — yang membatasi akses ke devices dan data.</p>
+      </div>
+
+      <p>
+        <strong>Technical security controls</strong> digunakan untuk membatasi akses ke devices di
+        organisasi dalam melindungi integritas data sensitif. Berbeda dengan administrative (yang
+        soal policy) dan physical (yang soal barrier), technical controls adalah implementasi
+        teknologi yang melakukan enforcement. Komponen technical security controls meliputi:
+      </p>
+
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">💻</div>System Access Controls</div>
+          <p>Digunakan untuk pembatasan akses ke data sesuai dengan <strong>sensitivity of data, clearance level users, user rights, dan permissions</strong>. Contoh: RBAC, ABAC, MAC, file permission (chmod), database grants.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🌐</div>Network Access Controls</div>
+          <p>Menawarkan berbagai access control mechanisms untuk network devices seperti routers dan switches. Contoh: 802.1X NAC, ACL, VLAN segmentation, port security, DHCP snooping.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🔐</div>Authentication &amp; Authorization</div>
+          <p>Memastikan hanya user dengan <strong>privileges yang tepat</strong> dapat mengakses system atau network resources. Contoh: SSO (SAML/OAuth), MFA, Kerberos, biometric auth, RBAC enforcement.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🔒</div>Encryption &amp; Protocols</div>
+          <p>Melindungi informasi yang melewati jaringan dan menjaga <strong>privacy dan reliability</strong> data. Contoh: TLS 1.3, IPsec, SSH, S/MIME, PGP, AES-256, ChaCha20-Poly1305.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🛡</div>Network Security Devices</div>
+          <p>Devices seperti <strong>firewall dan IDS</strong> digunakan untuk filter dan detect malicious traffic, melindungi organisasi dari threats. Termasuk IPS, WAF, NGFW, UTM, SIEM.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">📊</div>Auditing</div>
+          <p>Tracking dan examining activities dari network devices di jaringan. Mekanisme ini membantu <strong>mengidentifikasi weaknesses</strong> di jaringan. Implementasi: syslog, SIEM, log retention, audit trail.</p>
+        </div>
+      </div>
+
+      <div class="info-box info-tip">
+        <strong>Standar Acuan:</strong> Implementasi technical controls mengacu pada framework
+        <strong>NIST SP 800-53</strong> (Security and Privacy Controls), <strong>ISO 27001 Annex A</strong>,
+        <strong>CIS Controls v8</strong>, dan <strong>PCI DSS</strong> untuk data kartu kredit.
+        Pilih framework yang sesuai regulasi industri organisasi Anda.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 10: PROTOCOLS OVERVIEW ============= -->
+    <section id="protocols-overview">
+      <div class="section-header">
+        <span class="section-tag">Bagian 10</span>
+        <h2>Network Security Protocols — Overview</h2>
+        <p>Beragam protokol keamanan yang bekerja di layer Network, Transport, dan Application.</p>
+      </div>
+
+      <p>
+        Ada berbagai <strong>security protocols</strong> yang bekerja di layer network, transport,
+        dan application. Protokol-protokol ini membantu organisasi meningkatkan keamanan data dan
+        komunikasi terhadap berbagai jenis serangan. Pemahaman layer tempat setiap protokol bekerja
+        penting untuk arsitektur defense-in-depth yang tepat — setiap layer memiliki trade-off
+        performance vs. security yang berbeda.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">9 Protokol Keamanan Esensial Berdasarkan OSI Layer</div>
+        <svg viewBox="0 0 900 460" width="900" height="460" aria-label="Protocols by OSI layer">
+          <!-- Layer 7: Application -->
+          <rect x="40" y="20" width="820" height="100" rx="12" fill="#1a0e0e" stroke="#f87171" stroke-width="2"/>
+          <text x="60" y="42" class="ig-text-title" style="fill:#f87171">L7 · Application Layer</text>
+          <text x="60" y="58" class="ig-text-small">Protokol yang berjalan di atas transport layer, fokus ke aplikasi spesifik</text>
+          <g class="ig-text-small">
+            <rect x="60" y="70" width="130" height="40" rx="6" fill="#0d1320" stroke="#f87171"/>
+            <text x="125" y="87" text-anchor="middle" class="ig-text-strong">HTTPS</text>
+            <text x="125" y="100" text-anchor="middle" style="font-size:9px">HTTP over TLS</text>
+
+            <rect x="200" y="70" width="130" height="40" rx="6" fill="#0d1320" stroke="#f87171"/>
+            <text x="265" y="87" text-anchor="middle" class="ig-text-strong">S-HTTP</text>
+            <text x="265" y="100" text-anchor="middle" style="font-size:9px">Secure HTTP</text>
+
+            <rect x="340" y="70" width="130" height="40" rx="6" fill="#0d1320" stroke="#f87171"/>
+            <text x="405" y="87" text-anchor="middle" class="ig-text-strong">PGP</text>
+            <text x="405" y="100" text-anchor="middle" style="font-size:9px">Pretty Good Privacy</text>
+
+            <rect x="480" y="70" width="130" height="40" rx="6" fill="#0d1320" stroke="#f87171"/>
+            <text x="545" y="87" text-anchor="middle" class="ig-text-strong">S/MIME</text>
+            <text x="545" y="100" text-anchor="middle" style="font-size:9px">Secure MIME email</text>
+
+            <rect x="620" y="70" width="100" height="40" rx="6" fill="#0d1320" stroke="#f87171"/>
+            <text x="670" y="87" text-anchor="middle" class="ig-text-strong">Kerberos</text>
+            <text x="670" y="100" text-anchor="middle" style="font-size:9px">Auth protocol</text>
+
+            <rect x="730" y="70" width="120" height="40" rx="6" fill="#0d1320" stroke="#f87171"/>
+            <text x="790" y="87" text-anchor="middle" class="ig-text-strong">RADIUS</text>
+            <text x="790" y="100" text-anchor="middle" style="font-size:9px">AAA protocol</text>
+          </g>
+
+          <!-- Layer 4: Transport -->
+          <rect x="40" y="140" width="820" height="80" rx="12" fill="#0d1320" stroke="#fbbf24" stroke-width="2"/>
+          <text x="60" y="162" class="ig-text-title" style="fill:#fbbf24">L4 · Transport Layer</text>
+          <text x="60" y="178" class="ig-text-small">Protokol yang melindungi komunikasi end-to-end antara client dan server</text>
+          <g class="ig-text-small">
+            <rect x="60" y="190" width="280" height="25" rx="6" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="200" y="207" text-anchor="middle" class="ig-text-strong">TLS (Transport Layer Security)</text>
+            <rect x="360" y="190" width="280" height="25" rx="6" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="500" y="207" text-anchor="middle" class="ig-text-strong">SSL (Secure Sockets Layer)</text>
+            <rect x="660" y="190" width="180" height="25" rx="6" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="750" y="207" text-anchor="middle" class="ig-text-strong">TACACS+ (TCP 49)</text>
+          </g>
+
+          <!-- Layer 3: Network -->
+          <rect x="40" y="240" width="820" height="80" rx="12" fill="#0d1320" stroke="#22d3ee" stroke-width="2"/>
+          <text x="60" y="262" class="ig-text-title">L3 · Network Layer</text>
+          <text x="60" y="278" class="ig-text-small">Protokol yang melindungi paket IP di tingkat network</text>
+          <g class="ig-text-small">
+            <rect x="60" y="290" width="820" height="25" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="470" y="307" text-anchor="middle" class="ig-text-strong">IPsec (Internet Protocol Security) — AH + ESP, Transport &amp; Tunnel mode</text>
+          </g>
+
+          <!-- Bottom: scope legend -->
+          <rect x="40" y="340" width="820" height="100" rx="8" class="ig-box"/>
+          <text x="60" y="362" class="ig-text-strong">Scope per Layer:</text>
+          <text x="60" y="382" class="ig-text-small" style="fill:#f87171">• L7 (Application): HTTPS, S-HTTP, PGP, S/MIME, Kerberos, RADIUS — protect specific apps/services</text>
+          <text x="60" y="400" class="ig-text-small" style="fill:#fbbf24">• L4 (Transport): TLS, SSL, TACACS+ — protect communication channel end-to-end</text>
+          <text x="60" y="418" class="ig-text-small" style="fill:#22d3ee">• L3 (Network): IPsec — protect all IP traffic regardless of application</text>
+          <text x="60" y="436" class="ig-text-small" style="font-style:italic">Semakin tinggi layer → semakin spesifik protection. Semakin rendah → semakin transparan ke aplikasi.</text>
+        </svg>
+        <div class="infographic-caption">Gambar 10. 9 protokol keamanan esensial dipetakan ke OSI layer — Application (6 protokol), Transport (3), Network (1).</div>
+      </div>
+
+      <p>
+        Protokol yang bekerja di <strong>transport layer</strong>: <em>TLS</em> (security &amp;
+        dependability data antara dua communicating parties), <em>SSL</em> (security komunikasi
+        client-server). Protokol di <strong>network layer</strong>: <em>IPsec</em> (authenticates
+        packets during transmission). Protokol di <strong>application layer</strong>: <em>PGP</em>
+        (cryptographic privacy &amp; authentication untuk komunikasi &amp; email), <em>S/MIME</em>
+        (secure email), <em>Secure HTTP</em> (secure data di WWW), <em>HTTPS</em> (secure network
+        communication), <em>Kerberos</em> (authenticate requests di computer networks),
+        <em>RADIUS</em> (centralized AAA untuk remote-access servers), <em>TACACS+</em> (AAA untuk
+        network communication).
+      </p>
+    </section>
+
+    <!-- ============= BAGIAN 11: RADIUS ============= -->
+    <section id="radius">
+      <div class="section-header">
+        <span class="section-tag">Bagian 11</span>
+        <h2>RADIUS — Remote Authentication Dial-In User Service</h2>
+        <p>Protokol AAA terpusat untuk remote-access servers, bekerja di application layer dengan UDP/TCP.</p>
+      </div>
+
+      <p>
+        <strong>RADIUS</strong> adalah networking protocol yang dikembangkan oleh Livingston
+        Enterprises, menyediakan <strong>centralized Authentication, Authorization, dan Accounting
+        (AAA)</strong> untuk remote access servers agar berkomunikasi dengan central server. RADIUS
+        menggunakan client-server model, bekerja di application layer OSI dengan UDP atau TCP sebagai
+        transport protocol. RADIUS adalah <em>de-facto standard</em> untuk remote user authentication,
+        didokumentasikan dalam RFC 2865 dan RFC 2866.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">RADIUS Authentication Flow — 3 Langkah</div>
+        <svg viewBox="0 0 900 320" width="900" height="320" aria-label="RADIUS auth flow">
+          <defs>
+            <marker id="arr-radius" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/>
+            </marker>
+            <marker id="arr-radius-r" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M10,0 L0,5 L10,10 z" fill="#a78bfa"/>
+            </marker>
+          </defs>
+
+          <!-- Client -->
+          <rect x="40" y="120" width="140" height="80" rx="12" class="ig-accent-box"/>
+          <text x="110" y="145" text-anchor="middle" class="ig-text-title">Client</text>
+          <text x="110" y="163" text-anchor="middle" class="ig-text-small">User / Device</text>
+          <text x="110" y="178" text-anchor="middle" class="ig-text-small">Request access</text>
+          <text x="110" y="195" text-anchor="middle" class="ig-text-small" style="font-size:9px">PAP / CHAP / EAP</text>
+
+          <!-- NAS (RADIUS Client) -->
+          <rect x="280" y="120" width="160" height="80" rx="12" class="ig-warn-box"/>
+          <text x="360" y="145" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">NAS</text>
+          <text x="360" y="163" text-anchor="middle" class="ig-text-small">Network Access</text>
+          <text x="360" y="178" text-anchor="middle" class="ig-text-small">Server (Router)</text>
+          <text x="360" y="195" text-anchor="middle" class="ig-text-small" style="font-size:9px">RADIUS Client</text>
+
+          <!-- RADIUS Server -->
+          <rect x="540" y="120" width="160" height="80" rx="12" class="ig-purple-box"/>
+          <text x="620" y="145" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">RADIUS</text>
+          <text x="620" y="163" text-anchor="middle" class="ig-text-small">Server</text>
+          <text x="620" y="178" text-anchor="middle" class="ig-text-small">AAA + DB</text>
+          <text x="620" y="195" text-anchor="middle" class="ig-text-small" style="font-size:9px">UDP 1812/1813</text>
+
+          <!-- User DB -->
+          <rect x="780" y="120" width="100" height="80" rx="12" class="ig-box"/>
+          <text x="830" y="145" text-anchor="middle" class="ig-text-strong">User DB</text>
+          <text x="830" y="163" text-anchor="middle" class="ig-text-small">Active Directory</text>
+          <text x="830" y="178" text-anchor="middle" class="ig-text-small">/ LDAP</text>
+          <text x="830" y="195" text-anchor="middle" class="ig-text-small" style="font-size:9px">credentials</text>
+
+          <!-- Flow 1: Access-Request -->
+          <path d="M 180 140 L 280 140" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-radius)"/>
+          <text x="230" y="132" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">① access-request</text>
+
+          <path d="M 440 140 L 540 140" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-radius)"/>
+          <text x="490" y="132" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">forward</text>
+
+          <!-- DB check -->
+          <path d="M 700 140 L 780 140" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr-radius)"/>
+          <path d="M 780 160 L 700 160" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr-radius-r)"/>
+          <text x="740" y="180" text-anchor="middle" class="ig-text-small" style="font-size:9px;fill:#a78bfa">verify</text>
+
+          <!-- Flow 2: Access-Accept/Reject -->
+          <path d="M 540 180 L 440 180" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr-radius-r)"/>
+          <text x="490" y="172" text-anchor="middle" class="ig-text-small" style="fill:#a78bfa">② access-accept/reject</text>
+
+          <path d="M 280 180 L 180 180" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr-radius-r)"/>
+          <text x="230" y="172" text-anchor="middle" class="ig-text-small" style="fill:#a78bfa">+ challenge</text>
+
+          <!-- Flow 3: Accounting -->
+          <path d="M 180 220 L 280 220" stroke="#34d399" stroke-width="2" marker-end="url(#arr-radius)"/>
+          <text x="230" y="212" text-anchor="middle" class="ig-text-small" style="fill:#34d399">③ accounting-request</text>
+
+          <path d="M 440 220 L 540 220" stroke="#34d399" stroke-width="2" marker-end="url(#arr-radius)"/>
+          <path d="M 540 240 L 440 240" stroke="#34d399" stroke-width="2" marker-end="url(#arr-radius-r)"/>
+          <text x="490" y="260" text-anchor="middle" class="ig-text-small" style="fill:#34d399">accounting-response</text>
+
+          <!-- Bottom: components -->
+          <text x="450" y="295" text-anchor="middle" class="ig-text-strong">Komponen RADIUS:</text>
+          <text x="450" y="310" text-anchor="middle" class="ig-text-small">Access clients · Access servers · RADIUS proxies · RADIUS servers · User account databases</text>
+        </svg>
+        <div class="infographic-caption">Gambar 11. RADIUS authentication 3 langkah — Access-Request → Access-Accept/Reject → Accounting. UDP 1812/1813.</div>
+      </div>
+
+      <h3 class="sub-title">11.1 Authentication Steps in RADIUS</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h5>Access-Request</h5>
+            <p>Client menginisiasi koneksi dengan mengirim <strong>access-request packet</strong> ke server. Packet berisi: user credentials, NAS identifier, port info, dan request attributes.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h5>Server Verify &amp; Respond</h5>
+            <p>Server menerima access request dan membandingkan credentials dengan yang tersimpan di database. Jika match, server mengirim <strong>access-accept message</strong> + access-challenge untuk additional authentication. Jika tidak match, kirim <strong>access-reject</strong>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h5>Accounting-Request</h5>
+            <p>Client mengirim <strong>accounting-request</strong> ke server untuk specify accounting information untuk koneksi yang diterima. Server merespons dengan accounting-response yang menyatakan successful establishment network.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub-title">11.2 Karakteristik Teknis RADIUS</h3>
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">📦</div>Transport</div>
+          <p><strong>UDP</strong> (default port 1812 auth, 1813 accounting; legacy 1645/1646). Hanya satu RADIUS message per UDP payload. Connectionless — reliability ditangani aplikasi.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🔐</div>Encryption</div>
+          <p><strong>Hanya password yang dienkripsi</strong> menggunakan shared secret antara NAS dan RADIUS server. Username dan attributes lain dikirim plaintext. Tidak ideal untuk jaringan tidak terpercaya.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🔑</div>Auth Protocols</div>
+          <p>Mendukung <strong>PAP</strong> (Password Authentication Protocol), <strong>CHAP</strong> (Challenge Handshake Auth Protocol), <strong>EAP</strong> (Extensible Authentication Protocol) — termasuk EAP-TLS, EAP-PEAP, EAP-TTLS.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🌐</div>Use Case</div>
+          <p>VPN remote access (Cisco AnyConnect, OpenVPN), Wi-Fi enterprise (802.1X EAP), network device admin, dial-up ISP. <strong>AAA protocol</strong> yang bekerja di mobile &amp; local networks.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 12: TACACS+ ============= -->
+    <section id="tacacs">
+      <div class="section-header">
+        <span class="section-tag">Bagian 12</span>
+        <h2>TACACS+ — Terminal Access Controller Access Control System Plus</h2>
+        <p>Protokol AAA dari Cisco yang memisahkan tiga elemen AAA, mengenkripsi seluruh payload, digunakan untuk device administration.</p>
+      </div>
+
+      <p>
+        <strong>TACACS+</strong> adalah protocol yang dikembangkan oleh Cisco, diturunkan dari
+        TACACS protocol. Berbeda dengan RADIUS yang menggabungkan authentication dan authorization,
+        TACACS+ <strong>melakukan AAA secara terpisah</strong> sehingga lebih fleksibel. TACACS+
+        terutama digunakan untuk <em>device administration</em> — mengelola akses admin ke router,
+        switch, firewall. TACACS+ mengenkripsi seluruh komunikasi antara client dan server,
+        termasuk password user, sehingga terlindung dari serangan <em>sniffing</em>.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">TACACS+ Authentication Flow — 4 Langkah</div>
+        <svg viewBox="0 0 900 280" width="900" height="280" aria-label="TACACS+ flow">
+          <defs>
+            <marker id="arr-tac" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/>
+            </marker>
+          </defs>
+
+          <!-- User -->
+          <rect x="40" y="100" width="140" height="80" rx="12" class="ig-accent-box"/>
+          <text x="110" y="125" text-anchor="middle" class="ig-text-title">User</text>
+          <text x="110" y="143" text-anchor="middle" class="ig-text-small">Laptop user</text>
+          <text x="110" y="158" text-anchor="middle" class="ig-text-small">SSH/Telnet</text>
+          <text x="110" y="172" text-anchor="middle" class="ig-text-small" style="font-size:9px">to NAS</text>
+
+          <!-- NAS (Router) -->
+          <rect x="280" y="100" width="160" height="80" rx="12" class="ig-warn-box"/>
+          <text x="360" y="125" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">Router (NAS)</text>
+          <text x="360" y="143" text-anchor="middle" class="ig-text-small">Network Attached</text>
+          <text x="360" y="158" text-anchor="middle" class="ig-text-small">Storage</text>
+          <text x="360" y="172" text-anchor="middle" class="ig-text-small" style="font-size:9px">TACACS+ Client</text>
+
+          <!-- TACACS+ Server -->
+          <rect x="540" y="100" width="160" height="80" rx="12" class="ig-purple-box"/>
+          <text x="620" y="125" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">TACACS+</text>
+          <text x="620" y="143" text-anchor="middle" class="ig-text-small">Server</text>
+          <text x="620" y="158" text-anchor="middle" class="ig-text-small">AAA + DB</text>
+          <text x="620" y="172" text-anchor="middle" class="ig-text-small" style="font-size:9px">TCP port 49</text>
+
+          <!-- Step 1 -->
+          <path d="M 180 120 L 280 120" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-tac)"/>
+          <text x="230" y="112" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">① initiate connection</text>
+
+          <!-- Step 2 -->
+          <path d="M 280 140 L 180 140" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-tac)" stroke-dasharray="4,3"/>
+          <text x="230" y="160" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">② exchange auth params</text>
+
+          <!-- Step 3 -->
+          <path d="M 440 120 L 540 120" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-tac)"/>
+          <text x="490" y="112" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">③ forward params to server</text>
+
+          <!-- Step 4 -->
+          <path d="M 540 160 L 440 160" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr-tac)" stroke-dasharray="4,3"/>
+          <text x="490" y="180" text-anchor="middle" class="ig-text-small" style="fill:#a78bfa">④ REPLY message (accept/reject)</text>
+
+          <!-- Bottom: comparison -->
+          <text x="450" y="220" text-anchor="middle" class="ig-text-strong">TACACS+ vs RADIUS — Perbedaan Utama:</text>
+          <text x="60" y="245" class="ig-text-small" style="fill:#a78bfa">TACACS+:</text>
+          <text x="160" y="245" class="ig-text-small">Separate AAA · Full encryption · TCP 49 · Centralized authz · Cisco proprietary</text>
+          <text x="60" y="263" class="ig-text-small" style="fill:#22d3ee">RADIUS:</text>
+          <text x="160" y="263" class="ig-text-small">Combined auth+authz · Password-only encrypt · UDP 1812/1813 · Per-device authz · Open RFC</text>
+        </svg>
+        <div class="infographic-caption">Gambar 12. TACACS+ authentication 4 langkah + perbandingan utama dengan RADIUS.</div>
+      </div>
+
+      <h3 class="sub-title">12.1 Tabel Perbandingan RADIUS vs TACACS+</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Aspek</th><th>RADIUS</th><th>TACACS+</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>AAA Processing</strong></td><td>Combines authentication &amp; authorization</td><td>Separates all three elements of AAA → more flexible</td></tr>
+            <tr><td><strong>Encryption</strong></td><td>Encrypts <strong>only the password</strong></td><td>Encrypts <strong>entire payload</strong> (username + password + attributes)</td></tr>
+            <tr><td><strong>Authorization Config</strong></td><td>Each network device must contain authorization configuration</td><td>Central management for authorization configuration</td></tr>
+            <tr><td><strong>Transport</strong></td><td>UDP — Connectionless (ports 1645/1646, 1812/1813)</td><td>TCP — Connection oriented (port 49)</td></tr>
+            <tr><td><strong>Primary Use Case</strong></td><td>Remote access (VPN, Wi-Fi 802.1X)</td><td>Device administration (router/switch admin)</td></tr>
+            <tr><td><strong>Vendor</strong></td><td>Open standard (RFC 2865/2866)</td><td>Cisco proprietary (draft RFC)</td></tr>
+            <tr><td><strong>Failure Mode</strong></td><td>UDP — packet loss tolerated, may retry</td><td>TCP — connection failure = immediate fail</td></tr>
+            <tr><td><strong>Accounting</strong></td><td>Built-in accounting records</td><td>Built-in accounting records (separate from auth)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box info-tip">
+        <strong>Aturan Praktis:</strong> Gunakan <strong>TACACS+ untuk network device administration</strong>
+        (router/switch/firewall login) karena lebih aman (full encryption) &amp; fleksibel (separate
+        AAA). Gunakan <strong>RADIUS untuk end-user access</strong> (VPN, Wi-Fi 802.1X, dial-up)
+        karena open standard &amp; didukung semua vendor. Banyak organisasi besar menggunakan
+        <strong>keduanya secara paralel</strong> via Cisco ISE atau FreeRADIUS.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 13: KERBEROS ============= -->
+    <section id="kerberos">
+      <div class="section-header">
+        <span class="section-tag">Bagian 13</span>
+        <h2>Kerberos — Network Authentication Protocol</h2>
+        <p>Protokol client-server yang menggunakan enkripsi dan "ticket" mechanism untuk membuktikan identitas di non-secure network.</p>
+      </div>
+
+      <p>
+        <strong>Kerberos</strong> adalah network authentication protocol yang diimplementasikan untuk
+        mengautentikasi requests di computer networks. Berbasis client-server model, Kerberos
+        menggunakan enkripsi dan <strong>"ticket" mechanism</strong> untuk membuktikan identitas
+        user di non-secure network. Pesan protokol Kerberos melindungi jaringan dari
+        <em>replay attacks</em> dan <em>eavesdropping</em>. Kerberos umumnya menggunakan public-key
+        cryptography saat mengautentikasi user yang mencoba mengakses server.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">Kerberos Protocol — 5 Langkah dengan Ticket Granting</div>
+        <svg viewBox="0 0 900 480" width="900" height="480" aria-label="Kerberos flow">
+          <defs>
+            <marker id="arr-ker" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/>
+            </marker>
+            <marker id="arr-ker-r" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M10,0 L0,5 L10,10 z" fill="#a78bfa"/>
+            </marker>
+          </defs>
+
+          <!-- 4 entities -->
+          <rect x="40" y="80" width="160" height="80" rx="12" class="ig-accent-box"/>
+          <text x="120" y="105" text-anchor="middle" class="ig-text-title">Client (User)</text>
+          <text x="120" y="125" text-anchor="middle" class="ig-text-small">Initiates request</text>
+          <text x="120" y="142" text-anchor="middle" class="ig-text-small">with credentials</text>
+          <text x="120" y="155" text-anchor="middle" class="ig-text-small" style="font-size:9px">password → hash</text>
+
+          <rect x="280" y="80" width="200" height="80" rx="12" class="ig-warn-box"/>
+          <text x="380" y="105" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">Authentication Server</text>
+          <text x="380" y="125" text-anchor="middle" class="ig-text-small">(AS) + Active Directory</text>
+          <text x="380" y="142" text-anchor="middle" class="ig-text-small">Verifies credentials</text>
+          <text x="380" y="155" text-anchor="middle" class="ig-text-small" style="font-size:9px">issues TGT + session key</text>
+
+          <rect x="560" y="80" width="160" height="80" rx="12" class="ig-purple-box"/>
+          <text x="640" y="105" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">TGS</text>
+          <text x="640" y="125" text-anchor="middle" class="ig-text-small">Ticket Granting</text>
+          <text x="640" y="142" text-anchor="middle" class="ig-text-small">Server</text>
+          <text x="640" y="155" text-anchor="middle" class="ig-text-small" style="font-size:9px">issues service ticket</text>
+
+          <rect x="780" y="80" width="100" height="80" rx="12" class="ig-success-box"/>
+          <text x="830" y="105" text-anchor="middle" class="ig-text-title" style="fill:#34d399">Service</text>
+          <text x="830" y="125" text-anchor="middle" class="ig-text-small">Server</text>
+          <text x="830" y="142" text-anchor="middle" class="ig-text-small">(target app)</text>
+          <text x="830" y="155" text-anchor="middle" class="ig-text-small" style="font-size:9px">HTTP, SMB, etc</text>
+
+          <!-- Step 1: Client → AS -->
+          <path d="M 200 110 L 280 110" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-ker)"/>
+          <text x="240" y="100" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">① credentials</text>
+
+          <!-- Step 2: AS → Client (TGT + session key) -->
+          <path d="M 280 140 L 200 140" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr-ker-r)"/>
+          <text x="240" y="170" text-anchor="middle" class="ig-text-small" style="fill:#a78bfa">② TGT + TGS session key</text>
+
+          <!-- Step 3: Client → TGS (with TGT) -->
+          <path d="M 200 220 L 560 220" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-ker)" stroke-dasharray="5,3"/>
+          <text x="380" y="212" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">③ TGT → request service ticket</text>
+
+          <!-- Step 4: TGS → Client (service ticket) -->
+          <path d="M 560 250 L 200 250" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr-ker-r)" stroke-dasharray="5,3"/>
+          <text x="380" y="275" text-anchor="middle" class="ig-text-small" style="fill:#a78bfa">④ service ticket + session key</text>
+
+          <!-- Step 5: Client → Service (with service ticket) -->
+          <path d="M 200 330 L 780 330" stroke="#34d399" stroke-width="2" marker-end="url(#arr-ker)"/>
+          <text x="490" y="322" text-anchor="middle" class="ig-text-small" style="fill:#34d399">⑤ service ticket → access service</text>
+
+          <!-- Service → Client (authenticated) -->
+          <path d="M 780 360 L 200 360" stroke="#34d399" stroke-width="2" marker-end="url(#arr-ker-r)" stroke-dasharray="5,3"/>
+          <text x="490" y="385" text-anchor="middle" class="ig-text-small" style="fill:#34d399">✓ authenticated → service granted</text>
+
+          <!-- Bottom: properties -->
+          <rect x="40" y="410" width="820" height="60" rx="8" class="ig-box"/>
+          <text x="60" y="430" class="ig-text-strong">Properties:</text>
+          <text x="60" y="448" class="ig-text-small">• Uses symmetric cryptography + optional public-key (PKINIT)</text>
+          <text x="60" y="463" class="ig-text-small">• Time-limited tickets (typically 8-10 hours) · protects from replay &amp; eavesdropping · SSO foundation</text>
+        </svg>
+        <div class="infographic-caption">Gambar 13. Kerberos 5-langkah — Client → AS (TGT) → TGS (service ticket) → Service. SSO foundation di Active Directory.</div>
+      </div>
+
+      <h3 class="sub-title">13.1 Detail 5 Langkah Kerberos</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h5>User Sends Credentials to AS</h5>
+            <p>User mengirim credentials ke <strong>Authentication Server (AS)</strong>. Credentials berisi principal name (user@REALM) dan request untuk TGT (Ticket Granting Ticket).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h5>AS Verify &amp; Issue TGT</h5>
+            <p>AS meng-hash password user dan memverifikasi credentials dengan Active Directory database. Jika match, AS mengirim <strong>TGS session key + Ticket Granting Ticket (TGT)</strong> ke user untuk membuat session. TGT dienkripsi dengan key TGS.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h5>Client Request Service Ticket</h5>
+            <p>Setelah terautentikasi, user mengirim TGT ke <strong>Ticket Granting Server (TGS)</strong> untuk request <em>service ticket</em> ke server/service spesifik yang ingin diakses.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h5>TGS Grant Service Ticket</h5>
+            <p>TGS mengautentikasi TGT dan memberikan <strong>service ticket</strong> ke user, yang terdiri dari ticket dan session key. Ticket berisi identity user + permissions + expiration time, dienkripsi dengan key service target.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h5>Client Sends Ticket to Service</h5>
+            <p>Client mengirim service ticket ke server target. Server menggunakan key-nya untuk mendekripsi informasi dari TGS — client terautentikasi ke server. <strong>Tanpa password yang pernah dikirim ke service.</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box info-success">
+        <strong>Kenapa Kerberos Penting:</strong> Kerberos adalah <strong>foundation Single Sign-On
+        (SSO)</strong> di Windows Active Directory. Setelah user login pagi, TGT berlaku 8-10 jam —
+        user dapat access file server, email, intranet, database <em>tanpa login ulang</em>. Tiket
+        time-stamped mencegah replay attack. Password tidak pernah dikirim ke network setelah AS
+        exchange.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 14: PGP & S/MIME ============= -->
+    <section id="pgp-smime">
+      <div class="section-header">
+        <span class="section-tag">Bagian 14</span>
+        <h2>PGP &amp; S/MIME — Email Security Protocols</h2>
+        <p>Dua protokol application layer untuk cryptographic privacy dan authentication komunikasi email.</p>
+      </div>
+
+      <h3 class="sub-title">14.1 Pretty Good Privacy (PGP)</h3>
+      <p>
+        <strong>PGP</strong> adalah application layer protocol yang menyediakan cryptographic privacy
+        dan authentication untuk network communication. PGP adalah program enkripsi/dekripsi yang
+        digunakan untuk memberikan <strong>confidentiality dan validation</strong> selama komunikasi.
+        PGP meningkatkan keamanan email.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">PGP — Encryption &amp; Decryption Flow</div>
+        <svg viewBox="0 0 900 380" width="900" height="380" aria-label="PGP flow">
+          <defs>
+            <marker id="arr-pgp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/>
+            </marker>
+          </defs>
+
+          <!-- Top: Encryption -->
+          <text x="450" y="25" text-anchor="middle" class="ig-text-strong" style="fill:#22d3ee">🔒 ENCRYPTION (Sender side):</text>
+
+          <rect x="40" y="40" width="140" height="60" rx="8" class="ig-accent-box"/>
+          <text x="110" y="62" text-anchor="middle" class="ig-text-strong">Plaintext</text>
+          <text x="110" y="78" text-anchor="middle" class="ig-text-small">message</text>
+          <text x="110" y="92" text-anchor="middle" class="ig-text-small" style="font-size:9px">+ compress</text>
+
+          <rect x="220" y="40" width="160" height="60" rx="8" class="ig-warn-box"/>
+          <text x="300" y="62" text-anchor="middle" class="ig-text-strong" style="fill:#fbbf24">Session Key</text>
+          <text x="300" y="78" text-anchor="middle" class="ig-text-small">one-time, random</text>
+          <text x="300" y="92" text-anchor="middle" class="ig-text-small" style="font-size:9px">AES / 3DES</text>
+
+          <rect x="420" y="40" width="160" height="60" rx="8" fill="#0d1320" stroke="#22d3ee"/>
+          <text x="500" y="62" text-anchor="middle" class="ig-text-strong">Encrypted Msg</text>
+          <text x="500" y="78" text-anchor="middle" class="ig-text-small">ciphertext</text>
+
+          <rect x="620" y="40" width="240" height="60" rx="8" fill="#0d1320" stroke="#a78bfa"/>
+          <text x="740" y="62" text-anchor="middle" class="ig-text-strong" style="fill:#a78bfa">Encrypted Session Key</text>
+          <text x="740" y="78" text-anchor="middle" class="ig-text-small">with recipient's PUBLIC key</text>
+          <text x="740" y="92" text-anchor="middle" class="ig-text-small" style="font-size:9px">RSA / DH</text>
+
+          <path d="M 180 70 L 220 70" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-pgp)"/>
+          <path d="M 380 70 L 420 70" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-pgp)"/>
+          <path d="M 580 50 L 620 50" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-pgp)"/>
+          <path d="M 380 90 L 620 90" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr-pgp)"/>
+
+          <!-- Combined output -->
+          <rect x="280" y="120" width="340" height="40" rx="8" class="ig-success-box"/>
+          <text x="450" y="145" text-anchor="middle" class="ig-text-strong" style="fill:#34d399">→ Sent: Encrypted Msg + Encrypted Session Key</text>
+
+          <path d="M 500 100 L 450 120" stroke="#34d399" stroke-width="1.5" marker-end="url(#arr-pgp)"/>
+          <path d="M 740 100 L 580 130" stroke="#34d399" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr-pgp)"/>
+
+          <!-- Bottom: Decryption -->
+          <text x="450" y="195" text-anchor="middle" class="ig-text-strong" style="fill:#a78bfa">🔓 DECRYPTION (Recipient side):</text>
+
+          <rect x="40" y="210" width="160" height="60" rx="8" class="ig-accent-box"/>
+          <text x="120" y="232" text-anchor="middle" class="ig-text-strong">Encrypted</text>
+          <text x="120" y="248" text-anchor="middle" class="ig-text-small">Session Key</text>
+
+          <rect x="220" y="210" width="160" height="60" rx="8" fill="#0d1320" stroke="#a78bfa"/>
+          <text x="300" y="232" text-anchor="middle" class="ig-text-strong" style="fill:#a78bfa">Recipient's</text>
+          <text x="300" y="248" text-anchor="middle" class="ig-text-small" style="fill:#a78bfa">PRIVATE key</text>
+
+          <rect x="420" y="210" width="140" height="60" rx="8" class="ig-warn-box"/>
+          <text x="490" y="232" text-anchor="middle" class="ig-text-strong" style="fill:#fbbf24">Session Key</text>
+          <text x="490" y="248" text-anchor="middle" class="ig-text-small">decrypted</text>
+
+          <rect x="600" y="210" width="120" height="60" rx="8" fill="#0d1320" stroke="#22d3ee"/>
+          <text x="660" y="232" text-anchor="middle" class="ig-text-strong">Encrypted Msg</text>
+
+          <rect x="760" y="210" width="100" height="60" rx="8" class="ig-success-box"/>
+          <text x="810" y="232" text-anchor="middle" class="ig-text-strong" style="fill:#34d399">Plaintext</text>
+          <text x="810" y="248" text-anchor="middle" class="ig-text-small">✓</text>
+
+          <path d="M 200 240 L 220 240" stroke="#a78bfa" stroke-width="2" marker-end="url(#arr-pgp)"/>
+          <path d="M 380 240 L 420 240" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-pgp)"/>
+          <path d="M 560 240 L 600 240" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-pgp)"/>
+          <path d="M 720 240 L 760 240" stroke="#34d399" stroke-width="2" marker-end="url(#arr-pgp)"/>
+
+          <!-- Bottom: signature -->
+          <rect x="40" y="300" width="820" height="60" rx="8" class="ig-box"/>
+          <text x="60" y="322" class="ig-text-strong">Digital Signature (non-repudiation):</text>
+          <text x="60" y="340" class="ig-text-small">PGP membuat hash code dari user's name + signature → enkripsi dengan sender's PRIVATE key → receiver dekripsi dengan sender's PUBLIC key</text>
+          <text x="60" y="355" class="ig-text-small" style="font-style:italic">Two versions: RSA Algorithm · Diffie-Hellman Algorithm</text>
+        </svg>
+        <div class="infographic-caption">Gambar 14. PGP encryption/decryption flow — hybrid: symmetric session key + asymmetric key exchange + digital signature.</div>
+      </div>
+
+      <h3 class="sub-title">14.2 S/MIME (Secure/Multipurpose Internet Mail Extensions)</h3>
+      <p>
+        <strong>S/MIME</strong> digunakan untuk mengirim <strong>digitally signed dan encrypted
+        messages</strong>. Memungkinkan Anda mengenkripsi email messages dan digitally menandatangani
+        mereka untuk memastikan confidentiality, integrity, dan non-repudiation. S/MIME menyediakan
+        cryptographic security services seperti: <em>authentication, message integrity,
+        non-repudiation, privacy, dan data security</em>. S/MIME menggunakan RSA encryption method
+        dan menyediakan detail enkripsi dan digital signatures dalam message. S/MIME protocol perlu
+        mendapatkan certificate dari CA atau public CA. Protocol menggunakan private keys berbeda
+        untuk signature dan enkripsi.
+      </p>
+
+      <h3 class="sub-title">14.3 Tabel Perbandingan PGP vs S/MIME</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Feature</th><th>S/MIME v3</th><th>OpenPGP</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Message Format</strong></td><td>Binary, based on CMS Application/Pkcs 7-mime</td><td>Binary, based on previous PGP</td></tr>
+            <tr><td><strong>Certificate Format</strong></td><td>Binary, based on X.509v3</td><td>Binary, based on previous PGP (web of trust)</td></tr>
+            <tr><td><strong>Symmetric Algorithm</strong></td><td>Triple DES (DES, EDE3, CBC)</td><td>Triple DES (DES, EDE3, Eccentric CFB)</td></tr>
+            <tr><td><strong>Signature Algorithm</strong></td><td>Diffie-Hellman (X9.42) with DSS or RSA</td><td>ElGamal with DSS</td></tr>
+            <tr><td><strong>Hash Algorithm</strong></td><td>SHA-1</td><td>SHA-1</td></tr>
+            <tr><td><strong>MIME Encapsulation (Signed)</strong></td><td>Choice of multipart/signed or CMS Format multipart/signed</td><td>ASCII armor</td></tr>
+            <tr><td><strong>MIME Encapsulation (Encrypted)</strong></td><td>Application/Pkcs 7-mime</td><td>Multipart/Encrypted</td></tr>
+            <tr><td><strong>Trust Model</strong></td><td>Hierarchical CA (X.509)</td><td>Web of trust (peer-to-peer)</td></tr>
+            <tr><td><strong>Key Distribution</strong></td><td>Via CA-issued certificate</td><td>Key servers + key signing parties</td></tr>
+            <tr><td><strong>Native Support</strong></td><td>Outlook, Apple Mail, Thunderbird</td><td>Requires plugin (GpgOL, Enigmail)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box info-tip">
+        <strong>Pemilihan Praktis:</strong> <strong>S/MIME</strong> pilihan enterprise karena terintegrasi
+        native di Outlook/Exchange dan menggunakan PKI hierarkis (CA). <strong>PGP/OpenPGP</strong>
+        pilihan personal/activist karena web-of-trust yang decentralised dan tidak bergantung pada CA.
+        Email modern menggunakan keduanya — misal ProtonMail default PGP, Gmail enterprise S/MIME via
+        third-party.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 15: HTTPS, SSL, TLS ============= -->
+    <section id="https-tls">
+      <div class="section-header">
+        <span class="section-tag">Bagian 15</span>
+        <h2>HTTPS, S-HTTP, SSL &amp; TLS</h2>
+        <p>Empat protokol keamanan web — dari transport-level (SSL/TLS) hingga application-level (HTTPS, S-HTTP).</p>
+      </div>
+
+      <h3 class="sub-title">15.1 Hypertext Transfer Protocol Secure (HTTPS)</h3>
+      <p>
+        <strong>HTTPS</strong> adalah protokol yang digunakan untuk memastikan komunikasi yang aman
+        di jaringan. HTTPS menggunakan protokol seperti <strong>TLS dan SSL</strong> untuk memastikan
+        transmisi data yang aman. HTTPS mengkonfirmasi verifikasi website dan menjaga
+        <em>confidentiality dan reliability</em> pesan yang melewati internet. HTTPS melindungi dari
+        <strong>man-in-the-middle attacks</strong> karena data ditransmisikan via encrypted channel.
+      </p>
+
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🌐</div>HTTPS</div>
+          <p><strong>HTTP over TLS</strong> — kombinasi HTTP (application) + TLS (transport). Port 443. Manfaat: encryption, server authentication, optional client authentication, data integrity. <em>De-facto</em> standard web modern.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🔒</div>S-HTTP</div>
+          <p><strong>Secure HTTP</strong> — alternatif HTTPS. Application-level security yang menawarkan enkripsi dan digital signatures per message. Memverifikasi user via certificate. <em>Kurang populer</em> karena HTTPS menang.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">15.2 SSL vs TLS — Evolusi Protokol Transport</h3>
+      <div class="infographic">
+        <div class="ig-title">SSL vs TLS — Perbandingan dan Evolusi</div>
+        <svg viewBox="0 0 900 440" width="900" height="440" aria-label="SSL vs TLS">
+          <!-- Evolution timeline -->
+          <text x="450" y="25" text-anchor="middle" class="ig-text-strong">Evolution Timeline:</text>
+
+          <rect x="40" y="40" width="120" height="60" rx="8" fill="#0d1320" stroke="#f87171" stroke-width="2"/>
+          <text x="100" y="60" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">SSL 1.0</text>
+          <text x="100" y="75" text-anchor="middle" class="ig-text-small">1994 (never</text>
+          <text x="100" y="88" text-anchor="middle" class="ig-text-small">released)</text>
+
+          <rect x="180" y="40" width="120" height="60" rx="8" fill="#0d1320" stroke="#f87171" stroke-width="2"/>
+          <text x="240" y="60" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">SSL 2.0</text>
+          <text x="240" y="75" text-anchor="middle" class="ig-text-small">1995</text>
+          <text x="240" y="88" text-anchor="middle" class="ig-text-small" style="font-size:9px">DEPRECATED 2011</text>
+
+          <rect x="320" y="40" width="120" height="60" rx="8" fill="#0d1320" stroke="#f87171" stroke-width="2"/>
+          <text x="380" y="60" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">SSL 3.0</text>
+          <text x="380" y="75" text-anchor="middle" class="ig-text-small">1996</text>
+          <text x="380" y="88" text-anchor="middle" class="ig-text-small" style="font-size:9px">DEPRECATED 2015</text>
+
+          <rect x="460" y="40" width="120" height="60" rx="8" fill="#0d1320" stroke="#fbbf24" stroke-width="2"/>
+          <text x="520" y="60" text-anchor="middle" class="ig-text-strong" style="fill:#fbbf24">TLS 1.0</text>
+          <text x="520" y="75" text-anchor="middle" class="ig-text-small">1999</text>
+          <text x="520" y="88" text-anchor="middle" class="ig-text-small" style="font-size:9px">DEPRECATED 2020</text>
+
+          <rect x="600" y="40" width="120" height="60" rx="8" fill="#0d1320" stroke="#fbbf24" stroke-width="2"/>
+          <text x="660" y="60" text-anchor="middle" class="ig-text-strong" style="fill:#fbbf24">TLS 1.1</text>
+          <text x="660" y="75" text-anchor="middle" class="ig-text-small">2006</text>
+          <text x="660" y="88" text-anchor="middle" class="ig-text-small" style="font-size:9px">DEPRECATED 2020</text>
+
+          <rect x="740" y="40" width="120" height="60" rx="8" class="ig-success-box"/>
+          <text x="800" y="60" text-anchor="middle" class="ig-text-strong" style="fill:#34d399">TLS 1.2</text>
+          <text x="800" y="75" text-anchor="middle" class="ig-text-small">2008</text>
+          <text x="800" y="88" text-anchor="middle" class="ig-text-small" style="font-size:9px">CURRENT MIN</text>
+
+          <rect x="40" y="120" width="820" height="40" rx="8" class="ig-success-box"/>
+          <text x="450" y="145" text-anchor="middle" class="ig-text-strong" style="fill:#34d399">TLS 1.3 (2018) — Recommended standard, removes legacy crypto, 1-RTT handshake</text>
+
+          <!-- Properties: SSL -->
+          <rect x="40" y="180" width="400" height="120" rx="12" class="ig-danger-box"/>
+          <text x="60" y="205" class="ig-text-title" style="fill:#f87171">SSL (Secure Sockets Layer)</text>
+          <text x="60" y="225" class="ig-text-small">• Memerlukan reliable transport (TCP)</text>
+          <text x="60" y="242" class="ig-text-small">• Transparent layer untuk HTTP, FTP, Telnet</text>
+          <text x="60" y="259" class="ig-text-small">• Private channel: handshake → secret key</text>
+          <text x="60" y="276" class="ig-text-small">• Authenticated channel: server wajib, client opsional</text>
+          <text x="60" y="293" class="ig-text-small">• Reliable channel: message integrity check</text>
+
+          <!-- Properties: TLS -->
+          <rect x="460" y="180" width="400" height="120" rx="12" class="ig-success-box"/>
+          <text x="480" y="205" class="ig-text-title" style="fill:#34d399">TLS (Transport Layer Security)</text>
+          <text x="480" y="225" class="ig-text-small">• Confidentiality: symmetric cryptography</text>
+          <text x="480" y="242" class="ig-text-small">• Auth: public key cryptography (certificates)</text>
+          <text x="480" y="259" class="ig-text-small">• Reliability: auth codes (HMAC)</text>
+          <text x="480" y="276" class="ig-text-small">• TLS Record Protocol: encryption layer</text>
+          <text x="480" y="293" class="ig-text-small">• TLS Handshake Protocol: client-server auth</text>
+
+          <!-- Bottom: SSL advantages -->
+          <rect x="40" y="320" width="820" height="100" rx="8" class="ig-box"/>
+          <text x="60" y="342" class="ig-text-strong">SSL Advantages (yang dibawa ke TLS):</text>
+          <text x="60" y="362" class="ig-text-small">• Encrypts confidential information during data exchange</text>
+          <text x="60" y="380" class="ig-text-small">• Maintains record of certificate owner details</text>
+          <text x="60" y="398" class="ig-text-small">• CA checks certificate owner while issuing</text>
+          <text x="60" y="416" class="ig-text-small">• Often used in confidential online transactions (banking, e-commerce)</text>
+        </svg>
+        <div class="infographic-caption">Gambar 15. Evolusi SSL → TLS — semua versi SSL deprecated, TLS 1.2 minimum, TLS 1.3 recommended.</div>
+      </div>
+
+      <h3 class="sub-title">15.3 TLS Protocol — 2 Sub-Protocols</h3>
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">📜</div>TLS Record Protocol</div>
+          <p>Menyediakan security menggunakan metode enkripsi. Bertanggung jawab untuk: <strong>fragmentation</strong> (memecah data menjadi records), <strong>compression</strong> (opsional, deprecated di TLS 1.3), <strong>encryption</strong> (symmetric), <strong>integrity</strong> (HMAC).</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🤝</div>TLS Handshake Protocol</div>
+          <p>Menyediakan security dengan melakukan <strong>authentication client dan server</strong> sebelum komunikasi. Negotiate cipher suite, exchange keys (RSA, ECDHE), establish session. TLS 1.3 mengurangi handshake dari 2-RTT ke 1-RTT (0-RTT untuk resumed session).</p>
+        </div>
+      </div>
+
+      <div class="info-box info-danger">
+        <strong>Warning Praktis:</strong> SSL 2.0, SSL 3.0, TLS 1.0, TLS 1.1 sudah
+        <strong>DEPRECATED</strong> dan tidak boleh digunakan (POODLE, BEAST, CRIME attacks).
+        Minimum yang aman adalah <strong>TLS 1.2</strong>, idealnya <strong>TLS 1.3</strong>.
+        Cek server Anda via <code>ssllabs.com</code> — grade A+ hanya diberikan ke TLS 1.2/1.3
+        dengan HSTS dan modern cipher suite.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 16: IPsec ============= -->
+    <section id="ipsec">
+      <div class="section-header">
+        <span class="section-tag">Bagian 16</span>
+        <h2>Internet Protocol Security (IPsec)</h2>
+        <p>Protokol network layer untuk komunikasi aman via IP — dasar VPN site-to-site dan remote access.</p>
+      </div>
+
+      <p>
+        <strong>IPsec</strong> memastikan komunikasi aman via IP network. Bekerja di
+        <strong>network layer</strong> communication model dan menggunakan cryptographic security
+        services untuk komunikasi aman. IPsec memungkinkan authentication IP packets selama
+        komunikasi. IPsec diaplikasikan di <em>virtual private networks dan remote user access</em>.
+        Digunakan antara pair of hosts, pair of security gateways, atau security gateway dan host.
+      </p>
+
+      <p>
+        IPsec terdiri dari dua security services: <strong>Authentication Header (AH)</strong> dan
+        <strong>Encapsulating Security Payload (ESP)</strong>. AH memungkinkan authentication
+        pengirim, sedangkan ESP memungkinkan authentication pengirim + data encryption.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">IPsec — 2 Security Services (AH + ESP) × 2 Modes (Transport + Tunnel)</div>
+        <svg viewBox="0 0 900 460" width="900" height="460" aria-label="IPsec">
+          <!-- Top: AH vs ESP -->
+          <text x="450" y="25" text-anchor="middle" class="ig-text-strong">2 Security Services:</text>
+
+          <rect x="40" y="40" width="400" height="100" rx="12" class="ig-warn-box"/>
+          <text x="60" y="62" class="ig-text-title" style="fill:#fbbf24">AH (Authentication Header)</text>
+          <text x="60" y="82" class="ig-text-small">• Authenticate pengirim (data origin auth)</text>
+          <text x="60" y="98" class="ig-text-small">• Ensure data integrity (anti-tamper)</text>
+          <text x="60" y="114" class="ig-text-small">• Replay protection (sequence numbers)</text>
+          <text x="60" y="130" class="ig-text-small" style="fill:#f87171">✗ NO encryption (no confidentiality)</text>
+
+          <rect x="460" y="40" width="400" height="100" rx="12" class="ig-success-box"/>
+          <text x="480" y="62" class="ig-text-title" style="fill:#34d399">ESP (Encapsulating Security Payload)</text>
+          <text x="480" y="82" class="ig-text-small">• Authenticate pengirim (data origin auth)</text>
+          <text x="480" y="98" class="ig-text-small">• Data encryption (confidentiality) ✓</text>
+          <text x="480" y="114" class="ig-text-small">• Data integrity + replay protection</text>
+          <text x="480" y="130" class="ig-text-small" style="fill:#34d399">✓ All-in-one: auth + encrypt + integrity</text>
+
+          <!-- Middle: Transport vs Tunnel mode -->
+          <text x="450" y="175" text-anchor="middle" class="ig-text-strong">2 Modes — Packet Structure:</text>
+
+          <!-- Transport mode -->
+          <rect x="40" y="190" width="820" height="120" rx="12" class="ig-accent-box"/>
+          <text x="60" y="212" class="ig-text-title">Transport Mode (host-to-host)</text>
+          <text x="60" y="228" class="ig-text-small">Hanya payload dienkripsi, IP header asli dipertahankan. Lebih efisien, untuk end-to-end communication.</text>
+
+          <g class="ig-text-small">
+            <rect x="60" y="245" width="100" height="30" rx="4" fill="#0d1320" stroke="#22d3ee"/>
+            <text x="110" y="265" text-anchor="middle">Original IP hdr</text>
+
+            <rect x="170" y="245" width="100" height="30" rx="4" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="220" y="265" text-anchor="middle">IPsec hdr</text>
+
+            <rect x="280" y="245" width="280" height="30" rx="4" fill="#0d1320" stroke="#f87171"/>
+            <text x="420" y="265" text-anchor="middle" style="fill:#f87171">Payload (encrypted)</text>
+
+            <rect x="570" y="245" width="100" height="30" rx="4" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="620" y="265" text-anchor="middle">IPsec trailer</text>
+
+            <rect x="680" y="245" width="160" height="30" rx="4" fill="#0d1320" stroke="#34d399"/>
+            <text x="760" y="265" text-anchor="middle">Auth data (MIC)</text>
+          </g>
+
+          <text x="60" y="295" class="ig-text-small" style="font-style:italic">Use case: client-to-server VPN, end-host encryption</text>
+
+          <!-- Tunnel mode -->
+          <rect x="40" y="325" width="820" height="120" rx="12" class="ig-purple-box"/>
+          <text x="60" y="347" class="ig-text-title" style="fill:#a78bfa">Tunnel Mode (gateway-to-gateway / VPN site-to-site)</text>
+          <text x="60" y="363" class="ig-text-small">Seluruh paket IP asli dienkripsi dan dibungkus new IP header. Lebih aman, untuk VPN antar jaringan.</text>
+
+          <g class="ig-text-small">
+            <rect x="60" y="380" width="100" height="30" rx="4" fill="#0d1320" stroke="#a78bfa"/>
+            <text x="110" y="400" text-anchor="middle">New IP hdr</text>
+
+            <rect x="170" y="380" width="100" height="30" rx="4" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="220" y="400" text-anchor="middle">IPsec hdr</text>
+
+            <rect x="280" y="380" width="380" height="30" rx="4" fill="#0d1320" stroke="#f87171"/>
+            <text x="470" y="400" text-anchor="middle" style="fill:#f87171">Original IP hdr + Payload (encrypted)</text>
+
+            <rect x="670" y="380" width="100" height="30" rx="4" fill="#0d1320" stroke="#fbbf24"/>
+            <text x="720" y="400" text-anchor="middle">IPsec trailer</text>
+
+            <rect x="780" y="380" width="80" height="30" rx="4" fill="#0d1320" stroke="#34d399"/>
+            <text x="820" y="400" text-anchor="middle">Auth</text>
+          </g>
+
+          <text x="60" y="430" class="ig-text-small" style="font-style:italic">Use case: site-to-site VPN, remote access VPN, security gateway</text>
+        </svg>
+        <div class="infographic-caption">Gambar 16. IPsec — 2 services (AH/ESP) × 2 modes (Transport/Tunnel) = 4 kombinasi yang mungkin.</div>
+      </div>
+
+      <h3 class="sub-title">16.1 Karakteristik Teknis IPsec</h3>
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🔐</div>Security Services</div>
+          <p>Network-level peer authentication · data origin authentication · data integrity · data confidentiality (encryption) · replay protection. <strong>Semua via cryptography</strong>.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🔑</div>Key Management</div>
+          <p><strong>IKE (Internet Key Exchange)</strong> — protocol untuk negotiate security associations (SA) dan exchange keys. IKEv1 (RFC 2409) dan IKEv2 (RFC 7296, lebih modern).</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">🛡</div>Use Case VPN</div>
+          <p>VPN site-to-site (Cisco ASA, Fortinet, pfSense) · Remote access VPN (IPSec/L2TP, IKEv2) · Cloud VPN (AWS VPN, Azure VPN Gateway) · Mobile VPN (iOS/Android native IKEv2).</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">📊</div>Performance</div>
+          <p>Network layer = transparan ke aplikasi. Overhead: enkripsi + new headers. Hardware acceleration (AES-NI) penting untuk throughput tinggi. UDP 500 (IKE) + UDP 4500 (NAT-T) + protocol 50 (ESP).</p>
+        </div>
+      </div>
+
+      <div class="info-box info-success">
+        <strong>IPsec di Dunia Nyata:</strong> IPsec adalah <strong>backbone VPN global</strong> —
+        menghubungkan kantor cabang ke HQ, remote worker ke corporate network, dan cloud VPC ke
+        on-premise. Alternatif: WireGuard (modern, lebih ringan), OpenVPN (SSL/TLS based, lebih
+        portable). Pilihan tergantung use case: IPsec untuk enterprise site-to-site, WireGuard untuk
+        modern mesh VPN, OpenVPN untuk kompatibilitas luas.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 17: PRAKTIKUM ============= -->
+    <section id="praktikum">
+      <div class="practicum-banner">
+        <span class="section-tag" style="margin-bottom:8px">Bagian 17 · Hands-on Lab</span>
+        <h2>Modul Praktikum Network Security</h2>
+        <p>Empat sesi praktik hands-on: Wireshark protocol analysis, Nmap network scan, OpenSSL certificate &amp; crypto, dan RADIUS/Kerberos simulation.</p>
+      </div>
+
+      <h3 class="sub-title">17.1 Tujuan Praktikum</h3>
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">1</div>Analisis Protokol</div>
+          <p>Menggunakan Wireshark untuk capture dan analisis protokol keamanan (HTTPS, TLS handshake, IPsec) di jaringan nyata.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">2</div>Network Discovery</div>
+          <p>Melakukan network scan dan vulnerability assessment dengan Nmap untuk memetakan attack surface jaringan lab.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">3</div>Cryptography Lab</div>
+          <p>Menggunakan OpenSSL untuk generate CSR, sign certificate, encrypt/decrypt file, dan verify PGP signature.</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">4</div>AAA Simulation</div>
+          <p>Mensimulasikan RADIUS authentication dengan FreeRADIUS dan Kerberos dengan MIT Kerberos di lingkungan lab.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">17.2 Alat dan Bahan</h3>
+      <div class="two-col">
+        <div class="col-box left">
+          <h4><span class="ico">💻</span>Perangkat Keras</h4>
+          <ul class="checklist">
+            <li>Laptop/PC dengan minimum 8 GB RAM (16 GB disarankan untuk VM)</li>
+            <li>Koneksi internet (untuk download tools &amp; sample captures)</li>
+            <li>VirtualBox atau VMware (untuk VM lab)</li>
+            <li>2 VM: 1 Linux (Ubuntu Server) + 1 Windows/Linux client</li>
+            <li>Switch/router lab (boleh virtual via GNS3 atau Packet Tracer)</li>
+          </ul>
+        </div>
+        <div class="col-box right">
+          <h4><span class="ico">🧰</span>Perangkat Lunak</h4>
+          <ul class="checklist">
+            <li><strong>Wireshark</strong> untuk capture &amp; analisis paket</li>
+            <li><strong>Nmap</strong> + Nmap Scripting Engine (NSE) untuk scan</li>
+            <li><strong>OpenSSL</strong> untuk operasi kriptografi</li>
+            <li><strong>FreeRADIUS</strong> server di Ubuntu (apt install freeradius)</li>
+            <li><strong>MIT Kerberos</strong> (krb5-server) untuk Kerberos lab</li>
+            <li><strong>GnuPG / Gpg4win</strong> untuk PGP encryption</li>
+            <li><strong>tcpdump</strong> + <strong>ngrep</strong> untuk command-line analysis</li>
+            <li><strong>curl</strong> + <strong>openssl s_client</strong> untuk TLS inspection</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-box info-warn">
+        <strong>Catatan Etika:</strong> Lakukan praktik HANYA pada jaringan lab yang Anda miliki
+        atau punya izin tertulis. <strong>Jangan</strong> scan/capture di jaringan publik, kantor,
+        atau kampus tanpa izin — dapat melanggar UU ITE Pasal 30 &amp; 33. Untuk SSL inspection
+        gunakan website milik sendiri atau test sites seperti <code>badssl.com</code>.
+      </div>
+
+      <h3 class="sub-title">17.3 Workflow Praktikum 4 Sesi</h3>
+      <div class="infographic">
+        <div class="ig-title">Alur Praktikum — 4 Sesi, 20 Langkah, 1 Laporan Akhir</div>
+        <svg viewBox="0 0 900 280" width="900" height="280" aria-label="Practicum workflow">
+          <defs>
+            <linearGradient id="grad-lab-m01" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#22d3ee"/>
+              <stop offset="33%" stop-color="#34d399"/>
+              <stop offset="66%" stop-color="#a78bfa"/>
+              <stop offset="100%" stop-color="#fbbf24"/>
+            </linearGradient>
+          </defs>
+
+          <path d="M 60 100 L 840 100" stroke="url(#grad-lab-m01)" stroke-width="3" stroke-linecap="round"/>
+
+          <circle cx="150" cy="100" r="32" fill="#161d2e" stroke="#22d3ee" stroke-width="2.5"/>
+          <text x="150" y="98" text-anchor="middle" class="ig-text-title">S1</text>
+          <text x="150" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="80" y="150" width="140" height="70" rx="10" class="ig-accent-box"/>
+          <text x="150" y="172" text-anchor="middle" class="ig-text-strong">Wireshark</text>
+          <text x="150" y="188" text-anchor="middle" class="ig-text-small">Protocol Analysis</text>
+          <text x="150" y="202" text-anchor="middle" class="ig-text-small">(TLS, HTTPS, IPsec)</text>
+          <text x="150" y="65" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">~60 menit</text>
+
+          <circle cx="380" cy="100" r="32" fill="#161d2e" stroke="#34d399" stroke-width="2.5"/>
+          <text x="380" y="98" text-anchor="middle" class="ig-text-title" style="fill:#34d399">S2</text>
+          <text x="380" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="310" y="150" width="140" height="70" rx="10" class="ig-success-box"/>
+          <text x="380" y="172" text-anchor="middle" class="ig-text-strong">Nmap</text>
+          <text x="380" y="188" text-anchor="middle" class="ig-text-small">Network Scan</text>
+          <text x="380" y="202" text-anchor="middle" class="ig-text-small">(discovery, NSE)</text>
+          <text x="380" y="65" text-anchor="middle" class="ig-text-small" style="fill:#34d399">~45 menit</text>
+
+          <circle cx="610" cy="100" r="32" fill="#161d2e" stroke="#a78bfa" stroke-width="2.5"/>
+          <text x="610" y="98" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">S3</text>
+          <text x="610" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="540" y="150" width="140" height="70" rx="10" class="ig-purple-box"/>
+          <text x="610" y="172" text-anchor="middle" class="ig-text-strong">OpenSSL</text>
+          <text x="610" y="188" text-anchor="middle" class="ig-text-small">Crypto Lab</text>
+          <text x="610" y="202" text-anchor="middle" class="ig-text-small">(cert + PGP)</text>
+          <text x="610" y="65" text-anchor="middle" class="ig-text-small" style="fill:#a78bfa">~75 menit</text>
+
+          <circle cx="820" cy="100" r="32" fill="#161d2e" stroke="#fbbf24" stroke-width="2.5"/>
+          <text x="820" y="98" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">S4</text>
+          <text x="820" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="750" y="150" width="140" height="70" rx="10" class="ig-warn-box"/>
+          <text x="820" y="172" text-anchor="middle" class="ig-text-strong">FreeRADIUS</text>
+          <text x="820" y="188" text-anchor="middle" class="ig-text-small">AAA + Kerberos</text>
+          <text x="820" y="202" text-anchor="middle" class="ig-text-small">simulation</text>
+          <text x="820" y="65" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">~90 menit</text>
+
+          <rect x="280" y="240" width="340" height="30" rx="15" fill="#161d2e" stroke="#22d3ee" stroke-width="1.5"/>
+          <text x="450" y="260" text-anchor="middle" class="ig-text-strong" style="fill:#22d3ee">Total ~4.5 jam → Laporan Capture + Scan + Crypto + AAA</text>
+        </svg>
+        <div class="infographic-caption">Gambar 17. Workflow 4 sesi praktikum Modul 01 — total 20 langkah hands-on.</div>
+      </div>
+
+      <h3 class="sub-title">17.4 Langkah Praktikum</h3>
+
+      <h4 class="mini-title">Sesi 1 — Wireshark Protocol Analysis</h4>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h5>Install &amp; Setup Wireshark</h5>
+            <p>Download Wireshark dari <code>wireshark.org</code>. Install dengan Npcap (Windows) atau via package manager Linux: <code>apt install wireshark</code>. Jalankan sebagai root/administrator. Pilih interface yang aktif (Wi-Fi atau Ethernet).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h5>Capture TLS Handshake</h5>
+            <p>Buka browser ke <code>https://example.com</code> sambil capture. Filter <code>tls.handshake</code>. Identifikasi: <strong>Client Hello</strong> (cipher suites, SNI), <strong>Server Hello</strong> (selected cipher), <strong>Certificate</strong>, <strong>Key Exchange</strong>, <strong>Finished</strong>. Catat TLS version dan cipher suite yang dinegosiasi.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h5>Analisis HTTP vs HTTPS</h5>
+            <p>Akses <code>http://neverssl.com</code> lalu <code>https://example.com</code>. Bandingkan capture: HTTP plaintext menampilkan semua header &amp; body. HTTPS hanya menampilkan TLS records terenkripsi. Screenshot perbandingan.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h5>Decode TLS dengan Session Key</h5>
+            <p>Set environment variable <code>SSLKEYLOGFILE=/tmp/keys.log</code> di Firefox/Chrome. Browse beberapa HTTPS site. Import file ke Wireshark (Edit → Preferences → Protocols → TLS → (Pre)-Master-Secret log filename). Lihat decrypted HTTPS content. <strong>Pelajaran: jika attacker punya akses ke key log, TLS tidak melindungi apa-apa.</strong></p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h5>Dokumentasi &amp; Laporan</h5>
+            <p>Buat laporan: screenshot Client Hello + Server Hello, daftar cipher suite yang didukung client, cipher yang dipilih server, TLS version, certificate chain. Diskusikan: mengapa TLS 1.3 lebih cepat dari TLS 1.2? Apa risiko SSL strip?</p>
+          </div>
+        </div>
+      </div>
+
+      <h4 class="mini-title">Sesi 2 — Nmap Network Scan</h4>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h5>Install Nmap</h5>
+            <p>Download dari <code>nmap.org</code> atau <code>apt install nmap</code>. Verifikasi: <code>nmap --version</code>. Baca manual: <code>man nmap</code>. <strong>Wajib</strong> hanya scan jaringan lab yang Anda miliki.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h5>Host Discovery</h5>
+            <p>Scan jaringan lab: <code>nmap -sn 192.168.1.0/24</code> (ping scan, no port scan). Catat semua host yang aktif. Lalu coba: <code>nmap -sn -PR 192.168.1.0/24</code> (ARP scan, local only), <code>nmap -sn -PE 192.168.1.0/24</code> (ICMP echo).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h5>Port Scan &amp; Service Detection</h5>
+            <p>Untuk setiap host aktif: <code>nmap -sV -sC -p- &lt;target&gt;</code>. <code>-sV</code> = version detection, <code>-sC</code> = default NSE scripts, <code>-p-</code> = semua 65535 port. Catat: port terbuka, service, version. Identifikasi service berisiko tinggi (Telnet 23, FTP 21, RDP 3389 tanpa NLA).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h5>Vulnerability Script (NSE)</h5>
+            <p>Jalankan script NSE vulnerability: <code>nmap --script vuln &lt;target&gt;</code>. Catat vulnerabilities yang terdeteksi (jika ada). Alternatif: <code>nmap --script ssl-enum-ciphers,ssl-cert,http-headers &lt;target&gt;</code> untuk audit TLS/web service.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h5>Output XML &amp; Laporan</h5>
+            <p>Save output: <code>nmap -sV -sC -oX scan_result.xml -oN scan_result.txt &lt;target&gt;</code>. Konversi ke HTML: <code>xsltproc scan_result.xml &gt; scan.html</code>. Laporan: topologi jaringan, daftar host, port/service per host, vulnerabilities, rekomendasi hardening.</p>
+          </div>
+        </div>
+      </div>
+
+      <h4 class="mini-title">Sesi 3 — OpenSSL Cryptography Lab</h4>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h5>Install OpenSSL &amp; Verifikasi</h5>
+            <p><code>apt install openssl</code> atau download dari <code>openssl.org</code>. Cek versi: <code>openssl version</code>. Harus 1.1.1+ atau 3.0+ untuk TLS 1.3. Pelajari command: <code>openssl help</code>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h5>Generate Private Key &amp; CSR</h5>
+            <p>Buat private key: <code>openssl genrsa -out private.key 2048</code>. Buat CSR: <code>openssl req -new -key private.key -out request.csr</code>. Isi data: Country, State, Org, CN. Verifikasi CSR: <code>openssl req -text -noout -verify -in request.csr</code>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h5>Self-Signed Certificate (CA Lab)</h5>
+            <p>Buat self-signed cert untuk lab: <code>openssl req -x509 -new -key private.key -days 365 -out cert.pem</code>. Verifikasi: <code>openssl x509 -text -noout -in cert.pem</code>. Install di browser sebagai trusted CA. Test HTTPS server: <code>openssl s_server -cert cert.pem -key private.key -www</code>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h5>File Encryption &amp; Decryption</h5>
+            <p>Encrypt file: <code>openssl enc -aes-256-cbc -in secret.txt -out secret.enc -pbkdf2</code>. Decrypt: <code>openssl enc -d -aes-256-cbc -in secret.enc -out decrypted.txt -pbkdf2</code>. Bandingkan: <code>diff secret.txt decrypted.txt</code>. Pelajari: apa itu IV, salt, KDF.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h5>PGP-style dengan GnuPG</h5>
+            <p>Install GnuPG: <code>apt install gnupg</code>. Generate keypair: <code>gpg --gen-key</code>. Encrypt file: <code>gpg -e -r &lt;email&gt; file.txt</code>. Decrypt: <code>gpg -d file.txt.gpg</code>. Sign file: <code>gpg --sign file.txt</code>. Verify: <code>gpg --verify file.txt.sig</code>. Pelajari: web of trust vs PKI hierarkis.</p>
+          </div>
+        </div>
+      </div>
+
+      <h4 class="mini-title">Sesi 4 — FreeRADIUS &amp; Kerberos Simulation</h4>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h5>Install FreeRADIUS di Ubuntu</h5>
+            <p><code>apt install freeradius freeradius-utils</code>. Edit <code>/etc/freeradius/clients.conf</code> — tambahkan NAS client. Edit <code>/etc/freeradius/users</code> — tambahkan user test. Restart: <code>systemctl restart freeradius</code>. Test mode debug: <code>freeradius -X</code>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h5>Test RADIUS Auth dengan NTRadPing</h5>
+            <p>Download NTRadPing (Windows) atau gunakan <code>radtest</code> di Linux: <code>radtest testuser password localhost 0 testing123</code>. Verifikasi: access-accept message. Coba password salah → access-reject. Capture paket RADIUS dengan Wireshark (filter <code>radius</code>) — amati Access-Request, Access-Accept/Reject, Accounting.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h5>Install MIT Kerberos</h5>
+            <p><code>apt install krb5-kdc krb5-admin-server</code>. Setup realm: <code>krb5_newrealm</code>. Edit <code>/etc/krb5.conf</code> — set realm dan KDC. Buat principal admin: <code>kadmin.local -q "addprinc admin/admin"</code>. Buat principal user: <code>kadmin.local -q "addprinc testuser"</code>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h5>Test Kerberos Authentication</h5>
+            <p>Login sebagai testuser: <code>kinit testuser</code>. Lihat tiket: <code>klist</code>. Amati TGT (Ticket Granting Ticket) dengan expiration time. Request service ticket: <code>kvno host/kdc-server@REALM</code>. Lihat service ticket di <code>klist</code>. Destroy tiket: <code>kdestroy</code>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h5>Bandingkan RADIUS vs Kerberos</h5>
+            <p>Buat laporan komparatif: RADIUS (AAA untuk network access, UDP, encrypt password only) vs Kerberos (SSO untuk application access, TCP/UDP, ticket-based, full encryption). Kapan menggunakan RADIUS? Kapan Kerberos? Keduanya? Capture paket keduanya dengan Wireshark untuk dokumentasi.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="sub-title">17.5 Lembar Kerja / Tugas</h3>
+      <p>Jawab pertanyaan berdasarkan hasil praktikum. Setiap jawaban minimal 3-5 kalimat.</p>
+
+      <div class="card-grid grid-2">
+        <div class="card">
+          <div class="card-title"><div class="card-icon">Q1</div>TLS Handshake</div>
+          <p>Dari Sesi 1, jelaskan urutan lengkap TLS 1.2 handshake. Apa perbedaan utama dengan TLS 1.3 (yang mengurangi RTT)? Mengapa cipher suite selection penting untuk keamanan?</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">Q2</div>Nmap Discovery</div>
+          <p>Dari Sesi 2, sebutkan 3 service berisiko tinggi yang ditemukan. Mengapa service tersebut berisiko? Apa mitigasi yang Anda rekomendasikan untuk setiap service?</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">Q3</div>OpenSSL Cert</div>
+          <p>Dari Sesi 3 langkah 3, apa perbedaan self-signed certificate dengan CA-signed certificate? Kapan self-signed acceptable? Apa risikonya untuk production?</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">Q4</div>PGP vs S/MIME</div>
+          <p>Berdasarkan teori dan praktik GnuPG, jelaskan perbedaan trust model PGP (web of trust) vs S/MIME (PKI hierarkis). Mana yang lebih cocok untuk: (a) enterprise email, (b) personal activist email, (c) government email?</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">Q5</div>RADIUS vs TACACS+</div>
+          <p>Dari Sesi 4, kapan Anda menggunakan RADIUS vs TACACS+? Apa implikasi security RADIUS yang hanya mengenkripsi password (tidak full payload)? Bagaimana mitigasinya?</p>
+        </div>
+        <div class="card">
+          <div class="card-title"><div class="card-icon">Q6</div>Kerberos SSO</div>
+          <p>Berdasarkan praktik Kerberos, jelaskan bagaimana SSO (Single Sign-On) bekerja. Apa keuntungan TGT dibandingkan mengirim password ke setiap service? Apa risiko jika TGT dicuri?</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">17.6 Checklist Evaluasi</h3>
+      <p>Praktikum dinyatakan <strong>lulus</strong> jika minimal 10 dari 12 kriteria berikut terpenuhi:</p>
+      <ul class="checklist">
+        <li>Wireshark capture TLS handshake dengan screenshot Client Hello + Server Hello</li>
+        <li>Berhasil decrypt HTTPS dengan SSLKEYLOGFILE technique</li>
+        <li>Nmap host discovery menemukan minimal 3 host di jaringan lab</li>
+        <li>Port scan dengan -sV -sC mengidentifikasi service &amp; version minimal 5 port</li>
+        <li>Minimal 1 vulnerability terdeteksi via NSE script (atau dokumentasi "tidak ada" dengan justifikasi)</li>
+        <li>OpenSSL generate CSR dengan data lengkap &amp; verifikasi</li>
+        <li>Self-signed cert berhasil dibuat &amp; di-install di browser</li>
+        <li>File encryption/decryption AES-256-CBC dengan pbkdf2 berhasil</li>
+        <li>GnuPG keypair di-generate &amp; berhasil encrypt/decrypt + sign/verify</li>
+        <li>FreeRADIUS berjalan, radtest berhasil access-accept &amp; access-reject</li>
+        <li>Kerberos KDC ter-setup, kinit berhasil, klist menampilkan TGT</li>
+        <li>Laporan komparatif RADIUS vs Kerberos dengan capture Wireshark</li>
+      </ul>
+
+      <div class="info-box info-success">
+        <strong>Bonus:</strong> Mahasiswa yang dapat mendemonstrasikan: (a) setup VPN IPsec
+        site-to-site antara 2 VM, (b) integrasi FreeRADIUS dengan 802.1X Wi-Fi authentication,
+        (c) implementasi HSTS + Certificate Transparency di web server lab, atau (d) kontribusi
+        pertama ke OWASP atau NIST publication — akan mendapat nilai tambahan.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 18: RINGKASAN ============= -->
+    <section id="ringkasan">
+      <div class="section-header">
+        <span class="section-tag">Bagian 18</span>
+        <h2>Ringkasan Modul</h2>
+        <p>Rangkuman poin-poin kritis yang telah dibahas dalam Modul 01 Network Security Fundamentals.</p>
+      </div>
+
+      <div class="summary-box">
+        <h3>📋 Yang Telah Dipelajari</h3>
+
+        <!-- Summary journey infographic -->
+        <div class="infographic" style="margin-bottom:24px">
+          <div class="ig-title">Perjalanan Pembelajaran Modul 01 — Dari Konsep ke Protokol</div>
+          <svg viewBox="0 0 900 180" width="900" height="180" aria-label="Recap journey">
+            <defs>
+              <linearGradient id="grad-recap-m01" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#22d3ee"/>
+                <stop offset="100%" stop-color="#34d399"/>
+              </linearGradient>
+            </defs>
+
+            <path d="M 60 90 Q 220 30 380 90 T 700 90 T 840 90" stroke="url(#grad-recap-m01)" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+            <g>
+              <circle cx="60" cy="90" r="10" fill="#22d3ee" stroke="#0a0e1a" stroke-width="2"/>
+              <text x="60" y="115" text-anchor="middle" class="ig-text-small">3 Elements</text>
+
+              <circle cx="220" cy="55" r="10" fill="#22d3ee" stroke="#0a0e1a" stroke-width="2"/>
+              <text x="220" y="35" text-anchor="middle" class="ig-text-small">IA Principles</text>
+
+              <circle cx="380" cy="90" r="10" fill="#34d399" stroke="#0a0e1a" stroke-width="2"/>
+              <text x="380" y="115" text-anchor="middle" class="ig-text-small">4 Approaches</text>
+
+              <circle cx="540" cy="55" r="10" fill="#fbbf24" stroke="#0a0e1a" stroke-width="2"/>
+              <text x="540" y="35" text-anchor="middle" class="ig-text-small">3 Controls</text>
+
+              <circle cx="700" cy="90" r="10" fill="#a78bfa" stroke="#0a0e1a" stroke-width="2"/>
+              <text x="700" y="115" text-anchor="middle" class="ig-text-small">9 Protocols</text>
+
+              <circle cx="840" cy="90" r="12" fill="#34d399" stroke="#0a0e1a" stroke-width="3"/>
+              <text x="840" y="95" text-anchor="middle" style="font-size:14px;fill:#0a0e1a;font-weight:800">✓</text>
+              <text x="840" y="115" text-anchor="middle" class="ig-text-small" style="fill:#34d399">Praktikum</text>
+            </g>
+
+            <rect x="60" y="140" width="780" height="30" rx="15" fill="#161d2e" stroke="#22d3ee" stroke-width="1"/>
+            <text x="450" y="160" text-anchor="middle" class="ig-text-strong" style="fill:#22d3ee">Network Security = Controls × Protocols × Devices × Defense-in-Depth</text>
+          </svg>
+          <div class="infographic-caption">Gambar 18. Ringkasan perjalanan Modul 01 — dari 3 elemen dasar hingga praktikum 4 sesi.</div>
+        </div>
+
+        <ul class="checklist">
+          <li>Essentials network security — 3 elemen inti (Controls, Protocols, Devices) yang saling melengkapi.</li>
+          <li>Goal network defense — defense-in-depth 6 fase (predict, protect, monitor, analyze, detect, respond), bukan sekadar firewall.</li>
+          <li>5 Information Assurance principles — Confidentiality, Integrity, Availability (CIA Triad) + Non-repudiation + Authentication.</li>
+          <li>4 manfaat network defense — Increased Profits, Improved Productivity, Enhanced Compliance, Client Confidence.</li>
+          <li>10 tantangan network defender — 3 broad (distributed computing, emerging threats, lack of skills) + 7 operasional.</li>
+          <li>4 pendekatan network defense — Preventive, Reactive, Retrospective, Proactive — berdasarkan timeline attack.</li>
+          <li>3 klasifikasi security controls — Administrative, Physical (Prevention/Deterrence/Detection), Technical (6 komponen).</li>
+          <li>9 protokol keamanan esensial — RADIUS, TACACS+, Kerberos, PGP, S/MIME, S-HTTP, HTTPS, TLS, IPsec di 3 OSI layer.</li>
+          <li>RADIUS vs TACACS+ — perbedaan AAA processing, encryption, transport (UDP vs TCP), use case.</li>
+          <li>Kerberos 5-langkah — Client → AS → TGT → TGS → Service Ticket → Service. Foundation SSO di Active Directory.</li>
+          <li>PGP vs S/MIME — hybrid crypto (symmetric + asymmetric), perbedaan trust model (web of trust vs PKI hierarkis).</li>
+          <li>SSL/TLS evolusi — SSL 2.0/3.0 deprecated, TLS 1.0/1.1 deprecated, TLS 1.2 minimum, TLS 1.3 recommended.</li>
+          <li>IPsec — AH + ESP × Transport + Tunnel mode = 4 kombinasi. Backbone VPN global.</li>
+          <li>Praktikum 4 sesi hands-on — Wireshark, Nmap, OpenSSL, FreeRADIUS+Kerberos.</li>
+        </ul>
+      </div>
+
+      <div class="info-box info-tip" style="margin-top:24px">
+        <strong>Key Takeaway:</strong> Network security fundamentals bukan sekadar "pasang firewall".
+        Ia adalah <strong>sintesis 3 elemen (Controls × Protocols × Devices)</strong> yang dijalankan
+        via <strong>4 pendekatan (Preventive × Reactive × Retrospective × Proactive)</strong> untuk
+        mencapai <strong>5 prinsip IA (CIA + Non-Rep + Auth)</strong>. Tanpa pemahaman fondasi ini,
+        topik keamanan lanjutan (firewall, IDS, cryptography) akan dipahami secara parsial.
+        <strong>Modul ini adalah fondasi.</strong>
+      </div>
+    </section>
+
+    <footer>
+      <p><strong>Modul 01: Network Security Fundamentals</strong> · Network Defense Essentials</p>
+      <p>Disusun sebagai materi pembelajaran — bebas digunakan untuk tujuan edukasi.</p>
+      <div class="next-modul">
+        <span>Modul Selanjutnya →</span>
+        <strong>Modul 02: Identification, Authentication &amp; Authorization</strong>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // ===== TOC auto-highlight on scroll =====
+  (function(){
+    const tocLinks = document.querySelectorAll('#toc a');
+    const sections = Array.from(tocLinks).map(a => {
+      const id = a.getAttribute('href').slice(1);
+      return document.getElementById(id);
+    }).filter(Boolean);
+
+    function setActive(){
+      const scrollY = window.scrollY + 100;
+      let currentIdx = 0;
+      for(let i=0;i<sections.length;i++){
+        if(sections[i].offsetTop <= scrollY) currentIdx = i;
+      }
+      tocLinks.forEach((a, i) => a.classList.toggle('active', i === currentIdx));
+    }
+    setActive();
+    window.addEventListener('scroll', setActive, {passive:true});
+
+    // Smooth scroll with offset
+    tocLinks.forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = a.getAttribute('href').slice(1);
+        const target = document.getElementById(id);
+        if(target){
+          const offset = 80;
+          const top = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({top, behavior:'smooth'});
+          document.querySelector('.sidebar').classList.remove('open');
+        }
+      });
+    });
+  })();
+</script>
+</body>
+</html>
