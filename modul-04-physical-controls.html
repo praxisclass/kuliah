@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modul 04: Network Security Controls — Physical Controls — Network Defense Essentials</title>
+<meta name="description" content="Ebook &amp; Modul Praktikum Physical Controls - Network Defense Essentials">
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --bg-2:#0d1320;
+    --bg-elevated:#131a2a;
+    --bg-card:#161d2e;
+    --bg-card-hover:#1b2438;
+    --border:#242c40;
+    --border-strong:#344057;
+    --text:#e6edf3;
+    --text-2:#a8b3cf;
+    --text-muted:#6b7591;
+    --accent:#22d3ee;
+    --accent-2:#06b6d4;
+    --accent-glow:rgba(34,211,238,.15);
+    --accent-dim:rgba(34,211,238,.08);
+    --warn:#fbbf24;
+    --warn-bg:rgba(251,191,36,.08);
+    --danger:#f87171;
+    --danger-bg:rgba(248,113,113,.08);
+    --success:#34d399;
+    --success-bg:rgba(52,211,153,.08);
+    --purple:#a78bfa;
+    --purple-bg:rgba(167,139,250,.08);
+    --pink:#f472b6;
+    --shadow:0 4px 24px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:24px}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.7;
+    font-size:15px;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% 0%,rgba(34,211,238,.08),transparent),
+      radial-gradient(ellipse 60% 40% at 80% 100%,rgba(167,139,250,.06),transparent);
+    background-attachment:fixed;
+  }
+  h1,h2,h3,h4{font-family:'Space Grotesk','Inter',sans-serif;font-weight:700;line-height:1.3;letter-spacing:-.01em}
+  code,pre,.mono{font-family:'JetBrains Mono','Consolas','Monaco',monospace}
+  a{color:var(--accent);text-decoration:none}
+
+  /* Layout */
+  .layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+  .sidebar{
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+    background:var(--bg-2);
+    border-right:1px solid var(--border);
+    padding:24px 20px;
+    z-index:10;
+  }
+  .sidebar-brand{
+    display:flex;align-items:center;gap:12px;padding-bottom:20px;
+    border-bottom:1px solid var(--border);margin-bottom:20px;
+  }
+  .brand-logo{
+    width:40px;height:40px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;color:#0a0e1a;font-size:18px;
+    box-shadow:0 0 24px var(--accent-glow);
+  }
+  .brand-text{font-size:13px;color:var(--text-2);line-height:1.4}
+  .brand-text strong{display:block;color:var(--text);font-size:14px;font-weight:600}
+  .toc-title{
+    font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--text-muted);margin:16px 0 12px;font-weight:600;
+  }
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:2px}
+  .toc-list a{
+    display:block;padding:8px 12px;color:var(--text-2);
+    font-size:13.5px;border-radius:6px;border-left:2px solid transparent;
+    transition:all .15s ease;line-height:1.4;
+  }
+  .toc-list a:hover{background:var(--bg-card);color:var(--text)}
+  .toc-list a.active{
+    background:var(--accent-dim);color:var(--accent);
+    border-left-color:var(--accent);font-weight:500;
+  }
+  .toc-list a .num{
+    display:inline-block;width:24px;color:var(--text-muted);font-size:12px;
+  }
+  .toc-list a.active .num{color:var(--accent)}
+  .toc-sub{padding-left:14px;font-size:12.5px;color:var(--text-muted)}
+  .toc-sub a{padding:6px 12px;font-size:12.5px}
+
+  /* Content */
+  .content{max-width:980px;padding:0 56px 80px;min-width:0}
+  @media (max-width:1024px){
+    .layout{grid-template-columns:1fr}
+    .sidebar{position:fixed;left:-300px;width:280px;transition:left .25s ease}
+    .sidebar.open{left:0}
+    .content{padding:0 24px 60px}
+    .menu-toggle{display:flex!important}
+  }
+  .menu-toggle{
+    display:none;position:fixed;top:16px;right:16px;z-index:50;
+    width:44px;height:44px;border-radius:10px;
+    background:var(--bg-elevated);border:1px solid var(--border);
+    color:var(--text);align-items:center;justify-content:center;
+    cursor:pointer;font-size:20px;
+  }
+
+  /* Hero / Cover */
+  .hero{
+    position:relative;padding:80px 0 60px;
+    border-bottom:1px solid var(--border);margin-bottom:48px;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+    background-image:
+      linear-gradient(rgba(34,211,238,.04) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(34,211,238,.04) 1px,transparent 1px);
+    background-size:48px 48px;
+    mask-image:radial-gradient(ellipse 60% 70% at 50% 40%,#000 30%,transparent 75%);
+    -webkit-mask-image:radial-gradient(ellipse 60% 70% at 50% 40%,#000 30%,transparent 75%);
+    pointer-events:none;
+  }
+  .hero-content{position:relative;z-index:1}
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 14px;border-radius:999px;
+    background:var(--accent-dim);border:1px solid rgba(34,211,238,.3);
+    color:var(--accent);font-size:12px;font-weight:600;
+    letter-spacing:.08em;text-transform:uppercase;margin-bottom:24px;
+  }
+  .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+  .hero h1{
+    font-size:clamp(36px,5vw,56px);margin-bottom:16px;
+    background:linear-gradient(135deg,#fff 30%,var(--accent) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero-sub{
+    font-size:18px;color:var(--text-2);max-width:680px;margin-bottom:32px;
+  }
+  .hero-meta{
+    display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;
+  }
+  .meta-chip{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:10px 16px;background:var(--bg-card);
+    border:1px solid var(--border);border-radius:8px;
+    font-size:13px;color:var(--text-2);
+  }
+  .meta-chip strong{color:var(--text);font-weight:600}
+  .meta-chip svg{width:16px;height:16px;color:var(--accent)}
+
+  /* Section base */
+  section{margin-bottom:64px;scroll-margin-top:24px}
+  .section-header{margin-bottom:28px}
+  .section-tag{
+    display:inline-block;font-size:11px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.12em;
+    color:var(--accent);margin-bottom:8px;
+  }
+  .section-header h2{
+    font-size:30px;margin-bottom:8px;color:var(--text);
+  }
+  .section-header p{color:var(--text-2);font-size:15px;max-width:720px}
+  h3.sub-title{
+    font-size:20px;color:var(--text);margin:32px 0 14px;
+    padding-left:12px;border-left:3px solid var(--accent);
+  }
+  h4.mini-title{
+    font-size:15px;color:var(--accent);margin:20px 0 10px;
+    font-weight:600;text-transform:uppercase;letter-spacing:.05em;
+  }
+  p{margin-bottom:14px;color:var(--text-2)}
+  p strong{color:var(--text);font-weight:600}
+  ul,ol{margin:12px 0 20px;padding-left:24px;color:var(--text-2)}
+  ul li,ol li{margin-bottom:6px}
+  ul li::marker{color:var(--accent)}
+  ol li::marker{color:var(--accent);font-weight:600}
+
+  /* Card grid */
+  .card-grid{display:grid;gap:16px;margin:20px 0}
+  .grid-2{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:768px){
+    .grid-2,.grid-3{grid-template-columns:1fr}
+  }
+  .card{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:12px;padding:20px;transition:all .2s ease;
+  }
+  .card:hover{
+    border-color:var(--border-strong);background:var(--bg-card-hover);
+    transform:translateY(-2px);
+  }
+  .card-title{
+    display:flex;align-items:center;gap:10px;
+    font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px;
+  }
+  .card-icon{
+    width:32px;height:32px;border-radius:8px;
+    background:var(--accent-dim);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;flex-shrink:0;
+  }
+  .card p{font-size:13.5px;color:var(--text-2);margin:0}
+  .card .meta{
+    margin-top:10px;padding-top:10px;border-top:1px solid var(--border);
+    font-size:12px;color:var(--text-muted);display:flex;gap:12px;flex-wrap:wrap;
+  }
+  .card .meta span{display:inline-flex;align-items:center;gap:4px}
+
+  /* Info boxes */
+  .info-box{
+    border-left:3px solid;padding:14px 18px;border-radius:8px;
+    margin:16px 0;font-size:14px;
+  }
+  .info-tip{background:var(--accent-dim);border-color:var(--accent);color:var(--text)}
+  .info-tip strong{color:var(--accent)}
+  .info-warn{background:var(--warn-bg);border-color:var(--warn);color:var(--text)}
+  .info-warn strong{color:var(--warn)}
+  .info-danger{background:var(--danger-bg);border-color:var(--danger);color:var(--text)}
+  .info-danger strong{color:var(--danger)}
+  .info-success{background:var(--success-bg);border-color:var(--success);color:var(--text)}
+  .info-success strong{color:var(--success)}
+
+  /* Definition list */
+  .def-list{display:flex;flex-direction:column;gap:14px;margin:16px 0}
+  .def-item{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:10px;padding:16px 20px;
+  }
+  .def-item dt{
+    font-weight:600;color:var(--accent);font-size:14.5px;
+    margin-bottom:6px;display:flex;align-items:center;gap:8px;
+  }
+  .def-item dt::before{
+    content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);
+  }
+  .def-item dd{color:var(--text-2);font-size:14px;margin-left:14px}
+
+  /* Comparison table */
+  .table-wrap{overflow-x:auto;margin:20px 0;border-radius:12px;border:1px solid var(--border)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--bg-card)}
+  th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--border)}
+  th{background:var(--bg-elevated);color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+  td{color:var(--text-2)}
+  td strong{color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--bg-card-hover)}
+
+  /* Checklist */
+  .checklist{list-style:none;padding:0;margin:16px 0;display:flex;flex-direction:column;gap:8px}
+  .checklist li{
+    display:flex;gap:12px;padding:10px 14px;
+    background:var(--bg-card);border:1px solid var(--border);border-radius:8px;
+    font-size:14px;color:var(--text-2);line-height:1.5;
+  }
+  .checklist li::before{
+    content:'✓';flex-shrink:0;width:20px;height:20px;border-radius:50%;
+    background:var(--success-bg);color:var(--success);
+    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+  }
+  .checklist.warn li::before{background:var(--warn-bg);color:var(--warn)}
+  .checklist.danger li::before{content:'!';background:var(--danger-bg);color:var(--danger)}
+
+  /* Pill / badge */
+  .pill{
+    display:inline-block;padding:2px 10px;border-radius:999px;
+    font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-2);
+  }
+  .pill.accent{background:var(--accent-dim);color:var(--accent);border-color:rgba(34,211,238,.3)}
+  .pill.warn{background:var(--warn-bg);color:var(--warn);border-color:rgba(251,191,36,.3)}
+  .pill.danger{background:var(--danger-bg);color:var(--danger);border-color:rgba(248,113,113,.3)}
+  .pill.success{background:var(--success-bg);color:var(--success);border-color:rgba(52,211,153,.3)}
+  .pill.purple{background:var(--purple-bg);color:var(--purple);border-color:rgba(167,139,250,.3)}
+
+  /* Two column */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
+  @media (max-width:768px){.two-col{grid-template-columns:1fr}}
+  .col-box{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:12px;
+    padding:22px;
+  }
+  .col-box h4{
+    display:flex;align-items:center;gap:10px;
+    font-size:15px;color:var(--text);margin-bottom:14px;
+    padding-bottom:12px;border-bottom:1px solid var(--border);
+  }
+  .col-box h4 .ico{
+    width:28px;height:28px;border-radius:7px;display:flex;
+    align-items:center;justify-content:center;font-size:14px;
+  }
+  .col-box.left h4 .ico{background:var(--accent-dim);color:var(--accent)}
+  .col-box.right h4 .ico{background:var(--purple-bg);color:var(--purple)}
+
+  /* Steps */
+  .steps{position:relative;padding-left:32px;margin:24px 0}
+  .steps::before{
+    content:'';position:absolute;left:11px;top:8px;bottom:8px;
+    width:2px;background:var(--border-strong);
+  }
+  .step{position:relative;margin-bottom:24px}
+  .step-num{
+    position:absolute;left:-32px;top:0;width:24px;height:24px;border-radius:50%;
+    background:var(--bg-elevated);border:2px solid var(--accent);
+    color:var(--accent);font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;z-index:1;
+  }
+  .step-content{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+    padding:16px 20px;
+  }
+  .step-content h5{font-size:14px;color:var(--accent);margin-bottom:6px;font-weight:600}
+  .step-content p{font-size:13.5px;color:var(--text-2);margin:0}
+  .step-content ul{margin:8px 0 0;padding-left:18px;font-size:13px}
+
+  /* Practicum box */
+  .practicum-banner{
+    background:linear-gradient(135deg,var(--purple-bg),var(--accent-dim));
+    border:1px solid var(--border-strong);border-radius:16px;
+    padding:32px;margin:24px 0;text-align:center;
+  }
+  .practicum-banner h2{
+    font-size:28px;background:linear-gradient(135deg,var(--accent),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px;
+  }
+  .practicum-banner p{color:var(--text-2);max-width:600px;margin:0 auto}
+
+  /* Lab tools grid */
+  .tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px 0}
+  @media (max-width:600px){.tools-grid{grid-template-columns:1fr}}
+  .tool-card{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+    padding:14px 16px;display:flex;align-items:flex-start;gap:12px;
+  }
+  .tool-card .ico{
+    width:36px;height:36px;border-radius:8px;flex-shrink:0;
+    background:var(--bg-elevated);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;
+    color:var(--accent);
+  }
+  .tool-card .info{flex:1;min-width:0}
+  .tool-card .name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px}
+  .tool-card .desc{font-size:12.5px;color:var(--text-2);line-height:1.5}
+  .tool-card .url{font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace;margin-top:4px;display:block}
+
+  /* Summary */
+  .summary-box{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:14px;padding:28px;margin-top:24px;
+  }
+  .summary-box h3{
+    font-size:18px;color:var(--accent);margin-bottom:16px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .summary-box ul{margin:0;padding-left:20px}
+
+  /* Footer */
+  footer{
+    border-top:1px solid var(--border);padding:32px 0;
+    text-align:center;color:var(--text-muted);font-size:13px;
+  }
+  footer .next-modul{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:12px 20px;background:var(--bg-card);
+    border:1px solid var(--border);border-radius:10px;
+    color:var(--text-2);margin-top:16px;font-size:13px;
+  }
+  footer .next-modul strong{color:var(--accent)}
+
+  /* ===== INFOGRAPHICS / SVG STYLING ===== */
+  .infographic{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:14px;padding:24px;margin:24px 0;overflow:hidden;
+  }
+  .infographic-caption{
+    text-align:center;font-size:12.5px;color:var(--text-muted);
+    margin-top:12px;font-style:italic;
+  }
+  .infographic svg{display:block;margin:0 auto;max-width:100%;height:auto}
+  .ig-title{
+    font-size:13px;font-weight:600;color:var(--accent);
+    text-transform:uppercase;letter-spacing:.08em;
+    text-align:center;margin-bottom:16px;
+  }
+  .ig-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+  .ig-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:4px 10px;border-radius:6px;
+    font-size:11.5px;font-weight:500;
+    background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-2);
+  }
+  .ig-badge .dot{width:8px;height:8px;border-radius:50%}
+  .ig-badge.cyan{border-color:rgba(34,211,238,.4);color:var(--accent);background:var(--accent-dim)}
+  .ig-badge.cyan .dot{background:var(--accent)}
+  .ig-badge.purple{border-color:rgba(167,139,250,.4);color:var(--purple);background:var(--purple-bg)}
+  .ig-badge.purple .dot{background:var(--purple)}
+  .ig-badge.warn{border-color:rgba(251,191,36,.4);color:var(--warn);background:var(--warn-bg)}
+  .ig-badge.warn .dot{background:var(--warn)}
+  .ig-badge.danger{border-color:rgba(248,113,113,.4);color:var(--danger);background:var(--danger-bg)}
+  .ig-badge.danger .dot{background:var(--danger)}
+  .ig-badge.success{border-color:rgba(52,211,153,.4);color:var(--success);background:var(--success-bg)}
+  .ig-badge.success .dot{background:var(--success)}
+
+  /* Stat block */
+  .stat-row{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:24px 0;
+  }
+  @media (max-width:768px){.stat-row{grid-template-columns:repeat(2,1fr)}}
+  .stat-box{
+    background:linear-gradient(135deg,var(--bg-card),var(--bg-elevated));
+    border:1px solid var(--border);border-radius:12px;
+    padding:20px;text-align:center;position:relative;overflow:hidden;
+  }
+  .stat-box::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,var(--accent),var(--purple));
+  }
+  .stat-num{
+    font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    line-height:1;margin-bottom:6px;
+  }
+  .stat-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+  .stat-desc{font-size:12px;color:var(--text-2);margin-top:8px;line-height:1.4}
+
+  /* SVG text */
+  svg .ig-text{font-family:'Inter',sans-serif;font-size:11px;fill:var(--text-2)}
+  svg .ig-text-strong{font-family:'Inter',sans-serif;font-size:12px;fill:var(--text);font-weight:600}
+  svg .ig-text-title{font-family:'Space Grotesk',sans-serif;font-size:14px;fill:var(--accent);font-weight:700}
+  svg .ig-text-small{font-family:'Inter',sans-serif;font-size:10px;fill:var(--text-muted)}
+  svg .ig-line{stroke:var(--border-strong);fill:none}
+  svg .ig-accent-line{stroke:var(--accent);fill:none}
+  svg .ig-box{fill:var(--bg-elevated);stroke:var(--border-strong);stroke-width:1}
+  svg .ig-accent-box{fill:var(--accent-dim);stroke:var(--accent);stroke-width:1.5}
+  svg .ig-danger-box{fill:var(--danger-bg);stroke:var(--danger);stroke-width:1.5}
+  svg .ig-warn-box{fill:var(--warn-bg);stroke:var(--warn);stroke-width:1.5}
+  svg .ig-success-box{fill:var(--success-bg);stroke:var(--success);stroke-width:1.5}
+  svg .ig-purple-box{fill:var(--purple-bg);stroke:var(--purple);stroke-width:1.5}
+
+  /* Print */
+  @media print{
+    .sidebar,.menu-toggle{display:none}
+    .layout{grid-template-columns:1fr}
+    .content{padding:0 20px}
+    body{background:#fff;color:#000}
+    .hero h1{color:#000!important;-webkit-text-fill-color:#000}
+    .card,.col-box,.step-content,.tool-card,.summary-box,.info-box{
+      background:#f7f7f7;border-color:#ccc;color:#000;break-inside:avoid;
+    }
+  }
+
+  /* Anchor heading offset */
+  section[id],h3[id],h4[id]{scroll-margin-top:80px}
+</style>
+</head>
+<body>
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">☰</button>
+
+<div class="layout">
+
+  <!-- ===== SIDEBAR / TOC ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">M04</div>
+      <div class="brand-text"><strong>Physical Controls</strong> Network Defense Essentials</div>
+    </div>
+    <div class="toc-title">Daftar Isi</div>
+    <ul class="toc-list" id="toc">
+      <li><a href="#cover"><span class="num">00</span>Cover</a></li>
+      <li><a href="#tujuan"><span class="num">01</span>Tujuan Pembelajaran</a></li>
+      <li><a href="#need"><span class="num">02</span>Need for Physical Security</a></li>
+      <li><a href="#vectors"><span class="num">03</span>Attack Vectors</a></li>
+      <li><a href="#types"><span class="num">04</span>Types of Controls</a></li>
+      <li><a href="#barriers"><span class="num">05</span>Physical Barriers</a></li>
+      <li><a href="#locks"><span class="num">06</span>Physical Locks</a></li>
+      <li><a href="#detection"><span class="num">07</span>Weapon Detection</a></li>
+      <li><a href="#mantrap"><span class="num">08</span>Mantrap</a></li>
+      <li><a href="#surveillance"><span class="num">09</span>Surveillance &amp; Lighting</a></li>
+      <li><a href="#power"><span class="num">10</span>Power Supply (UPS)</a></li>
+      <li><a href="#workplace"><span class="num">11</span>Workplace Security</a></li>
+      <li><a href="#cables"><span class="num">12</span>Network Cable Security</a></li>
+      <li><a href="#policy"><span class="num">13</span>Physical Security Policy</a></li>
+      <li><a href="#environmental"><span class="num">14</span>Environmental Controls</a></li>
+      <li><a href="#praktikum"><span class="num">15</span>Modul Praktikum</a></li>
+      <li><a href="#ringkasan"><span class="num">16</span>Ringkasan</a></li>
+    </ul>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="content">
+
+    <!-- ============= HERO / COVER ============= -->
+    <section id="cover" class="hero">
+      <div class="hero-content">
+        <div class="hero-badge"><span class="dot"></span> Module 04 · Network Defense Essentials</div>
+        <h1>Network Security Controls — Physical Controls</h1>
+        <p class="hero-sub">
+          Ebook &amp; Modul Praktikum — proteksi fisik infrastruktur IT: dari physical security attack vectors
+          (natural &amp; man-made threats), 5 jenis controls (preventive, detective, deterrent, recovery, compensating),
+          physical barriers (fences, bollards, turnstiles, mantraps), locks (mechanical, digital, electromagnetic),
+          surveillance &amp; lighting, UPS power supply, workplace security, network cable security, hingga
+          environmental controls (HVAC, EMI shielding, hot/cold aisles).
+        </p>
+        <div class="hero-meta">
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span><strong>Target:</strong> Mahasiswa</span></div>
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span><strong>Durasi:</strong> 4-5 jam</span></div>
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg><span><strong>Level:</strong> Intermediate</span></div>
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span><strong>17</strong> Bagian</span></div>
+        </div>
+
+        <div class="stat-row" style="margin-top:48px">
+          <div class="stat-box"><div class="stat-num">5</div><div class="stat-label">Control Types</div><div class="stat-desc">Preventive · Detective · Deterrent · Recovery · Compensating</div></div>
+          <div class="stat-box"><div class="stat-num">4</div><div class="stat-label">Lock Types</div><div class="stat-desc">Mechanical · Digital · Electromagnetic · Combination</div></div>
+          <div class="stat-box"><div class="stat-num">6</div><div class="stat-label">UPS Types</div><div class="stat-desc">Standby · Line-interactive · Hybrid · Ferro · Double-conversion · Delta</div></div>
+          <div class="stat-box"><div class="stat-num">4</div><div class="stat-label">HVAC Systems</div><div class="stat-desc">Split · Hybrid heat · Duct-free · Packaged</div></div>
+        </div>
+
+        <div class="infographic" style="margin-top:32px">
+          <div class="ig-title">Alur Pembelajaran Modul 04</div>
+          <svg viewBox="0 0 920 280" width="920" height="280" aria-label="Module flow">
+            <defs><marker id="arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/></marker><linearGradient id="grad-flow" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#22d3ee" stop-opacity="0.2"/><stop offset="100%" stop-color="#a78bfa" stop-opacity="0.2"/></linearGradient></defs>
+            <rect x="20" y="30" width="140" height="60" rx="10" class="ig-accent-box"/><text x="90" y="55" text-anchor="middle" class="ig-text-title">1</text><text x="90" y="75" text-anchor="middle" class="ig-text-strong">Need for</text><text x="90" y="88" text-anchor="middle" class="ig-text">PhysSec</text><path d="M160 60 L205 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="210" y="30" width="140" height="60" rx="10" class="ig-accent-box"/><text x="280" y="55" text-anchor="middle" class="ig-text-title">2</text><text x="280" y="75" text-anchor="middle" class="ig-text-strong">Attack</text><text x="280" y="88" text-anchor="middle" class="ig-text">Vectors</text><path d="M350 60 L395 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="400" y="30" width="140" height="60" rx="10" class="ig-accent-box"/><text x="470" y="55" text-anchor="middle" class="ig-text-title">3</text><text x="470" y="75" text-anchor="middle" class="ig-text-strong">Barriers &amp;</text><text x="470" y="88" text-anchor="middle" class="ig-text">Locks</text><path d="M540 60 L585 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="590" y="30" width="140" height="60" rx="10" class="ig-warn-box"/><text x="660" y="55" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">4</text><text x="660" y="75" text-anchor="middle" class="ig-text-strong">Mantrap &amp;</text><text x="660" y="88" text-anchor="middle" class="ig-text">Detection</text>
+            <path d="M660 95 L660 145" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="590" y="150" width="140" height="60" rx="10" class="ig-purple-box"/><text x="660" y="175" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">5</text><text x="660" y="195" text-anchor="middle" class="ig-text-strong">Power &amp;</text><text x="660" y="208" text-anchor="middle" class="ig-text">Workplace</text><path d="M585 180 L540 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="400" y="150" width="140" height="60" rx="10" class="ig-purple-box"/><text x="470" y="175" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">6</text><text x="470" y="195" text-anchor="middle" class="ig-text-strong">Cable &amp;</text><text x="470" y="208" text-anchor="middle" class="ig-text">Device Sec</text><path d="M395 180 L350 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="210" y="150" width="140" height="60" rx="10" class="ig-success-box"/><text x="280" y="175" text-anchor="middle" class="ig-text-title" style="fill:#34d399">7</text><text x="280" y="195" text-anchor="middle" class="ig-text-strong">HVAC &amp;</text><text x="280" y="208" text-anchor="middle" class="ig-text">Env Controls</text><path d="M205 180 L160 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="20" y="150" width="140" height="60" rx="10" class="ig-success-box"/><text x="90" y="175" text-anchor="middle" class="ig-text-title" style="fill:#34d399">8</text><text x="90" y="195" text-anchor="middle" class="ig-text-strong">Praktikum</text><text x="90" y="208" text-anchor="middle" class="ig-text">Hands-on</text>
+            <rect x="380" y="230" width="160" height="40" rx="10" fill="url(#grad-flow)" stroke="#22d3ee" stroke-width="1.5"/><text x="460" y="248" text-anchor="middle" class="ig-text-title">LAB</text><text x="460" y="262" text-anchor="middle" class="ig-text-small">4 Sesi Praktikum</text>
+            <path d="M90 215 L90 250 L375 250" class="ig-accent-line" stroke-width="2" stroke-dasharray="4,3" fill="none"/><path d="M280 215 L280 245 L375 245" class="ig-accent-line" stroke-width="1.5" stroke-dasharray="3,3" fill="none" opacity="0.5"/><path d="M470 215 L470 225" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/><path d="M660 215 L660 245 L545 245" class="ig-accent-line" stroke-width="1.5" stroke-dasharray="3,3" fill="none" opacity="0.5"/>
+          </svg>
+          <div class="infographic-caption">Gambar 1. Alur pembelajaran Modul 04 — dari need for physical security hingga praktikum hands-on.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= TUJUAN ============= -->
+    <section id="tujuan">
+      <div class="section-header">
+        <span class="section-tag">Bagian 01</span>
+        <h2>Tujuan Pembelajaran</h2>
+        <p>Physical security memainkan peran utama di setiap organisasi — proteksi critical information, network infrastructure, physical equipment, facilities, personnel dari environmental disasters, terrorism, vandalism, dan theft.</p>
+      </div>
+      <p>
+        <strong>Physical security</strong> berperan utama di setiap organisasi. Ia mencakup proteksi
+        critical information, network infrastructure, physical equipment dan devices, facilities, personnel,
+        dll. dari environmental disasters, terrorism, vandalism, dan theft. Physical security menjadi
+        tantangan yang semakin sulit dengan meningkatnya penggunaan devices seperti USB drives, laptops,
+        smartphones, dan tablets karena malicious actors dapat dengan mudah mendapatkan physical access
+        ke devices tersebut dan steal sensitive data.
+      </p>
+      <p>Setelah menyelesaikan modul ini, Anda akan mampu:</p>
+      <div class="card-grid grid-2" style="margin-top:20px">
+        <div class="card"><div class="card-title"><div class="card-icon">1</div>Importance of Physical Security</div><p>Memahami pentingnya physical security — mengapa conventional firewalls &amp; IDS tidak menjamin physical security.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">2</div>Attack Vectors</div><p>Memahami physical security attack vectors — natural/environmental threats (floods, fires, earthquakes) dan man-made threats (vandalism, theft, terrorism, social engineering).</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">3</div>Physical Security Controls</div><p>Mendeskripsikan berbagai jenis physical security controls — preventive, detective, deterrent, recovery, compensating.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">4</div>Workplace Security</div><p>Menjelaskan pentingnya workplace security — reception area, server/backup security, critical assets, removable devices, network cables.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">5</div>Physical Security Policy</div><p>Memahami physical security policy — design considerations untuk building protection, access control, surveillance.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">6</div>Environmental Controls</div><p>Memahami berbagai environmental controls — HVAC, EMI shielding, hot and cold aisles, power supply (UPS).</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 2: NEED FOR PHYSICAL SECURITY ============= -->
+    <section id="need">
+      <div class="section-header">
+        <span class="section-tag">Bagian 02</span>
+        <h2>Need for Physical Security</h2>
+        <p>Mengapa physical security adalah aspek paling overlooked — dan mengapa attacker mengeksploitasinya.</p>
+      </div>
+      <p>
+        Meskipun cyber-attacks menjadi semakin complex, attacker terus menggunakan berbagai teknik untuk
+        mengkompromi physical security organisasi. Namun, organisasi semakin fokus menguatkan IT security,
+        yang <strong>overshadows physical security</strong>. Physical security adalah aspek keamanan yang
+        paling overlooked, dan fakta ini telah disadari banyak organisasi dalam lima tahun terakhir.
+        Mengetahui fakta ini, attacker mengambil keuntungan dari loopholes untuk mengkompromi physical
+        security organisasi.
+      </p>
+      <p>
+        Menurut data US Department of Health and Human Services Breach Portal, <strong>physical security
+        breaches</strong> adalah salah satu security incident yang paling sering terjadi di organisasi.
+        Menurut BCI Scan Report, physical security kini dipersepsikan sebagai growing concern untuk business
+        continuity professionals — termasuk possibility terrorism dan security incident seperti vandalism,
+        theft, atau fraud.
+      </p>
+
+      <div class="info-box info-warn">
+        <strong>Key Insight:</strong> Physical security breaches berbeda dari security breach lainnya.
+        Mereka dapat dilakukan dengan <strong>little to no technical knowledge</strong>. Conventional
+        security measures seperti firewalls dan IDSes tidak menjamin physical security — firewall bekerja
+        di atas physical layer OSI model, sehingga tidak melindungi physical layer jaringan. Physical
+        security harus diimplementasikan di <strong>physical layer (Layer 1) OSI model</strong>.
+      </div>
+
+      <h3 class="sub-title">2.1 Physical Layer OSI — Apa yang Dilindungi</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">🔌</div>All Cabling &amp; Network Systems</div><p>Semua kabel fisik — UTP, STP, fiber-optic, coaxial. Kabel yang dapat di-tap, di-cut, atau di-sabotage. Physical access ke kabel = akses ke data yang transit.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🖥</div>Physical Access to Systems</div><p>Akses fisik ke server, workstation, router, switch. Siapa yang bisa sentuh device = bisa install keylogger, clone disk, reset password via console.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">⚡</div>Power Support</div><p>Power supply untuk semua kabel dan sistem. Tanpa power = tidak ada sistem. Power fluctuation = hardware damage. UPS &amp; generator = critical.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🌡</div>Environment Support</div><p>Lingkungan yang menopang sistem — temperature, humidity, ventilation, fire suppression. Server room tanpa AC = overheating = hardware failure.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 3: ATTACK VECTORS ============= -->
+    <section id="vectors">
+      <div class="section-header">
+        <span class="section-tag">Bagian 03</span>
+        <h2>Physical Security Attack Vectors</h2>
+        <p>Dua kategori ancaman: Natural/Environmental dan Man-made — masing-masing dengan dampak unik.</p>
+      </div>
+
+      <div class="infographic">
+        <div class="ig-title">Physical Security Attack Vectors — Natural vs Man-made</div>
+        <svg viewBox="0 0 900 480" width="900" height="480" aria-label="Attack vectors">
+          <!-- Natural/Environmental (left) -->
+          <rect x="40" y="20" width="400" height="440" rx="12" class="ig-warn-box"/>
+          <text x="240" y="45" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">Natural / Environmental Threats</text>
+
+          <rect x="60" y="60" width="170" height="60" rx="8" fill="#0d1320" stroke="#fbbf24"/>
+          <text x="145" y="80" text-anchor="middle" class="ig-text-strong" style="fill:#fbbf24">🌊 Floods</text>
+          <text x="145" y="97" text-anchor="middle" class="ig-text-small" style="font-size:9px">Heavy rains, melting ice.</text>
+          <text x="145" y="110" text-anchor="middle" class="ig-text-small" style="font-size:9px">Server room basement risk</text>
+
+          <rect x="250" y="60" width="170" height="60" rx="8" fill="#0d1320" stroke="#fbbf24"/>
+          <text x="335" y="80" text-anchor="middle" class="ig-text-strong" style="fill:#fbbf24">🔥 Fires</text>
+          <text x="335" y="97" text-anchor="middle" class="ig-text-small" style="font-size:9px">Short circuits, poor</text>
+          <text x="335" y="110" text-anchor="middle" class="ig-text-small" style="font-size:9px">building materials</text>
+
+          <rect x="60" y="130" width="170" height="60" rx="8" fill="#0d1320" stroke="#fbbf24"/>
+          <text x="145" y="150" text-anchor="middle" class="ig-text-strong" style="fill:#fbbf24">🏔 Earthquakes</text>
+          <text x="145" y="167" text-anchor="middle" class="ig-text-small" style="font-size:9px">Seismic waves disrupt</text>
+          <text x="145" y="180" text-anchor="middle" class="ig-text-small" style="font-size:9px">cabling, building, devices</text>
+
+          <rect x="250" y="130" width="170" height="60" rx="8" fill="#0d1320" stroke="#fbbf24"/>
+          <text x="335" y="150" text-anchor="middle" class="ig-text-strong" style="fill:#fbbf24">⚡ Lightning</text>
+          <text x="335" y="167" text-anchor="middle" class="ig-text-small" style="font-size:9px">Power fluctuation,</text>
+          <text x="335" y="180" text-anchor="middle" class="ig-text-small" style="font-size:9px">short circuit, memory damage</text>
+
+          <rect x="60" y="200" width="360" height="60" rx="8" fill="#0d1320" stroke="#fbbf24"/>
+          <text x="240" y="220" text-anchor="middle" class="ig-text-strong" style="fill:#fbbf24">🌡 Temperature &amp; Humidity</text>
+          <text x="240" y="237" text-anchor="middle" class="ig-text-small" style="font-size:9px">High humidity → corrosion, short-circuit. Low humidity → ESD.</text>
+          <text x="240" y="250" text-anchor="middle" class="ig-text-small" style="font-size:9px">Extreme temp → hardware damage</text>
+
+          <rect x="60" y="280" width="360" height="160" rx="8" fill="#0d1320" stroke="#fbbf24"/>
+          <text x="240" y="305" text-anchor="middle" class="ig-text-strong" style="fill:#fbbf24">Mitigation:</text>
+          <text x="80" y="325" class="ig-text-small">• Data center NOT in basement (flood risk)</text>
+          <text x="80" y="343" class="ig-text-small">• Fire suppression (FM-200, water mist)</text>
+          <text x="80" y="361" class="ig-text-small">• Seismic-rated racks for earthquake zone</text>
+          <text x="80" y="379" class="ig-text-small">• Surge protector + lightning rod</text>
+          <text x="80" y="397" class="ig-text-small">• HVAC 18-27°C, 40-60% humidity</text>
+          <text x="80" y="415" class="ig-text-small">• Environmental monitoring sensors</text>
+          <text x="80" y="433" class="ig-text-small" style="font-style:italic">DR site in different geographic zone</text>
+
+          <!-- Man-made (right) -->
+          <rect x="460" y="20" width="400" height="440" rx="12" class="ig-danger-box"/>
+          <text x="660" y="45" text-anchor="middle" class="ig-text-title" style="fill:#f87171">Man-made Threats</text>
+
+          <rect x="480" y="60" width="180" height="55" rx="8" fill="#0d1320" stroke="#f87171"/>
+          <text x="570" y="80" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">🔨 Vandalism</text>
+          <text x="570" y="97" text-anchor="middle" class="ig-text-small" style="font-size:9px">Disgruntled employees</text>
+          <text x="570" y="108" text-anchor="middle" class="ig-text-small" style="font-size:9px">breaking/harming systems</text>
+
+          <rect x="680" y="60" width="160" height="55" rx="8" fill="#0d1320" stroke="#f87171"/>
+          <text x="760" y="80" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">📱 Device Loss</text>
+          <text x="760" y="97" text-anchor="middle" class="ig-text-small" style="font-size:9px">Theft of laptops, phones,</text>
+          <text x="760" y="108" text-anchor="middle" class="ig-text-small" style="font-size:9px">USB drives with data</text>
+
+          <rect x="480" y="125" width="180" height="55" rx="8" fill="#0d1320" stroke="#f87171"/>
+          <text x="570" y="145" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">💥 Physical Damage</text>
+          <text x="570" y="162" text-anchor="middle" class="ig-text-small" style="font-size:9px">Improper maintenance,</text>
+          <text x="570" y="173" text-anchor="middle" class="ig-text-small" style="font-size:9px">poor cabling, no replacement</text>
+
+          <rect x="680" y="125" width="160" height="55" rx="8" fill="#0d1320" stroke="#f87171"/>
+          <text x="760" y="145" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">🎒 Theft</text>
+          <text x="760" y="162" text-anchor="middle" class="ig-text-small" style="font-size:9px">Lack of security &amp; locks</text>
+          <text x="760" y="173" text-anchor="middle" class="ig-text-small" style="font-size:9px">→ equipment stolen</text>
+
+          <rect x="480" y="190" width="180" height="55" rx="8" fill="#0d1320" stroke="#f87171"/>
+          <text x="570" y="210" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">💣 Terrorism</text>
+          <text x="570" y="227" text-anchor="middle" class="ig-text-small" style="font-size:9px">Vehicle bomb, human bomb,</text>
+          <text x="570" y="238" text-anchor="middle" class="ig-text-small" style="font-size:9px">postal bomb</text>
+
+          <rect x="680" y="190" width="160" height="55" rx="8" fill="#0d1320" stroke="#f87171"/>
+          <text x="760" y="210" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">🎭 Social Eng.</text>
+          <text x="760" y="227" text-anchor="middle" class="ig-text-small" style="font-size:9px">Acquiring personal info</text>
+          <text x="760" y="238" text-anchor="middle" class="ig-text-small" style="font-size:9px">→ unauthorized access</text>
+
+          <rect x="480" y="255" width="360" height="55" rx="8" fill="#0d1320" stroke="#f87171"/>
+          <text x="660" y="275" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">🔓 Unauthorized Access</text>
+          <text x="660" y="292" text-anchor="middle" class="ig-text-small" style="font-size:9px">Internal &amp; external users attempt gain access</text>
+          <text x="660" y="303" text-anchor="middle" class="ig-text-small" style="font-size:9px">to systems/information</text>
+
+          <rect x="480" y="325" width="360" height="115" rx="8" fill="#0d1320" stroke="#f87171"/>
+          <text x="660" y="350" text-anchor="middle" class="ig-text-strong" style="fill:#f87171">Mitigation:</text>
+          <text x="500" y="370" class="ig-text-small">• Access control (badge, biometric, mantrap)</text>
+          <text x="500" y="388" class="ig-text-small">• CCTV surveillance + security guards</text>
+          <text x="500" y="406" class="ig-text-small">• Device encryption + cable locks</text>
+          <text x="500" y="424" class="ig-text-small">• Acceptable use policy + training</text>
+        </svg>
+        <div class="infographic-caption">Gambar 2. Physical security attack vectors — Natural/Environmental (6 threats) vs Man-made (7 threats), masing-masing dengan mitigasi.</div>
+      </div>
+
+      <div class="info-box info-danger">
+        <strong>Realitas:</strong> Sebuah successful unauthorized physical access dapat menyebabkan
+        <strong>theft, damage, atau modification</strong> information systems. Physical security breach
+        dapat langsung mempengaruhi <strong>confidentiality, integrity, dan availability</strong> informasi
+        dan sistem. Physical security = basis dari setiap information security program.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 4: TYPES OF CONTROLS ============= -->
+    <section id="types">
+      <div class="section-header">
+        <span class="section-tag">Bagian 04</span>
+        <h2>Types of Physical Security Controls</h2>
+        <p>5 jenis controls berdasarkan functionality + 3 berdasarkan plane of application.</p>
+      </div>
+
+      <div class="infographic">
+        <div class="ig-title">5 Physical Security Controls by Functionality</div>
+        <svg viewBox="0 0 900 380" width="900" height="380" aria-label="5 control types">
+          <rect x="40" y="20" width="260" height="100" rx="10" class="ig-accent-box"/>
+          <text x="170" y="42" text-anchor="middle" class="ig-text-title">① Preventive</text>
+          <text x="170" y="62" text-anchor="middle" class="ig-text-small">Prevent security violations</text>
+          <text x="170" y="78" text-anchor="middle" class="ig-text-small">&amp; enforce access control</text>
+          <text x="170" y="100" text-anchor="middle" class="ig-text-small" style="font-style:italic">e.g., door locks, security guards</text>
+
+          <rect x="320" y="20" width="260" height="100" rx="10" class="ig-warn-box"/>
+          <text x="450" y="42" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">② Detective</text>
+          <text x="450" y="62" text-anchor="middle" class="ig-text-small">Detect security violations</text>
+          <text x="450" y="78" text-anchor="middle" class="ig-text-small">&amp; record intrusion attempts</text>
+          <text x="450" y="100" text-anchor="middle" class="ig-text-small" style="font-style:italic">e.g., motion detectors, alarms, CCTV</text>
+
+          <rect x="600" y="20" width="260" height="100" rx="10" class="ig-purple-box"/>
+          <text x="730" y="42" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">③ Deterrent</text>
+          <text x="730" y="62" text-anchor="middle" class="ig-text-small">Discourage attackers</text>
+          <text x="730" y="78" text-anchor="middle" class="ig-text-small">Send warning messages</text>
+          <text x="730" y="100" text-anchor="middle" class="ig-text-small" style="font-style:italic">e.g., warning signs, visible cameras</text>
+
+          <rect x="180" y="140" width="260" height="100" rx="10" class="ig-danger-box"/>
+          <text x="310" y="162" text-anchor="middle" class="ig-text-title" style="fill:#f87171">④ Recovery</text>
+          <text x="310" y="182" text-anchor="middle" class="ig-text-small">Recover from violations</text>
+          <text x="310" y="198" text-anchor="middle" class="ig-text-small">Restore to persistent state</text>
+          <text x="310" y="220" text-anchor="middle" class="ig-text-small" style="font-style:italic">e.g., DR plan, BC plan, backup</text>
+
+          <rect x="460" y="140" width="260" height="100" rx="10" class="ig-success-box"/>
+          <text x="590" y="162" text-anchor="middle" class="ig-text-title" style="fill:#34d399">⑤ Compensating</text>
+          <text x="590" y="182" text-anchor="middle" class="ig-text-small">Alternative when primary fail</text>
+          <text x="590" y="198" text-anchor="middle" class="ig-text-small">Restore using backup technique</text>
+          <text x="590" y="220" text-anchor="middle" class="ig-text-small" style="font-style:italic">e.g., hot sites, backup power</text>
+
+          <rect x="40" y="260" width="820" height="100" rx="8" class="ig-box"/>
+          <text x="60" y="285" class="ig-text-strong">By Plane of Application:</text>
+          <text x="60" y="305" class="ig-text-small" style="fill:#22d3ee">• Physical: doors, secure facilities, fire extinguishers, flood protection</text>
+          <text x="60" y="325" class="ig-text-small" style="fill:#fbbf24">• Administrative: organization's policies, procedures, guidelines for info security</text>
+          <text x="60" y="345" class="ig-text-small" style="fill:#a78bfa">• Technical: IDS/IPS, firewalls, authentication systems</text>
+        </svg>
+        <div class="infographic-caption">Gambar 3. 5 physical security controls by functionality + 3 by plane of application. Defense-in-depth = kombinasi semua.</div>
+      </div>
+
+      <h3 class="sub-title">4.1 Location &amp; Site Architecture Considerations</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">📍</div>Location Considerations</div><p>Sebelum buy/lease building, pertimbangkan: facility location, neighboring buildings, joint tenancy risks, power &amp; water supply, sewage, proximity to roads/transportation, emergency support, fire stations, hospitals, airports, local crime rate, prior security incidents. <strong>Hindari</strong> lokasi prone to natural disasters (floods, tornadoes, earthquakes, hurricanes, mudslides, fires).</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🏗</div>Site Architecture</div><p>Design considerations: number of entrances (main, staircase, parking, lift, hallway, reception), neighboring facilities analysis, assets inventory, critical infrastructure identification, separate server/storage room, emergency exits, environmental hazard management, sanitation system, parking away from main building.</p></div>
+      </div>
+    </section>
+    <!-- ============= BAGIAN 5: PHYSICAL BARRIERS ============= -->
+    <section id="barriers">
+      <div class="section-header">
+        <span class="section-tag">Bagian 05</span>
+        <h2>Physical Barriers</h2>
+        <p>Multi-layer approach: external barriers (fences/walls), middle barriers (equipment), internal barriers (doors/windows).</p>
+      </div>
+      <p>
+        Physical barriers <strong>define physical boundary</strong> suatu area dan membagi vehicle traffic
+        dari pedestrians. Penggunaan physical barrier deters dan delays outsiders dari entering premises.
+        Untuk discourage intruders, gunakan <strong>multi-layer approach</strong>: external barriers
+        (fences, walls), middle barriers (equipment yang obstruct traffic), internal barriers (doors,
+        windows, grills, glass, curtains).
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">Multi-Layer Physical Barriers — External → Middle → Internal</div>
+        <svg viewBox="0 0 900 380" width="900" height="380" aria-label="Multi-layer barriers">
+          <!-- External -->
+          <rect x="40" y="20" width="820" height="80" rx="10" class="ig-danger-box"/>
+          <text x="60" y="42" class="ig-text-title" style="fill:#f87171">External Barriers — First Line of Defense</text>
+          <text x="60" y="60" class="ig-text-small">Fences · Electric fences · Metal rails · Walls · Bollards</text>
+          <text x="60" y="78" class="ig-text-small" style="font-style:italic">Goal: Block &amp; deter attackers, mark boundary, prevent vehicle entry, protect against explosives</text>
+          <g class="ig-text-small">
+            <rect x="60" y="85" width="100" height="12" rx="3" fill="#0d1320" stroke="#f87171"/><text x="110" y="95" text-anchor="middle" style="font-size:9px">🚧 Fences</text>
+            <rect x="170" y="85" width="100" height="12" rx="3" fill="#0d1320" stroke="#f87171"/><text x="220" y="95" text-anchor="middle" style="font-size:9px">⚡ Electric fence</text>
+            <rect x="280" y="85" width="100" height="12" rx="3" fill="#0d1320" stroke="#f87171"/><text x="330" y="95" text-anchor="middle" style="font-size:9px">🚗 Bollards</text>
+            <rect x="390" y="85" width="100" height="12" rx="3" fill="#0d1320" stroke="#f87171"/><text x="440" y="95" text-anchor="middle" style="font-size:9px">🧱 Walls</text>
+            <rect x="500" y="85" width="100" height="12" rx="3" fill="#0d1320" stroke="#f87171"/><text x="550" y="95" text-anchor="middle" style="font-size:9px">🔄 Turnstiles</text>
+          </g>
+
+          <!-- Middle -->
+          <rect x="80" y="120" width="740" height="80" rx="10" class="ig-warn-box"/>
+          <text x="100" y="142" class="ig-text-title" style="fill:#fbbf24">Middle Barriers — Obstruct Traffic &amp; People</text>
+          <text x="100" y="160" class="ig-text-small">Turnstiles · Security checkpoints · Vehicle barriers · Access control gates</text>
+          <text x="100" y="178" class="ig-text-small" style="font-style:italic">Goal: Slow down intruders, force through checkpoint, one-person-at-a-time entry</text>
+          <g class="ig-text-small">
+            <rect x="100" y="185" width="140" height="12" rx="3" fill="#0d1320" stroke="#fbbf24"/><text x="170" y="195" text-anchor="middle" style="font-size:9px">🔄 Turnstile (coin/ticket/pass)</text>
+            <rect x="250" y="185" width="140" height="12" rx="3" fill="#0d1320" stroke="#fbbf24"/><text x="320" y="195" text-anchor="middle" style="font-size:9px">🚧 Vehicle barrier gate</text>
+            <rect x="400" y="185" width="140" height="12" rx="3" fill="#0d1320" stroke="#fbbf24"/><text x="470" y="195" text-anchor="middle" style="font-size:9px">🎫 Security checkpoint</text>
+          </g>
+
+          <!-- Internal -->
+          <rect x="120" y="220" width="660" height="80" rx="10" class="ig-accent-box"/>
+          <text x="140" y="242" class="ig-text-title">Internal Barriers — Inside Building</text>
+          <text x="140" y="260" class="ig-text-small">Doors · Windows · Grills · Glass · Curtains</text>
+          <text x="140" y="278" class="ig-text-small" style="font-style:italic">Goal: Control access within restricted areas, strengthen security</text>
+          <g class="ig-text-small">
+            <rect x="140" y="285" width="100" height="12" rx="3" fill="#0d1320" stroke="#22d3ee"/><text x="190" y="295" text-anchor="middle" style="font-size:9px">🚪 Doors</text>
+            <rect x="250" y="285" width="100" height="12" rx="3" fill="#0d1320" stroke="#22d3ee"/><text x="300" y="295" text-anchor="middle" style="font-size:9px">🪟 Windows</text>
+            <rect x="360" y="285" width="100" height="12" rx="3" fill="#0d1320" stroke="#22d3ee"/><text x="410" y="295" text-anchor="middle" style="font-size:9px">🔒 Grills</text>
+            <rect x="470" y="285" width="100" height="12" rx="3" fill="#0d1320" stroke="#22d3ee"/><text x="520" y="295" text-anchor="middle" style="font-size:9px">🛡 Bullet-resistant</text>
+            <rect x="580" y="285" width="100" height="12" rx="3" fill="#0d1320" stroke="#22d3ee"/><text x="630" y="295" text-anchor="middle" style="font-size:9px">🚿 Curtains</text>
+          </g>
+
+          <!-- Bottom: security considerations -->
+          <rect x="40" y="320" width="820" height="50" rx="8" class="ig-box"/>
+          <text x="60" y="342" class="ig-text-strong">Security Considerations:</text>
+          <text x="60" y="360" class="ig-text-small">Use combination of barriers · Bullet-resistant windows · Lock doors &amp; windows · Electric security fences detect climbing/cutting · Alarms alert security</text>
+        </svg>
+        <div class="infographic-caption">Gambar 4. Multi-layer physical barriers — External (fences/bollards) → Middle (turnstiles/checkpoints) → Internal (doors/windows/grills).</div>
+      </div>
+
+      <h3 class="sub-title">5.1 Security Personnel</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">👮</div>Guards</div><p>Screening visitors &amp; employees, documenting names, regular patrols, inspecting packages/vehicles, managing traffic, guiding visitors, maintaining visitor logs, handling CCTV cameras as deterrent &amp; detection mechanism.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">👨‍✈️</div>Supervisors &amp; Safety Officers</div><p>Supervisors: train/monitor guards, assist during crisis, handle crowds, maintain keys/locks/lights. Safety officers: implement &amp; manage safety-related equipment, ensure proper functioning.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">👔</div>CISO</div><p>Modern CISO harus punya <strong>diverse skill set</strong> — tidak hanya technically competent, tetapi juga memahami physical security, business risk, dan security investment.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🎓</div>Training Areas</div><p>Org culture/ethics, security policies/procedures, policy enforcement, trespassers &amp; crowd management, emergency handling, human/public relations, patrolling, workplace violence, first aid, fire prevention, vehicle traffic, report writing.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 6: PHYSICAL LOCKS ============= -->
+    <section id="locks">
+      <div class="section-header">
+        <span class="section-tag">Bagian 06</span>
+        <h2>Physical Locks</h2>
+        <p>4 jenis locking systems: mechanical, digital, electric/electromagnetic, combination.</p>
+      </div>
+
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">🔑</div>Mechanical Locks</div><p>Easy method to restrict unauthorized access. Dengan atau tanpa keys. 2 tipe: <strong>Warded lock</strong> (spring-loaded bolt + notch, only correct key fits) dan <strong>Tumbler lock</strong> (metal pieces in slot, correct key raises pieces above bolt). Tumbler: pin, disk, lever variants.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔢</div>Digital Locks</div><p>Require fingerprints, smart cards, atau keypad PINs. Easy to handle, no keys to lose/forge. Provides automatic locking. User hanya swipe smart card, scan fingerprint, atau enter PIN.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">⚡</div>Electric/Electromagnetic Locks</div><p>Operate on electric current. Locking/unlocking via supplying/eliminating power. Activated/deactivated via magnets atau motors. <strong>Fail safe</strong> (unlocked saat power loss) vs <strong>Fail secure</strong> (locked saat power loss). Electromagnetic = electromagnet + armature plate.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔓</div>Combination Locks</div><p>Require combination of numbers &amp; letters. Entry via keypad atau rotating dial yang intermingles dengan rotating discs. No keys needed. <strong>Keamanan</strong>: tergantung panjang &amp; complexity combination.</p></div>
+      </div>
+
+      <div class="info-box info-tip">
+        <strong>Fail Safe vs Fail Secure:</strong> Pilihan tergantung use case. <strong>Fail safe</strong>
+        untuk emergency exits (harus terbuka saat power loss agar orang bisa keluar). <strong>Fail secure</strong>
+        untuk server room/data center (harus tetap terkunci saat power loss untuk mencegah unauthorized
+        access). Kombinasi dengan UPS = best practice untuk fail secure.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 7: WEAPON DETECTION ============= -->
+    <section id="detection">
+      <div class="section-header">
+        <span class="section-tag">Bagian 07</span>
+        <h2>Concealed Weapon / Contraband Detection</h2>
+        <p>Devices untuk detect illegal materials — explosives, bombs, weapons — sebelum masuk premises.</p>
+      </div>
+      <div class="card-grid grid-3">
+        <div class="card"><div class="card-title"><div class="card-icon">🚪</div>Walkthrough Metal Detectors</div><p>Di airport terminals, schools, sports stadiums. Check people yang admission ke certain areas. Harus maintained &amp; properly monitored. Deploy di <strong>setiap entry point</strong> organisasi.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔍</div>Handheld Metal Detectors</div><p>Screen people lebih closely, detect suspicious objects. Digunakan di most places where walkthrough detectors digunakan — sebagai <em>secondary screening</em>.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📡</div>X-ray Inspection Systems</div><p>Easy to handle. Use X-rays instead of visible light untuk screen objects — bags, packages, cargo. Dapat detect explosives, weapons, contraband <strong>bahkan saat covered by other objects</strong>.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 8: MANTRAP ============= -->
+    <section id="mantrap">
+      <div class="section-header">
+        <span class="section-tag">Bagian 08</span>
+        <h2>Mantrap — Interlocking Door System</h2>
+        <p>Physical access security control untuk catching trespassers — separates non-secure from secure areas.</p>
+      </div>
+      <p>
+        <strong>Mantrap</strong> adalah mechanical locking mechanism yang terdiri dari small space dengan
+        <strong>two sets of interlocking doors</strong>. First set of doors must close sebelum second set
+        opens. User authentication di mantrap doors menggunakan smart cards, keypad PINs, atau biometric
+        verification. Mantrap beroperasi automatically, berguna untuk authorizing visitors, mengurangi
+        manpower, dan menjamin safety organisasi.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">Mantrap Working — 4 Langkah Interlocking</div>
+        <svg viewBox="0 0 900 320" width="900" height="320" aria-label="Mantrap">
+          <defs><marker id="arr-mt" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/></marker></defs>
+
+          <!-- Step 1: Auth -->
+          <rect x="40" y="20" width="180" height="100" rx="10" class="ig-accent-box"/>
+          <text x="130" y="42" text-anchor="middle" class="ig-text-title">Step 1</text>
+          <text x="130" y="60" text-anchor="middle" class="ig-text-strong">Authenticate</text>
+          <text x="130" y="78" text-anchor="middle" class="ig-text-small">Person attempts</text>
+          <text x="130" y="92" text-anchor="middle" class="ig-text-small">access — smart</text>
+          <text x="130" y="106" text-anchor="middle" class="ig-text-small">card/PIN/biometric</text>
+
+          <!-- Step 2: Door 1 opens -->
+          <rect x="260" y="20" width="180" height="100" rx="10" class="ig-success-box"/>
+          <text x="350" y="42" text-anchor="middle" class="ig-text-title" style="fill:#34d399">Step 2</text>
+          <text x="350" y="60" text-anchor="middle" class="ig-text-strong">Door 1 Opens</text>
+          <text x="350" y="78" text-anchor="middle" class="ig-text-small">Person walks in.</text>
+          <text x="350" y="92" text-anchor="middle" class="ig-text-small">First door opens</text>
+          <text x="350" y="106" text-anchor="middle" class="ig-text-small">after auth success</text>
+
+          <!-- Step 3: Door 1 closes, person locked -->
+          <rect x="480" y="20" width="180" height="100" rx="10" class="ig-warn-box"/>
+          <text x="570" y="42" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">Step 3</text>
+          <text x="570" y="60" text-anchor="middle" class="ig-text-strong">Locked Inside</text>
+          <text x="570" y="78" text-anchor="middle" class="ig-text-small">Door 1 closes.</text>
+          <text x="570" y="92" text-anchor="middle" class="ig-text-small">Person is locked.</text>
+          <text x="570" y="106" text-anchor="middle" class="ig-text-small">Signals door 2 unlock</text>
+
+          <!-- Step 4: Door 2 opens -->
+          <rect x="700" y="20" width="160" height="100" rx="10" class="ig-purple-box"/>
+          <text x="780" y="42" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">Step 4</text>
+          <text x="780" y="60" text-anchor="middle" class="ig-text-strong">Door 2 Opens</text>
+          <text x="780" y="78" text-anchor="middle" class="ig-text-small">Person walks out.</text>
+          <text x="780" y="92" text-anchor="middle" class="ig-text-small">Door 1 auto-locks.</text>
+          <text x="780" y="106" text-anchor="middle" class="ig-text-small">Secure area accessed</text>
+
+          <!-- Arrows -->
+          <path d="M 220 70 L 260 70" stroke="#22d3ee" stroke-width="2" marker-end="url(#arr-mt)"/>
+          <path d="M 440 70 L 480 70" stroke="#34d399" stroke-width="2" marker-end="url(#arr-mt)"/>
+          <path d="M 660 70 L 700 70" stroke="#fbbf24" stroke-width="2" marker-end="url(#arr-mt)"/>
+
+          <!-- Bottom: mantrap diagram -->
+          <rect x="200" y="160" width="500" height="130" rx="10" class="ig-box"/>
+          <text x="450" y="185" text-anchor="middle" class="ig-text-strong">Mantrap Physical Layout:</text>
+          <!-- Non-secure area -->
+          <rect x="220" y="200" width="120" height="70" rx="6" fill="#0d1320" stroke="#f87171"/>
+          <text x="280" y="230" text-anchor="middle" class="ig-text-small" style="fill:#f87171">Non-secure</text>
+          <text x="280" y="248" text-anchor="middle" class="ig-text-small" style="fill:#f87171">Area</text>
+          <!-- Door 1 -->
+          <rect x="350" y="200" width="20" height="70" rx="3" fill="#fbbf24"/>
+          <text x="360" y="190" text-anchor="middle" class="ig-text-small" style="font-size:8px">D1</text>
+          <!-- Mantrap space -->
+          <rect x="380" y="200" width="140" height="70" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+          <text x="450" y="230" text-anchor="middle" class="ig-text-small">Mantrap</text>
+          <text x="450" y="248" text-anchor="middle" class="ig-text-small">Space</text>
+          <!-- Door 2 -->
+          <rect x="530" y="200" width="20" height="70" rx="3" fill="#a78bfa"/>
+          <text x="540" y="190" text-anchor="middle" class="ig-text-small" style="font-size:8px">D2</text>
+          <!-- Secure area -->
+          <rect x="560" y="200" width="120" height="70" rx="6" fill="#0d1320" stroke="#34d399"/>
+          <text x="620" y="230" text-anchor="middle" class="ig-text-small" style="fill:#34d399">Secure</text>
+          <text x="620" y="248" text-anchor="middle" class="ig-text-small" style="fill:#34d399">Area</text>
+        </svg>
+        <div class="infographic-caption">Gambar 5. Mantrap 4-langkah — authenticate → door 1 opens → locked inside → door 2 opens. D1 &amp; D2 interlocking.</div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 9: SURVEILLANCE & LIGHTING ============= -->
+    <section id="surveillance">
+      <div class="section-header">
+        <span class="section-tag">Bagian 09</span>
+        <h2>Surveillance &amp; Lighting</h2>
+        <p>4 jenis lighting systems untuk deter, detect, dan respond terhadap physical security threats.</p>
+      </div>
+
+      <h3 class="sub-title">9.1 Lighting Systems</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">💡</div>Continuous Lighting</div><p>Arranged untuk provide <strong>continuous lighting</strong> ke large area throughout the night. Primary deterrence — area well-lit discourages intruders.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔦</div>Standby Lighting</div><p>Used whenever suspicious activity detected by security personnel atau alarm system. Operate <strong>manually atau automatically</strong>.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon"> 🔦</div>Movable Lighting</div><p>Manually controlled lighting system yang provides lighting at night atau only when needed. Normally used as <em>extension</em> of continuous atau standby system.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🚨</div>Emergency Lighting</div><p>Used mainly during <strong>power failures</strong> atau when regular lighting systems fail. Critical untuk safe evacuation + security saat blackout.</p></div>
+      </div>
+
+      <h3 class="sub-title">9.2 CCTV &amp; Video Surveillance</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">📹</div>CCTV Systems</div><p>Guards generally handle CCTV cameras as <strong>deterrent</strong> dan mechanism to detect dan possibly prevent intrusion. 24×7 surveillance untuk sensitive areas (server rooms, entrance, parking).</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🎥</div>Modern Surveillance</div><p>IP cameras with motion detection, night vision, analytics (face recognition, license plate recognition). Cloud recording + AI anomaly detection. Integration dengan access control system.</p></div>
+      </div>
+    </section>
+    <!-- ============= BAGIAN 10: POWER SUPPLY ============= -->
+    <section id="power">
+      <div class="section-header">
+        <span class="section-tag">Bagian 10</span>
+        <h2>Power Supply — UPS Types</h2>
+        <p>6 jenis UPS untuk handle blackouts, power outages, spikes, dan surges.</p>
+      </div>
+      <p>
+        Facilities dapat menderita <strong>blackouts atau power outages</strong> yang membuat systems
+        inoperable. Power outages bisa impact ability untuk provide IT services dan physical security.
+        Power spikes, surges, atau blackouts bisa damage equipment. <strong>UPS (Uninterruptible Power
+        Supply)</strong> memungkinkan computers berfungsi saat power failure — contains battery yang
+        senses power fluctuations.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">6 Types of UPS — dari Standby ke Delta Conversion Online</div>
+        <svg viewBox="0 0 900 420" width="900" height="420" aria-label="UPS types">
+          <rect x="40" y="20" width="400" height="90" rx="10" class="ig-accent-box"/>
+          <text x="60" y="42" class="ig-text-title">① Standby UPS</text>
+          <text x="60" y="62" class="ig-text-small">Most common untuk personal computers.</text>
+          <text x="60" y="78" class="ig-text-small">Offline battery backup. AC-DC circuitry</text>
+          <text x="60" y="94" class="ig-text-small">connects to UPS during power fluctuation.</text>
+
+          <rect x="460" y="20" width="400" height="90" rx="10" class="ig-warn-box"/>
+          <text x="480" y="42" class="ig-text-title" style="fill:#fbbf24">② Line Interactive UPS</text>
+          <text x="480" y="62" class="ig-text-small">Most common untuk small business, web,</text>
+          <text x="480" y="78" class="ig-text-small">departmental servers. Handles continuous</text>
+          <text x="480" y="94" class="ig-text-small">power fluctuations. Very little battery usage.</text>
+
+          <rect x="40" y="120" width="400" height="90" rx="10" class="ig-purple-box"/>
+          <text x="60" y="142" class="ig-text-title" style="fill:#a78bfa">③ Standby Online Hybrid</text>
+          <text x="60" y="162" class="ig-text-small">Most common untuk server rooms.</text>
+          <text x="60" y="178" class="ig-text-small">Power supply below 10 kVA. Connected to</text>
+          <text x="60" y="194" class="ig-text-small">battery during power failure.</text>
+
+          <rect x="460" y="120" width="400" height="90" rx="10" class="ig-danger-box"/>
+          <text x="480" y="142" class="ig-text-title" style="fill:#f87171">④ Standby Ferro</text>
+          <text x="480" y="162" class="ig-text-small">Ferro resonant transformer untuk filtering.</text>
+          <text x="480" y="178" class="ig-text-small">Ample time switching main→battery. No longer</text>
+          <text x="480" y="194" class="ig-text-small">common — unstable with modern computer loads.</text>
+
+          <rect x="40" y="220" width="400" height="90" rx="10" class="ig-success-box"/>
+          <text x="60" y="242" class="ig-text-title" style="fill:#34d399">⑤ Double Conversion Online</text>
+          <text x="60" y="262" class="ig-text-small">Electrical isolation necessary. Power above</text>
+          <text x="60" y="278" class="ig-text-small">10 kVA. Ideal electric output. Components</text>
+          <text x="60" y="294" class="ig-text-small">subject to continuous wear, reducing dependability.</text>
+
+          <rect x="460" y="220" width="400" height="90" rx="10" class="ig-accent-box"/>
+          <text x="480" y="242" class="ig-text-title">⑥ Delta Conversion Online</text>
+          <text x="480" y="262" class="ig-text-small">Complete isolation / direct connectivity.</text>
+          <text x="480" y="278" class="ig-text-small">Inverter supplies load voltage. Power range</text>
+          <text x="480" y="294" class="ig-text-small">5 kVA to 1 MW. Controls power input + charging.</text>
+
+          <rect x="40" y="330" width="820" height="70" rx="8" class="ig-box"/>
+          <text x="60" y="355" class="ig-text-strong">Security Measures for Power:</text>
+          <text x="60" y="375" class="ig-text-small">• Be prepared for power fluctuations · Use UPS to manage outages · Safeguard from environmental threats</text>
+          <text x="60" y="390" class="ig-text-small">• Protect from static electricity · Use plugging equipment properly · Generator for extended outage</text>
+        </svg>
+        <div class="infographic-caption">Gambar 6. 6 jenis UPS — dari Standby (personal) hingga Delta Conversion Online (5 kVA - 1 MW, enterprise).</div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 11: WORKPLACE SECURITY ============= -->
+    <section id="workplace">
+      <div class="section-header">
+        <span class="section-tag">Bagian 11</span>
+        <h2>Workplace Security</h2>
+        <p>Reception area, server/backup security, critical assets, removable devices — semua aspek workplace.</p>
+      </div>
+
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">🛎</div>Reception Area</div><p>Initial point of contact. Vulnerable karena provides easy access ke strangers. Receptionists harus recognize unusual behavior (solicitors, ex-employees). Maintain eye contact, non-confrontational posture. <strong>Important files tidak di reception desk</strong>. Computer screens tidak visible to visitors. Always locked saat receptionist away.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🖥</div>Server/Backup Security</div><p>Physical security untuk critical servers &amp; backup devices: separate room, CCTV + smart card + biometric auth, rack mount servers, UPS attached, locked drawers/cabinets. <strong>Backup devices stored off-site</strong>. Full disk encryption. Motion sensing alarms. Discourage DVD/USB backups.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">💻</div>Critical Assets</div><p>Workstations (unoccupied = vulnerable, disconnect/remove), routers/switches (locked rooms), printers (bolted down, separate locations). Network devices &amp; computer equipment in <strong>locked cabinets</strong> — biometric locks + climate control.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📱</div>Removable &amp; Portable Devices</div><p>USB, SD cards, laptops, phones — pose physical security risks. Keep in drawer/safe, cable lock permanently. <strong>Encrypt hard drives</strong>. Install anti-theft software (remote lock/track/wipe). Enable lockout after failed attempts. Label device with contact info. Docking station yang permanently fixes laptop.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 12: NETWORK CABLE SECURITY ============= -->
+    <section id="cables">
+      <div class="section-header">
+        <span class="section-tag">Bagian 12</span>
+        <h2>Securing Network Cables</h2>
+        <p>4 jenis kabel jaringan dengan trade-off security vs performance — dari UTP hingga fiber-optic.</p>
+      </div>
+      <p>
+        Network cable security sering <strong>overlooked</strong> sebagai aspek physical security. Dengan
+        flawed atau insecure network cabling, attacker dapat dengan mudah access sensitive information
+        dengan bypassing security controls lain. Risks: <strong>wiretapping, physical damage, theft</strong>.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">4 Types of Network Cables — Security Comparison</div>
+        <svg viewBox="0 0 900 360" width="900" height="360" aria-label="Cable types">
+          <rect x="40" y="20" width="200" height="160" rx="10" class="ig-danger-box"/>
+          <text x="140" y="42" text-anchor="middle" class="ig-text-title" style="fill:#f87171">UTP</text>
+          <text x="140" y="58" text-anchor="middle" class="ig-text-small">Unshielded Twisted Pair</text>
+          <text x="60" y="82" class="ig-text-small" style="font-size:10px;fill:#34d399">✓ Easy to install</text>
+          <text x="60" y="98" class="ig-text-small" style="font-size:10px;fill:#34d399">✓ Office Ethernet</text>
+          <text x="60" y="118" class="ig-text-small" style="font-size:10px;fill:#f87171">✗ Prone to wiretapping</text>
+          <text x="60" y="134" class="ig-text-small" style="font-size:10px;fill:#f87171">✗ EMI/RFI susceptible</text>
+          <text x="60" y="150" class="ig-text-small" style="font-size:10px;fill:#f87171">✗ Not for long distance</text>
+          <text x="60" y="170" class="ig-text-small" style="font-size:9px;font-style:italic">Risk: HIGH</text>
+
+          <rect x="260" y="20" width="200" height="160" rx="10" class="ig-warn-box"/>
+          <text x="360" y="42" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">STP</text>
+          <text x="360" y="58" text-anchor="middle" class="ig-text-small">Shielded Twisted Pair</text>
+          <text x="280" y="82" class="ig-text-small" style="font-size:10px;fill:#34d399">✓ Immune to crosstalk</text>
+          <text x="280" y="98" class="ig-text-small" style="font-size:10px;fill:#34d399">✓ Secured data transmit</text>
+          <text x="280" y="118" class="ig-text-small" style="font-size:10px;fill:#f87171">✗ More expensive</text>
+          <text x="280" y="134" class="ig-text-small" style="font-size:10px;fill:#f87171">✗ Difficult to install</text>
+          <text x="280" y="170" class="ig-text-small" style="font-size:9px;font-style:italic">Risk: MEDIUM</text>
+
+          <rect x="480" y="20" width="200" height="160" rx="10" class="ig-success-box"/>
+          <text x="580" y="42" text-anchor="middle" class="ig-text-title" style="fill:#34d399">Fiber-Optic</text>
+          <text x="580" y="58" text-anchor="middle" class="ig-text-small">Glass or Plastic</text>
+          <text x="500" y="82" class="ig-text-small" style="font-size:10px;fill:#34d399">✓ Least susceptible to tap</text>
+          <text x="500" y="98" class="ig-text-small" style="font-size:10px;fill:#34d399">✓ Long distance</text>
+          <text x="500" y="118" class="ig-text-small" style="font-size:10px;fill:#34d399">✓ EMI immune, no crosstalk</text>
+          <text x="500" y="134" class="ig-text-small" style="font-size:10px;fill:#f87171">✗ Expensive</text>
+          <text x="500" y="150" class="ig-text-small" style="font-size:10px;fill:#f87171">✗ Limited physical arc</text>
+          <text x="500" y="170" class="ig-text-small" style="font-size:9px;font-style:italic">Risk: LOWEST (best security)</text>
+
+          <rect x="700" y="20" width="160" height="160" rx="10" class="ig-purple-box"/>
+          <text x="780" y="42" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">Coaxial</text>
+          <text x="780" y="58" text-anchor="middle" class="ig-text-small">Copper conductor</text>
+          <text x="720" y="82" class="ig-text-small" style="font-size:10px;fill:#34d399">✓ Long distance</text>
+          <text x="720" y="98" class="ig-text-small" style="font-size:10px;fill:#34d399">✓ Moisture resistant</text>
+          <text x="720" y="118" class="ig-text-small" style="font-size:10px;fill:#f87171">✗ Doesn't bend easily</text>
+          <text x="720" y="134" class="ig-text-small" style="font-size:10px;fill:#f87171">✗ Difficult to install</text>
+          <text x="720" y="170" class="ig-text-small" style="font-size:9px;font-style:italic">Risk: MEDIUM</text>
+
+          <rect x="40" y="200" width="820" height="140" rx="8" class="ig-box"/>
+          <text x="60" y="225" class="ig-text-strong">Securing Network Cabling — Best Practices:</text>
+          <text x="60" y="245" class="ig-text-small">• Lay network wiring separately from all other wiring (prevent electronic interference)</text>
+          <text x="60" y="263" class="ig-text-small">• Install armored cable if threat of rodents/termites</text>
+          <text x="60" y="281" class="ig-text-small">• Use transparent conduits in highly sensitive areas (easy identify damage)</text>
+          <text x="60" y="299" class="ig-text-small">• Undergrounding cables prevents physical access</text>
+          <text x="60" y="317" class="ig-text-small">• Restrict access to cabling pathways to authorized personnel only</text>
+          <text x="60" y="335" class="ig-text-small">• Create redundancy to avoid single point of failure · Document entire cable infrastructure</text>
+        </svg>
+        <div class="infographic-caption">Gambar 7. 4 jenis kabel jaringan — UTP (paling rentan wiretap) hingga Fiber-optic (paling aman). Best practices cable security.</div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 13: PHYSICAL SECURITY POLICY ============= -->
+    <section id="policy">
+      <div class="section-header">
+        <span class="section-tag">Bagian 13</span>
+        <h2>Physical Security Policy</h2>
+        <p>Guidelines untuk ensure adequate physical security measures diimplementasikan.</p>
+      </div>
+      <p>
+        <strong>Physical security policy</strong> mendefinisikan guidelines untuk memastikan adequate
+        physical security measures diimplementasikan. Di IT organisations di mana large amounts physical
+        assets ditangani, assets prone to damage during installations atau transfer. Care harus diambil
+        dalam terms of frequency of monitoring dan analyzing risks, dan training provided to people
+        handling physical assets. Designing physical security policy helps organisasi maintain norms
+        yang diikuti employees untuk reduce probability of loss.
+      </p>
+
+      <h3 class="sub-title">13.1 Design Considerations Checklist</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">📋</div>Building Protection</div><p>Is building protection deficiency reviewed regularly? Is there a process to identify outsiders (visitors, contractors, vendors) before granting access? Are adequate lighting systems installed?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🚪</div>Entry Points</div><p>Are each of the entry points properly blocked? Are badges, locks, keys, dan authentication controls audited regularly?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📹</div>Surveillance</div><p>Is video surveillance footage monitored regularly? Is the inventory of the organization's assets maintained regularly?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔒</div>Physical Security Checklist</div><p>Follow copyright rules, store removable items in locker, keep sensitive areas under surveillance, advise employees to swipe card, avoid combustible materials, ensure company satisfaction, evaluate physical security of location.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 14: ENVIRONMENTAL CONTROLS ============= -->
+    <section id="environmental">
+      <div class="section-header">
+        <span class="section-tag">Bagian 14</span>
+        <h2>Environmental Controls</h2>
+        <p>HVAC, EMI Shielding, dan Hot/Cold Aisles — kontrol lingkungan untuk protect hardware &amp; data.</p>
+      </div>
+
+      <h3 class="sub-title">14.1 HVAC — Heating, Ventilation &amp; Air Conditioning</h3>
+      <p>
+        Continuous power consumption/supply dapat menyebabkan data centers, hardware, dan equipment menjadi
+        hot sangat cepat. Improper equipment placement dapat increase risk of fire. <strong>HVAC</strong>
+        adalah special system yang controls environment di room atau building — terutama humidity conditions
+        dan ventilation. Deployed untuk maintain comfortable temperatures agar hardware tidak terpengaruh
+        moisture dan changes in air. HVAC juga purifies air, removes smoke, odor, heat, dan dust particles.
+      </p>
+
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">❄️</div>4 Types HVAC Systems</div><p><strong>(1) Heating &amp; AC Split System</strong> — most common, components inside &amp; outside building. <strong>(2) Hybrid Heat Split</strong> — advanced, better energy efficiency, electric heat pump. <strong>(3) Duct-free Split</strong> — for locations where traditional can't be used. <strong>(4) Packaged</strong> — most efficient, all components in single unit.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🌡</div>HVAC Baseline</div><p>Baseline temperature dan humidity levels harus maintained untuk keep equipment working reliably. Equipment yang emits hot/cold air harus continuously monitored. <strong>Recommended: 18-27°C, 40-60% humidity</strong> untuk data center (ASHRAE guidelines).</p></div>
+      </div>
+
+      <h3 class="sub-title">14.2 EMI Shielding</h3>
+      <div class="card"><div class="card-title"><div class="card-icon">📡</div>Electromagnetic Interference Shielding</div><p>Electromagnetic radiation dari different electronic devices interferes dengan surrounding devices, causes problems: shaky monitors, system failures, unexplained shutdowns. <strong>EMI shielding</strong> = practice of coating electronic equipment dengan metals agar electromagnetic waves tidak interfere. Uses metals atau metal foams. Conductor produces eddy currents yang cancel effect of magnetic field. Industries: telecommunication, healthcare (heavy equipment).</p></div>
+
+      <h3 class="sub-title">14.3 Hot &amp; Cold Aisles</h3>
+      <div class="infographic">
+        <div class="ig-title">Hot &amp; Cold Aisles — Data Center Airflow Management</div>
+        <svg viewBox="0 0 900 300" width="900" height="300" aria-label="Hot cold aisles">
+          <rect x="40" y="20" width="820" height="40" rx="6" fill="#0d1320" stroke="#22d3ee"/>
+          <text x="450" y="45" text-anchor="middle" class="ig-text-strong" style="fill:#22d3ee">🔥 HOT AISLE — AC INPUT DUCT (suck hot air)</text>
+
+          <!-- Server racks row 1 -->
+          <rect x="100" y="70" width="60" height="60" rx="6" fill="#0d1320" stroke="#f87171"/>
+          <text x="130" y="95" text-anchor="middle" class="ig-text-small" style="font-size:9px;fill:#f87171">Rack 1</text>
+          <text x="130" y="110" text-anchor="middle" class="ig-text-small" style="font-size:9px">←back</text>
+          <text x="130" y="122" text-anchor="middle" class="ig-text-small" style="font-size:9px">front→</text>
+
+          <rect x="200" y="70" width="60" height="60" rx="6" fill="#0d1320" stroke="#f87171"/>
+          <text x="230" y="95" text-anchor="middle" class="ig-text-small" style="font-size:9px;fill:#f87171">Rack 2</text>
+          <text x="230" y="110" text-anchor="middle" class="ig-text-small" style="font-size:9px">←back</text>
+          <text x="230" y="122" text-anchor="middle" class="ig-text-small" style="font-size:9px">front→</text>
+
+          <rect x="300" y="70" width="60" height="60" rx="6" fill="#0d1320" stroke="#f87171"/>
+          <text x="330" y="95" text-anchor="middle" class="ig-text-small" style="font-size:9px;fill:#f87171">Rack 3</text>
+          <text x="330" y="110" text-anchor="middle" class="ig-text-small" style="font-size:9px">←back</text>
+          <text x="330" y="122" text-anchor="middle" class="ig-text-small" style="font-size:9px">front→</text>
+
+          <rect x="500" y="70" width="60" height="60" rx="6" fill="#0d1320" stroke="#f87171"/>
+          <text x="530" y="95" text-anchor="middle" class="ig-text-small" style="font-size:9px;fill:#f87171">Rack 4</text>
+          <text x="530" y="110" text-anchor="middle" class="ig-text-small" style="font-size:9px">←back</text>
+          <text x="530" y="122" text-anchor="middle" class="ig-text-small" style="font-size:9px">front→</text>
+
+          <rect x="600" y="70" width="60" height="60" rx="6" fill="#0d1320" stroke="#f87171"/>
+          <text x="630" y="95" text-anchor="middle" class="ig-text-small" style="font-size:9px;fill:#f87171">Rack 5</text>
+          <text x="630" y="110" text-anchor="middle" class="ig-text-small" style="font-size:9px">←back</text>
+          <text x="630" y="122" text-anchor="middle" class="ig-text-small" style="font-size:9px">front→</text>
+
+          <!-- Cold aisle -->
+          <rect x="40" y="140" width="820" height="40" rx="6" fill="#0d1320" stroke="#34d399"/>
+          <text x="450" y="165" text-anchor="middle" class="ig-text-strong" style="fill:#34d399">❄️ COLD AISLE — AC OUTPUT DUCT (blow cold air)</text>
+
+          <!-- Server racks row 2 (reversed) -->
+          <rect x="100" y="190" width="60" height="60" rx="6" fill="#0d1320" stroke="#f87171"/>
+          <text x="130" y="215" text-anchor="middle" class="ig-text-small" style="font-size:9px;fill:#f87171">Rack 6</text>
+          <text x="130" y="230" text-anchor="middle" class="ig-text-small" style="font-size:9px">front→</text>
+          <text x="130" y="242" text-anchor="middle" class="ig-text-small" style="font-size:9px">←back</text>
+
+          <rect x="200" y="190" width="60" height="60" rx="6" fill="#0d1320" stroke="#f87171"/>
+          <text x="230" y="215" text-anchor="middle" class="ig-text-small" style="font-size:9px;fill:#f87171">Rack 7</text>
+          <text x="230" y="230" text-anchor="middle" class="ig-text-small" style="font-size:9px">front→</text>
+          <text x="230" y="242" text-anchor="middle" class="ig-text-small" style="font-size:9px">←back</text>
+
+          <rect x="300" y="190" width="60" height="60" rx="6" fill="#0d1320" stroke="#f87171"/>
+          <text x="330" y="215" text-anchor="middle" class="ig-text-small" style="font-size:9px;fill:#f87171">Rack 8</text>
+          <text x="330" y="230" text-anchor="middle" class="ig-text-small" style="font-size:9px">front→</text>
+          <text x="330" y="242" text-anchor="middle" class="ig-text-small" style="font-size:9px">←back</text>
+
+          <rect x="500" y="190" width="60" height="60" rx="6" fill="#0d1320" stroke="#f87171"/>
+          <text x="530" y="215" text-anchor="middle" class="ig-text-small" style="font-size:9px;fill:#f87171">Rack 9</text>
+          <text x="530" y="230" text-anchor="middle" class="ig-text-small" style="font-size:9px">front→</text>
+          <text x="530" y="242" text-anchor="middle" class="ig-text-small" style="font-size:9px">←back</text>
+
+          <rect x="600" y="190" width="60" height="60" rx="6" fill="#0d1320" stroke="#f87171"/>
+          <text x="630" y="215" text-anchor="middle" class="ig-text-small" style="font-size:9px;fill:#f87171">Rack 10</text>
+          <text x="630" y="230" text-anchor="middle" class="ig-text-small" style="font-size:9px">front→</text>
+          <text x="630" y="242" text-anchor="middle" class="ig-text-small" style="font-size:9px">←back</text>
+
+          <text x="450" y="280" text-anchor="middle" class="ig-text-small" style="font-style:italic">Fronts face cold aisle (AC output), backs face hot aisle (AC input). Hot air tidak mix dengan cold air.</text>
+        </svg>
+        <div class="infographic-caption">Gambar 8. Hot &amp; Cold Aisles — racks arranged so fronts face cold air (AC output), backs face hot air (AC input). Prevents mixing, increases efficiency.</div>
+      </div>
+
+      <div class="info-box info-success">
+        <strong>Hot/Cold Aisle Benefits:</strong> Protects hardware dari humidity &amp; heat, increases
+        hardware performance, maintains consistent room temperature. <strong>Cold aisle</strong>: easy
+        implement, less expensive, fits existing data center. <strong>Hot aisle</strong>: more effective,
+        perfect air distribution, but expensive &amp; uncomfortable for maintenance.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 15: PRAKTIKUM ============= -->
+    <section id="praktikum">
+      <div class="practicum-banner">
+        <span class="section-tag" style="margin-bottom:8px">Bagian 15 · Hands-on Lab</span>
+        <h2>Modul Praktikum Physical Controls</h2>
+        <p>Empat sesi praktik hands-on: physical security audit, access control system setup, environmental monitoring, dan cable security &amp; network tapping demo.</p>
+      </div>
+
+      <h3 class="sub-title">15.1 Tujuan Praktikum</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">1</div>Physical Security Audit</div><p>Melakukan physical security audit di gedung kampus/lab — identify gaps, assess barriers, locks, surveillance, lighting.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">2</div>Access Control Setup</div><p>Setup RFID/biometric access control system menggunakan Raspberry Pi + RFID reader + electromagnetic door lock.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">3</div>Environmental Monitoring</div><p>Build environmental monitoring station (temperature, humidity, smoke detection) dengan Arduino + sensors + alert system.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">4</div>Cable Security Demo</div><p>Demonstrasi network cable tapping pada UTP vs fiber-optic + cable security best practices implementation.</p></div>
+      </div>
+
+      <h3 class="sub-title">15.2 Alat dan Bahan</h3>
+      <div class="two-col">
+        <div class="col-box left">
+          <h4><span class="ico">💻</span>Perangkat Keras</h4>
+          <ul class="checklist">
+            <li>Raspberry Pi 4 (untuk access control system)</li>
+            <li>RFID RC522 reader + tags (atau fingerprint sensor)</li>
+            <li>12V electromagnetic door lock + relay module</li>
+            <li>Arduino Uno (untuk environmental monitoring)</li>
+            <li>DHT22 sensor (temperature + humidity)</li>
+            <li>MQ-2 smoke/gas sensor</li>
+            <li>Buzzer + LED untuk alert</li>
+            <li>UTP cable + fiber-optic patch cord (untuk cable demo)</li>
+            <li>Cable tester, wire stripper, RJ45 crimp tool</li>
+            <li>USB UPS (untuk demo failover)</li>
+          </ul>
+        </div>
+        <div class="col-box right">
+          <h4><span class="ico">🧰</span>Perangkat Lunak</h4>
+          <ul class="checklist">
+            <li><strong>Arduino IDE</strong> untuk program environmental monitor</li>
+            <li><strong>Python 3 + RPi.GPIO</strong> untuk Raspberry Pi access control</li>
+            <li><strong>ThingSpeak / Blynk</strong> untuk IoT dashboard (env monitor)</li>
+            <li><strong>Wireshark</strong> untuk cable tapping demo capture</li>
+            <li><strong>Ettercap</strong> untuk ARP spoofing demo (UTP tap)</li>
+            <li><strong>Nmap</strong> untuk network scan saat cable tap</li>
+            <li>Physical security audit checklist template</li>
+            <li>Camera/smartphone untuk dokumentasi audit</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="sub-title">15.3 Workflow Praktikum 4 Sesi</h3>
+      <div class="infographic">
+        <div class="ig-title">Alur Praktikum — 4 Sesi, 20 Langkah, 1 Laporan Akhir</div>
+        <svg viewBox="0 0 900 280" width="900" height="280" aria-label="Practicum workflow">
+          <defs><linearGradient id="grad-lab-m04" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#22d3ee"/><stop offset="33%" stop-color="#34d399"/><stop offset="66%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#fbbf24"/></linearGradient></defs>
+          <path d="M 60 100 L 840 100" stroke="url(#grad-lab-m04)" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="150" cy="100" r="32" fill="#161d2e" stroke="#22d3ee" stroke-width="2.5"/><text x="150" y="98" text-anchor="middle" class="ig-text-title">S1</text><text x="150" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="80" y="150" width="140" height="70" rx="10" class="ig-accent-box"/><text x="150" y="172" text-anchor="middle" class="ig-text-strong">Physical</text><text x="150" y="188" text-anchor="middle" class="ig-text-small">Security Audit</text><text x="150" y="202" text-anchor="middle" class="ig-text-small">(gedung kampus)</text>
+          <text x="150" y="65" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">~60 menit</text>
+          <circle cx="380" cy="100" r="32" fill="#161d2e" stroke="#34d399" stroke-width="2.5"/><text x="380" y="98" text-anchor="middle" class="ig-text-title" style="fill:#34d399">S2</text><text x="380" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="310" y="150" width="140" height="70" rx="10" class="ig-success-box"/><text x="380" y="172" text-anchor="middle" class="ig-text-strong">Access Control</text><text x="380" y="188" text-anchor="middle" class="ig-text-small">RFID + Pi</text><text x="380" y="202" text-anchor="middle" class="ig-text-small">+ maglock</text>
+          <text x="380" y="65" text-anchor="middle" class="ig-text-small" style="fill:#34d399">~90 menit</text>
+          <circle cx="610" cy="100" r="32" fill="#161d2e" stroke="#a78bfa" stroke-width="2.5"/><text x="610" y="98" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">S3</text><text x="610" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="540" y="150" width="140" height="70" rx="10" class="ig-purple-box"/><text x="610" y="172" text-anchor="middle" class="ig-text-strong">Env Monitor</text><text x="610" y="188" text-anchor="middle" class="ig-text-small">Arduino +</text><text x="610" y="202" text-anchor="middle" class="ig-text-small">DHT22 + smoke</text>
+          <text x="610" y="65" text-anchor="middle" class="ig-text-small" style="fill:#a78bfa">~75 menit</text>
+          <circle cx="820" cy="100" r="32" fill="#161d2e" stroke="#fbbf24" stroke-width="2.5"/><text x="820" y="98" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">S4</text><text x="820" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="750" y="150" width="140" height="70" rx="10" class="ig-warn-box"/><text x="820" y="172" text-anchor="middle" class="ig-text-strong">Cable Tap</text><text x="820" y="188" text-anchor="middle" class="ig-text-small">Demo UTP vs</text><text x="820" y="202" text-anchor="middle" class="ig-text-small">Fiber</text>
+          <text x="820" y="65" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">~75 menit</text>
+          <rect x="280" y="240" width="340" height="30" rx="15" fill="#161d2e" stroke="#22d3ee" stroke-width="1.5"/><text x="450" y="260" text-anchor="middle" class="ig-text-strong" style="fill:#22d3ee">Total ~5 jam → Laporan Audit + Access Ctrl + Env Monitor + Cable Sec</text>
+        </svg>
+        <div class="infographic-caption">Gambar 9. Workflow 4 sesi praktikum Modul 04 — total 20 langkah hands-on.</div>
+      </div>
+
+      <h3 class="sub-title">15.4 Langkah Praktikum</h3>
+
+      <h4 class="mini-title">Sesi 1 — Physical Security Audit</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Prepare Audit Checklist</h5><p>Buat checklist berdasarkan modul: (a) location considerations, (b) site architecture, (c) physical barriers (fences, doors, windows), (d) locks (type, condition), (e) surveillance (CCTV coverage, blind spots), (f) lighting (continuous, standby, emergency), (g) power supply (UPS, generator), (h) HVAC, (i) access control (badge, biometric, mantrap).</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Conduct On-Site Audit</h5><p>Dengan izin, audit gedung kampus/lab. Foto setiap area. Catat: number of entrances, type of locks, CCTV placement (cover or blind spot?), lighting adequacy, server room security (locked? biometric? CCTV?), reception area security, fire suppression system, emergency exits, UPS presence.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Identify Gaps &amp; Risks</h5><p>Untuk setiap area, identify: (a) gap (what's missing/non-compliant), (b) risk level (Critical/High/Medium/Low), (c) recommendation. Contoh: "Server room lock = mechanical only (gap), risk: HIGH, recommendation: upgrade to biometric + CCTV."</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>Multi-Layer Barrier Assessment</h5><p>Assess apakah gedung punya 3-layer defense: <strong>External</strong> (fence, wall, bollard), <strong>Middle</strong> (turnstile, checkpoint, reception), <strong>Internal</strong> (locked doors, badge access, biometric). Identifikasi layer yang lemah atau hilang.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Laporan Audit</h5><p>Buat laporan: executive summary, detailed findings per area dengan foto evidence, risk matrix (likelihood × impact), remediation roadmap (quick wins 90 hari, medium 6 bulan, long 1 tahun), budget estimate. Present ke class.</p></div></div>
+      </div>
+
+      <h4 class="mini-title">Sesi 2 — Access Control System dengan Raspberry Pi</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Setup Hardware</h5><p>Hubungkan: RFID RC522 ke Raspberry Pi SPI pins. Relay module ke GPIO pin. 12V electromagnetic lock ke relay. LED green (access granted) + LED red (denied) + buzzer. Power: 12V adapter untuk lock, 5V USB untuk Pi.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Write Python Access Control Script</h5><p>Install <code>spi-dev</code> dan <code>MFRC522</code> library. Script: (a) wait for RFID tag, (b) read UID, (c) check against whitelist di database (SQLite), (d) if match → trigger relay (unlock 3 detik) + green LED + log entry, (e) if no match → red LED + buzzer + log failed attempt.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Test dengan Multiple Tags</h5><p>Register 3 RFID tags sebagai authorized, 2 sebagai unauthorized. Test: tap authorized → door unlock 3 detik. Tap unauthorized → buzzer + red LED. Test rapid tap → rate limiting (lockout after 5 failed).</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>Add Audit Logging</h5><p>Log setiap access attempt ke SQLite database: timestamp, UID, result (grant/deny), door open duration. Buat web dashboard sederhana (Flask) untuk view log. Export log ke CSV untuk analysis.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Fail-Safe vs Fail-Secure Demo</h5><p>Demonstrasi: saat power diputus (simulate power outage), electromagnetic lock = <strong>fail-safe</strong> (unlock, orang bisa keluar). Bandingkan dengan fail-secure (tetap locked). Diskusikan: kapan pakai masing-masing? Tambahkan UPS untuk keep system running saat outage.</p></div></div>
+      </div>
+
+      <h4 class="mini-title">Sesi 3 — Environmental Monitoring Station</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Wire Sensors ke Arduino</h5><p>Hubungkan: DHT22 (temperature + humidity) ke digital pin 2. MQ-2 (smoke/gas) ke analog pin A0. Buzzer ke pin 8. LED red (alert) ke pin 9. LED green (normal) ke pin 10. LCD 16x2 I2C untuk display real-time.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Program Arduino</h5><p>Install library DHT, LiquidCrystal_I2C. Program: (a) read DHT22 every 5 detik, (b) read MQ-2 continuously, (c) display temp/humidity/smoke level di LCD, (d) if temp &gt; 30°C atau humidity &gt; 70% atau smoke &gt; threshold → buzzer + red LED, (e) else green LED.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Set Thresholds</h5><p>Berdasarkan ASHRAE: temp 18-27°C (alert &gt; 30°C), humidity 40-60% (alert &gt; 70% atau &lt; 30%). MQ-2 smoke threshold: baseline + 30%. Test: heat sensor dengan hair dryer, humidifier untuk humidity, korek api untuk smoke.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>IoT Dashboard Integration</h5><p>Kirim data ke ThingSpeak atau Blynk cloud via ESP8266 WiFi module (atau Arduino + Ethernet shield). Setup dashboard: real-time gauge (temp, humidity, smoke), historical graph, alert notification via email/Telegram bot jika threshold exceeded.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Laporan &amp; Recommendations</h5><p>Buat laporan: (a) sensor calibration data, (b) threshold justifikasi, (c) dashboard screenshot, (d) alert test results, (e) rekomendasi: integrate dengan HVAC control, add water leak sensor, connect ke fire suppression system, integrate dengan SIEM untuk centralized monitoring.</p></div></div>
+      </div>
+
+      <h4 class="mini-title">Sesi 4 — Network Cable Tapping Demo</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Setup UTP Tapping Lab</h5><p>Buat 2 VM: attacker + victim di same switch. Victim browse HTTP site. Attacker run Wireshark. <strong>Demo UTP wiretap</strong>: gunakan cable splitter / network tap device di UTP cable antara victim dan switch. Capture all traffic — demonstrate bahwa UTP <strong>transmit data in cleartext</strong> jika tidak encrypted.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>ARP Spoofing Demo</h5><p>Attacker run <code>ettercap -T -M arp /victim// /gateway//</code>. Victim traffic sekarang flows through attacker. Wireshark capture semua — passwords, cookies, images. <strong>Pelajaran: UTP cable + no encryption = sniffable</strong>. Mitigasi: encryption (HTTPS, SSH, VPN), dynamic ARP inspection, port security.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Fiber-Optic Security Demo</h5><p>Demonstrasi: fiber-optic cable TIDAK bisa di-tap dengan mudah. (1) Tapping fiber memerlukan specialized equipment (fiber coupler/splitter), (2) bending fiber untuk tap menyebabkan signal loss yang detectable, (3) no electromagnetic emanation (tidak bisa sniff via antenna). <strong>Pelajaran: fiber = paling aman dari wiretap.</strong></p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>Cable Security Best Practices</h5><p>Implementasi di lab: (a) run UTP di <strong>transparent conduit</strong> (visible damage detection), (b) label semua cables, (c) document cable infrastructure, (d) restrict access ke cabling pathways (locked server room, cable trays above ceiling sealed), (e) use armored cable di area prone to rodent, (f) redundant paths (no single point of failure).</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Laporan &amp; Comparison</h5><p>Buat laporan: (a) UTP tap demo dengan Wireshark capture, (b) ARP spoofing impact analysis, (c) fiber-optic security comparison, (d) cable security best practices checklist, (e) recommendation: migrate critical links ke fiber, implement port security, encryption everywhere.</p></div></div>
+      </div>
+
+      <h3 class="sub-title">15.5 Lembar Kerja / Tugas</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">Q1</div>Audit Findings</div><p>Dari Sesi 1, sebutkan 3 physical security gap paling critical yang ditemukan. Apa risk level-nya? Apa rekomendasi remediasi? Berapa estimasi biaya?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q2</div>Fail-Safe vs Fail-Secure</div><p>Dari Sesi 2, jelaskan kapan menggunakan fail-safe vs fail-secure lock. Berikan contoh untuk: server room, emergency exit, reception area. Mengapa UPS penting untuk fail-secure?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q3</div>Environmental Monitoring</div><p>Dari Sesi 3, mengapa temperature dan humidity monitoring penting di server room? Apa dampak jika temperature &gt; 30°C? Apa dampak humidity &lt; 30%? Bagaimana HVAC mengatasi?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q4</div>Cable Tapping Risk</div><p>Dari Sesi 4, mengapa UTP lebih rentan wiretapping dibanding fiber-optic? Apa mitigasi selain mengganti ke fiber? Bagaimana encryption (HTTPS/TLS) membantu meskipun kabel di-tap?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q5</div>Multi-Layer Defense</div><p>Berdasarkan modul, jelaskan konsep multi-layer physical barriers (external → middle → internal). Berikan contoh implementasi di gedung kampus Anda. Mana layer yang paling lemah?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q6</div>Hot/Cold Aisle</div><p>Mengapa hot/cold aisle arrangement penting di data center? Apa yang terjadi jika racks di-arrange secara random? Bagaimana ini berhubungan dengan HVAC dan environmental controls?</p></div>
+      </div>
+
+      <h3 class="sub-title">15.6 Checklist Evaluasi</h3>
+      <p>Praktikum dinyatakan <strong>lulus</strong> jika minimal 10 dari 12 kriteria berikut terpenuhi:</p>
+      <ul class="checklist">
+        <li>Physical security audit checklist lengkap dengan foto evidence</li>
+        <li>Minimal 5 gaps teridentifikasi dengan risk level &amp; recommendation</li>
+        <li>Multi-layer barrier assessment (external/middle/internal) terdokumentasi</li>
+        <li>RFID access control system berfungsi (grant authorized, deny unauthorized)</li>
+        <li>Audit logging dengan SQLite + web dashboard berfungsi</li>
+        <li>Fail-safe vs fail-secure demo terdokumentasi</li>
+        <li>Environmental monitoring station berfungsi (temp, humidity, smoke)</li>
+        <li>Threshold alert teruji (buzzer + LED saat exceeded)</li>
+        <li>IoT dashboard (ThingSpeak/Blynk) menampilkan real-time data</li>
+        <li>UTP cable tapping demo dengan Wireshark capture</li>
+        <li>ARP spoofing demo terdokumentasi dengan mitigasi</li>
+        <li>Cable security best practices checklist implemented &amp; terdokumentasi</li>
+      </ul>
+
+      <div class="info-box info-success">
+        <strong>Bonus:</strong> Mahasiswa yang dapat mendemonstrasikan: (a) integrasi access control
+        dengan environmental monitoring (auto-unlock saat fire detected), (b) CCTV motion detection
+        dengan Raspberry Pi camera, (c) fiber-optic tap detection menggunakan OTDR (Optical Time Domain
+        Reflectometer), atau (d) implementasi mantrap simulation dengan 2 interlocking doors — akan
+        mendapat nilai tambahan.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 16: RINGKASAN ============= -->
+    <section id="ringkasan">
+      <div class="section-header">
+        <span class="section-tag">Bagian 16</span>
+        <h2>Ringkasan Modul</h2>
+        <p>Rangkuman poin-poin kritis yang telah dibahas dalam Modul 04 Physical Controls.</p>
+      </div>
+
+      <div class="summary-box">
+        <h3>📋 Yang Telah Dipelajari</h3>
+        <ul class="checklist">
+          <li>Need for physical security — most overlooked aspect, attacker exploit loopholes. Physical layer = Layer 1 OSI.</li>
+          <li>Physical security attack vectors — Natural/Environmental (floods, fires, earthquakes, lightning, temp/humidity) + Man-made (vandalism, device loss, damage, theft, terrorism, social engineering, unauthorized access).</li>
+          <li>5 types physical security controls — Preventive (door locks, guards), Detective (motion detectors, alarms, CCTV), Deterrent (warning signs), Recovery (DR, BC, backup), Compensating (hot sites, backup power).</li>
+          <li>Location &amp; site architecture considerations — facility location, neighboring buildings, entrances, server room, emergency exits.</li>
+          <li>Physical barriers — multi-layer: External (fences, bollards, walls), Middle (turnstiles, checkpoints), Internal (doors, windows, grills, glass).</li>
+          <li>Security personnel — guards, supervisors, safety officers, CISO. Training areas: 11+ topics.</li>
+          <li>Physical locks — Mechanical (warded, tumbler), Digital (fingerprint, smart card, PIN), Electric/Electromagnetic (fail-safe vs fail-secure), Combination.</li>
+          <li>Concealed weapon detection — walkthrough metal detectors, handheld detectors, X-ray inspection systems.</li>
+          <li>Mantrap — interlocking doors, 4-step process, separates non-secure from secure areas.</li>
+          <li>Lighting — 4 types: Continuous, Standby, Movable, Emergency.</li>
+          <li>Power supply — 6 UPS types: Standby, Line-interactive, Standby online hybrid, Standby Ferro, Double conversion online, Delta conversion online.</li>
+          <li>Workplace security — reception area, server/backup security, critical assets, removable devices, portable mobile devices.</li>
+          <li>Network cable security — 4 types: UTP (most vulnerable), STP (medium), Fiber-optic (most secure), Coaxial (medium). Best practices: separate wiring, armored cable, transparent conduit, undergrounding.</li>
+          <li>Physical security policy — design considerations checklist, building protection, entry points, surveillance, asset inventory.</li>
+          <li>Environmental controls — HVAC (4 types: split, hybrid heat, duct-free, packaged), EMI shielding (metal coating, eddy currents), Hot/Cold aisles (airflow management).</li>
+          <li>Praktikum 4 sesi — Physical Security Audit, Access Control (RFID + Pi), Environmental Monitoring (Arduino + sensors), Cable Tapping Demo.</li>
+        </ul>
+      </div>
+
+      <div class="info-box info-tip" style="margin-top:24px">
+        <strong>Key Takeaway:</strong> Physical security adalah <strong>basis dari semua information
+        security</strong>. Tanpa physical security, semua technical controls (firewall, IDS, encryption)
+        dapat di-bypass dengan physical access. Siapa pun yang bisa sentuh server = bisa install keylogger,
+        clone disk, reset password via console. <strong>Defense-in-depth dimulai dari physical layer</strong>
+        — multi-layer barriers, multiple lock types, surveillance, environmental controls, dan power
+        redundancy. Modul ini melengkapi Modul 03 (administrative) untuk membentuk foundation yang
+        lengkap sebelum technical controls (Modul 05).
+      </div>
+    </section>
+
+    <footer>
+      <p><strong>Modul 04: Network Security Controls — Physical Controls</strong> · Network Defense Essentials</p>
+      <p>Disusun sebagai materi pembelajaran — bebas digunakan untuk tujuan edukasi.</p>
+      <div class="next-modul"><span>Modul Selanjutnya →</span><strong>Modul 05: Network Security Controls — Technical Controls</strong></div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  (function(){
+    const tocLinks = document.querySelectorAll('#toc a');
+    const sections = Array.from(tocLinks).map(a => {
+      const id = a.getAttribute('href').slice(1);
+      return document.getElementById(id);
+    }).filter(Boolean);
+    function setActive(){
+      const scrollY = window.scrollY + 100;
+      let currentIdx = 0;
+      for(let i=0;i<sections.length;i++){
+        if(sections[i].offsetTop <= scrollY) currentIdx = i;
+      }
+      tocLinks.forEach((a, i) => a.classList.toggle('active', i === currentIdx));
+    }
+    setActive();
+    window.addEventListener('scroll', setActive, {passive:true});
+    tocLinks.forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = a.getAttribute('href').slice(1);
+        const target = document.getElementById(id);
+        if(target){
+          const offset = 80;
+          const top = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({top, behavior:'smooth'});
+          document.querySelector('.sidebar').classList.remove('open');
+        }
+      });
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modul 03: Network Security Controls — Administrative Controls — Network Defense Essentials</title>
+<meta name="description" content="Ebook &amp; Modul Praktikum Administrative Controls - Network Defense Essentials">
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --bg-2:#0d1320;
+    --bg-elevated:#131a2a;
+    --bg-card:#161d2e;
+    --bg-card-hover:#1b2438;
+    --border:#242c40;
+    --border-strong:#344057;
+    --text:#e6edf3;
+    --text-2:#a8b3cf;
+    --text-muted:#6b7591;
+    --accent:#22d3ee;
+    --accent-2:#06b6d4;
+    --accent-glow:rgba(34,211,238,.15);
+    --accent-dim:rgba(34,211,238,.08);
+    --warn:#fbbf24;
+    --warn-bg:rgba(251,191,36,.08);
+    --danger:#f87171;
+    --danger-bg:rgba(248,113,113,.08);
+    --success:#34d399;
+    --success-bg:rgba(52,211,153,.08);
+    --purple:#a78bfa;
+    --purple-bg:rgba(167,139,250,.08);
+    --pink:#f472b6;
+    --shadow:0 4px 24px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:24px}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.7;
+    font-size:15px;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% 0%,rgba(34,211,238,.08),transparent),
+      radial-gradient(ellipse 60% 40% at 80% 100%,rgba(167,139,250,.06),transparent);
+    background-attachment:fixed;
+  }
+  h1,h2,h3,h4{font-family:'Space Grotesk','Inter',sans-serif;font-weight:700;line-height:1.3;letter-spacing:-.01em}
+  code,pre,.mono{font-family:'JetBrains Mono','Consolas','Monaco',monospace}
+  a{color:var(--accent);text-decoration:none}
+
+  /* Layout */
+  .layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+  .sidebar{
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+    background:var(--bg-2);
+    border-right:1px solid var(--border);
+    padding:24px 20px;
+    z-index:10;
+  }
+  .sidebar-brand{
+    display:flex;align-items:center;gap:12px;padding-bottom:20px;
+    border-bottom:1px solid var(--border);margin-bottom:20px;
+  }
+  .brand-logo{
+    width:40px;height:40px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;color:#0a0e1a;font-size:18px;
+    box-shadow:0 0 24px var(--accent-glow);
+  }
+  .brand-text{font-size:13px;color:var(--text-2);line-height:1.4}
+  .brand-text strong{display:block;color:var(--text);font-size:14px;font-weight:600}
+  .toc-title{
+    font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--text-muted);margin:16px 0 12px;font-weight:600;
+  }
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:2px}
+  .toc-list a{
+    display:block;padding:8px 12px;color:var(--text-2);
+    font-size:13.5px;border-radius:6px;border-left:2px solid transparent;
+    transition:all .15s ease;line-height:1.4;
+  }
+  .toc-list a:hover{background:var(--bg-card);color:var(--text)}
+  .toc-list a.active{
+    background:var(--accent-dim);color:var(--accent);
+    border-left-color:var(--accent);font-weight:500;
+  }
+  .toc-list a .num{
+    display:inline-block;width:24px;color:var(--text-muted);font-size:12px;
+  }
+  .toc-list a.active .num{color:var(--accent)}
+  .toc-sub{padding-left:14px;font-size:12.5px;color:var(--text-muted)}
+  .toc-sub a{padding:6px 12px;font-size:12.5px}
+
+  /* Content */
+  .content{max-width:980px;padding:0 56px 80px;min-width:0}
+  @media (max-width:1024px){
+    .layout{grid-template-columns:1fr}
+    .sidebar{position:fixed;left:-300px;width:280px;transition:left .25s ease}
+    .sidebar.open{left:0}
+    .content{padding:0 24px 60px}
+    .menu-toggle{display:flex!important}
+  }
+  .menu-toggle{
+    display:none;position:fixed;top:16px;right:16px;z-index:50;
+    width:44px;height:44px;border-radius:10px;
+    background:var(--bg-elevated);border:1px solid var(--border);
+    color:var(--text);align-items:center;justify-content:center;
+    cursor:pointer;font-size:20px;
+  }
+
+  /* Hero / Cover */
+  .hero{
+    position:relative;padding:80px 0 60px;
+    border-bottom:1px solid var(--border);margin-bottom:48px;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+    background-image:
+      linear-gradient(rgba(34,211,238,.04) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(34,211,238,.04) 1px,transparent 1px);
+    background-size:48px 48px;
+    mask-image:radial-gradient(ellipse 60% 70% at 50% 40%,#000 30%,transparent 75%);
+    -webkit-mask-image:radial-gradient(ellipse 60% 70% at 50% 40%,#000 30%,transparent 75%);
+    pointer-events:none;
+  }
+  .hero-content{position:relative;z-index:1}
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 14px;border-radius:999px;
+    background:var(--accent-dim);border:1px solid rgba(34,211,238,.3);
+    color:var(--accent);font-size:12px;font-weight:600;
+    letter-spacing:.08em;text-transform:uppercase;margin-bottom:24px;
+  }
+  .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+  .hero h1{
+    font-size:clamp(36px,5vw,56px);margin-bottom:16px;
+    background:linear-gradient(135deg,#fff 30%,var(--accent) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero-sub{
+    font-size:18px;color:var(--text-2);max-width:680px;margin-bottom:32px;
+  }
+  .hero-meta{
+    display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;
+  }
+  .meta-chip{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:10px 16px;background:var(--bg-card);
+    border:1px solid var(--border);border-radius:8px;
+    font-size:13px;color:var(--text-2);
+  }
+  .meta-chip strong{color:var(--text);font-weight:600}
+  .meta-chip svg{width:16px;height:16px;color:var(--accent)}
+
+  /* Section base */
+  section{margin-bottom:64px;scroll-margin-top:24px}
+  .section-header{margin-bottom:28px}
+  .section-tag{
+    display:inline-block;font-size:11px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.12em;
+    color:var(--accent);margin-bottom:8px;
+  }
+  .section-header h2{
+    font-size:30px;margin-bottom:8px;color:var(--text);
+  }
+  .section-header p{color:var(--text-2);font-size:15px;max-width:720px}
+  h3.sub-title{
+    font-size:20px;color:var(--text);margin:32px 0 14px;
+    padding-left:12px;border-left:3px solid var(--accent);
+  }
+  h4.mini-title{
+    font-size:15px;color:var(--accent);margin:20px 0 10px;
+    font-weight:600;text-transform:uppercase;letter-spacing:.05em;
+  }
+  p{margin-bottom:14px;color:var(--text-2)}
+  p strong{color:var(--text);font-weight:600}
+  ul,ol{margin:12px 0 20px;padding-left:24px;color:var(--text-2)}
+  ul li,ol li{margin-bottom:6px}
+  ul li::marker{color:var(--accent)}
+  ol li::marker{color:var(--accent);font-weight:600}
+
+  /* Card grid */
+  .card-grid{display:grid;gap:16px;margin:20px 0}
+  .grid-2{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:768px){
+    .grid-2,.grid-3{grid-template-columns:1fr}
+  }
+  .card{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:12px;padding:20px;transition:all .2s ease;
+  }
+  .card:hover{
+    border-color:var(--border-strong);background:var(--bg-card-hover);
+    transform:translateY(-2px);
+  }
+  .card-title{
+    display:flex;align-items:center;gap:10px;
+    font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px;
+  }
+  .card-icon{
+    width:32px;height:32px;border-radius:8px;
+    background:var(--accent-dim);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;flex-shrink:0;
+  }
+  .card p{font-size:13.5px;color:var(--text-2);margin:0}
+  .card .meta{
+    margin-top:10px;padding-top:10px;border-top:1px solid var(--border);
+    font-size:12px;color:var(--text-muted);display:flex;gap:12px;flex-wrap:wrap;
+  }
+  .card .meta span{display:inline-flex;align-items:center;gap:4px}
+
+  /* Info boxes */
+  .info-box{
+    border-left:3px solid;padding:14px 18px;border-radius:8px;
+    margin:16px 0;font-size:14px;
+  }
+  .info-tip{background:var(--accent-dim);border-color:var(--accent);color:var(--text)}
+  .info-tip strong{color:var(--accent)}
+  .info-warn{background:var(--warn-bg);border-color:var(--warn);color:var(--text)}
+  .info-warn strong{color:var(--warn)}
+  .info-danger{background:var(--danger-bg);border-color:var(--danger);color:var(--text)}
+  .info-danger strong{color:var(--danger)}
+  .info-success{background:var(--success-bg);border-color:var(--success);color:var(--text)}
+  .info-success strong{color:var(--success)}
+
+  /* Definition list */
+  .def-list{display:flex;flex-direction:column;gap:14px;margin:16px 0}
+  .def-item{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:10px;padding:16px 20px;
+  }
+  .def-item dt{
+    font-weight:600;color:var(--accent);font-size:14.5px;
+    margin-bottom:6px;display:flex;align-items:center;gap:8px;
+  }
+  .def-item dt::before{
+    content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);
+  }
+  .def-item dd{color:var(--text-2);font-size:14px;margin-left:14px}
+
+  /* Comparison table */
+  .table-wrap{overflow-x:auto;margin:20px 0;border-radius:12px;border:1px solid var(--border)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--bg-card)}
+  th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--border)}
+  th{background:var(--bg-elevated);color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+  td{color:var(--text-2)}
+  td strong{color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--bg-card-hover)}
+
+  /* Checklist */
+  .checklist{list-style:none;padding:0;margin:16px 0;display:flex;flex-direction:column;gap:8px}
+  .checklist li{
+    display:flex;gap:12px;padding:10px 14px;
+    background:var(--bg-card);border:1px solid var(--border);border-radius:8px;
+    font-size:14px;color:var(--text-2);line-height:1.5;
+  }
+  .checklist li::before{
+    content:'✓';flex-shrink:0;width:20px;height:20px;border-radius:50%;
+    background:var(--success-bg);color:var(--success);
+    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+  }
+  .checklist.warn li::before{background:var(--warn-bg);color:var(--warn)}
+  .checklist.danger li::before{content:'!';background:var(--danger-bg);color:var(--danger)}
+
+  /* Pill / badge */
+  .pill{
+    display:inline-block;padding:2px 10px;border-radius:999px;
+    font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-2);
+  }
+  .pill.accent{background:var(--accent-dim);color:var(--accent);border-color:rgba(34,211,238,.3)}
+  .pill.warn{background:var(--warn-bg);color:var(--warn);border-color:rgba(251,191,36,.3)}
+  .pill.danger{background:var(--danger-bg);color:var(--danger);border-color:rgba(248,113,113,.3)}
+  .pill.success{background:var(--success-bg);color:var(--success);border-color:rgba(52,211,153,.3)}
+  .pill.purple{background:var(--purple-bg);color:var(--purple);border-color:rgba(167,139,250,.3)}
+
+  /* Two column */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
+  @media (max-width:768px){.two-col{grid-template-columns:1fr}}
+  .col-box{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:12px;
+    padding:22px;
+  }
+  .col-box h4{
+    display:flex;align-items:center;gap:10px;
+    font-size:15px;color:var(--text);margin-bottom:14px;
+    padding-bottom:12px;border-bottom:1px solid var(--border);
+  }
+  .col-box h4 .ico{
+    width:28px;height:28px;border-radius:7px;display:flex;
+    align-items:center;justify-content:center;font-size:14px;
+  }
+  .col-box.left h4 .ico{background:var(--accent-dim);color:var(--accent)}
+  .col-box.right h4 .ico{background:var(--purple-bg);color:var(--purple)}
+
+  /* Steps */
+  .steps{position:relative;padding-left:32px;margin:24px 0}
+  .steps::before{
+    content:'';position:absolute;left:11px;top:8px;bottom:8px;
+    width:2px;background:var(--border-strong);
+  }
+  .step{position:relative;margin-bottom:24px}
+  .step-num{
+    position:absolute;left:-32px;top:0;width:24px;height:24px;border-radius:50%;
+    background:var(--bg-elevated);border:2px solid var(--accent);
+    color:var(--accent);font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;z-index:1;
+  }
+  .step-content{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+    padding:16px 20px;
+  }
+  .step-content h5{font-size:14px;color:var(--accent);margin-bottom:6px;font-weight:600}
+  .step-content p{font-size:13.5px;color:var(--text-2);margin:0}
+  .step-content ul{margin:8px 0 0;padding-left:18px;font-size:13px}
+
+  /* Practicum box */
+  .practicum-banner{
+    background:linear-gradient(135deg,var(--purple-bg),var(--accent-dim));
+    border:1px solid var(--border-strong);border-radius:16px;
+    padding:32px;margin:24px 0;text-align:center;
+  }
+  .practicum-banner h2{
+    font-size:28px;background:linear-gradient(135deg,var(--accent),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px;
+  }
+  .practicum-banner p{color:var(--text-2);max-width:600px;margin:0 auto}
+
+  /* Lab tools grid */
+  .tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px 0}
+  @media (max-width:600px){.tools-grid{grid-template-columns:1fr}}
+  .tool-card{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+    padding:14px 16px;display:flex;align-items:flex-start;gap:12px;
+  }
+  .tool-card .ico{
+    width:36px;height:36px;border-radius:8px;flex-shrink:0;
+    background:var(--bg-elevated);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;
+    color:var(--accent);
+  }
+  .tool-card .info{flex:1;min-width:0}
+  .tool-card .name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px}
+  .tool-card .desc{font-size:12.5px;color:var(--text-2);line-height:1.5}
+  .tool-card .url{font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace;margin-top:4px;display:block}
+
+  /* Summary */
+  .summary-box{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:14px;padding:28px;margin-top:24px;
+  }
+  .summary-box h3{
+    font-size:18px;color:var(--accent);margin-bottom:16px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .summary-box ul{margin:0;padding-left:20px}
+
+  /* Footer */
+  footer{
+    border-top:1px solid var(--border);padding:32px 0;
+    text-align:center;color:var(--text-muted);font-size:13px;
+  }
+  footer .next-modul{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:12px 20px;background:var(--bg-card);
+    border:1px solid var(--border);border-radius:10px;
+    color:var(--text-2);margin-top:16px;font-size:13px;
+  }
+  footer .next-modul strong{color:var(--accent)}
+
+  /* ===== INFOGRAPHICS / SVG STYLING ===== */
+  .infographic{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:14px;padding:24px;margin:24px 0;overflow:hidden;
+  }
+  .infographic-caption{
+    text-align:center;font-size:12.5px;color:var(--text-muted);
+    margin-top:12px;font-style:italic;
+  }
+  .infographic svg{display:block;margin:0 auto;max-width:100%;height:auto}
+  .ig-title{
+    font-size:13px;font-weight:600;color:var(--accent);
+    text-transform:uppercase;letter-spacing:.08em;
+    text-align:center;margin-bottom:16px;
+  }
+  .ig-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+  .ig-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:4px 10px;border-radius:6px;
+    font-size:11.5px;font-weight:500;
+    background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-2);
+  }
+  .ig-badge .dot{width:8px;height:8px;border-radius:50%}
+  .ig-badge.cyan{border-color:rgba(34,211,238,.4);color:var(--accent);background:var(--accent-dim)}
+  .ig-badge.cyan .dot{background:var(--accent)}
+  .ig-badge.purple{border-color:rgba(167,139,250,.4);color:var(--purple);background:var(--purple-bg)}
+  .ig-badge.purple .dot{background:var(--purple)}
+  .ig-badge.warn{border-color:rgba(251,191,36,.4);color:var(--warn);background:var(--warn-bg)}
+  .ig-badge.warn .dot{background:var(--warn)}
+  .ig-badge.danger{border-color:rgba(248,113,113,.4);color:var(--danger);background:var(--danger-bg)}
+  .ig-badge.danger .dot{background:var(--danger)}
+  .ig-badge.success{border-color:rgba(52,211,153,.4);color:var(--success);background:var(--success-bg)}
+  .ig-badge.success .dot{background:var(--success)}
+
+  /* Stat block */
+  .stat-row{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:24px 0;
+  }
+  @media (max-width:768px){.stat-row{grid-template-columns:repeat(2,1fr)}}
+  .stat-box{
+    background:linear-gradient(135deg,var(--bg-card),var(--bg-elevated));
+    border:1px solid var(--border);border-radius:12px;
+    padding:20px;text-align:center;position:relative;overflow:hidden;
+  }
+  .stat-box::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,var(--accent),var(--purple));
+  }
+  .stat-num{
+    font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    line-height:1;margin-bottom:6px;
+  }
+  .stat-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+  .stat-desc{font-size:12px;color:var(--text-2);margin-top:8px;line-height:1.4}
+
+  /* SVG text */
+  svg .ig-text{font-family:'Inter',sans-serif;font-size:11px;fill:var(--text-2)}
+  svg .ig-text-strong{font-family:'Inter',sans-serif;font-size:12px;fill:var(--text);font-weight:600}
+  svg .ig-text-title{font-family:'Space Grotesk',sans-serif;font-size:14px;fill:var(--accent);font-weight:700}
+  svg .ig-text-small{font-family:'Inter',sans-serif;font-size:10px;fill:var(--text-muted)}
+  svg .ig-line{stroke:var(--border-strong);fill:none}
+  svg .ig-accent-line{stroke:var(--accent);fill:none}
+  svg .ig-box{fill:var(--bg-elevated);stroke:var(--border-strong);stroke-width:1}
+  svg .ig-accent-box{fill:var(--accent-dim);stroke:var(--accent);stroke-width:1.5}
+  svg .ig-danger-box{fill:var(--danger-bg);stroke:var(--danger);stroke-width:1.5}
+  svg .ig-warn-box{fill:var(--warn-bg);stroke:var(--warn);stroke-width:1.5}
+  svg .ig-success-box{fill:var(--success-bg);stroke:var(--success);stroke-width:1.5}
+  svg .ig-purple-box{fill:var(--purple-bg);stroke:var(--purple);stroke-width:1.5}
+
+  /* Print */
+  @media print{
+    .sidebar,.menu-toggle{display:none}
+    .layout{grid-template-columns:1fr}
+    .content{padding:0 20px}
+    body{background:#fff;color:#000}
+    .hero h1{color:#000!important;-webkit-text-fill-color:#000}
+    .card,.col-box,.step-content,.tool-card,.summary-box,.info-box{
+      background:#f7f7f7;border-color:#ccc;color:#000;break-inside:avoid;
+    }
+  }
+
+  /* Anchor heading offset */
+  section[id],h3[id],h4[id]{scroll-margin-top:80px}
+</style>
+</head>
+<body>
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">☰</button>
+
+<div class="layout">
+
+  <!-- ===== SIDEBAR / TOC ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">M03</div>
+      <div class="brand-text">
+        <strong>Administrative Controls</strong>
+        Network Defense Essentials
+      </div>
+    </div>
+    <div class="toc-title">Daftar Isi</div>
+    <ul class="toc-list" id="toc">
+      <li><a href="#cover"><span class="num">00</span>Cover</a></li>
+      <li><a href="#tujuan"><span class="num">01</span>Tujuan Pembelajaran</a></li>
+      <li><a href="#compliance"><span class="num">02</span>Regulatory Compliance</a></li>
+      <li><a href="#pci-dss"><span class="num">03</span>PCI DSS</a></li>
+      <li><a href="#hipaa"><span class="num">04</span>HIPAA</a></li>
+      <li><a href="#sox"><span class="num">05</span>SOX Act</a></li>
+      <li><a href="#gdpr"><span class="num">06</span>GDPR &amp; DPA</a></li>
+      <li><a href="#iso"><span class="num">07</span>ISO 27000 Series</a></li>
+      <li><a href="#fisma"><span class="num">08</span>FISMA &amp; Other Acts</a></li>
+      <li><a href="#cyberlaw"><span class="num">09</span>Cyber Law per Negara</a></li>
+      <li><a href="#policy-basics"><span class="num">10</span>Security Policy Basics</a></li>
+      <li><a href="#policy-types"><span class="num">11</span>Types of Policies</a></li>
+      <li><a href="#password-policy"><span class="num">12</span>Password Policy</a></li>
+      <li><a href="#training"><span class="num">13</span>Security Awareness Training</a></li>
+      <li><a href="#praktikum"><span class="num">14</span>Modul Praktikum</a></li>
+      <li><a href="#ringkasan"><span class="num">15</span>Ringkasan</a></li>
+    </ul>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="content">
+
+    <!-- ============= HERO / COVER ============= -->
+    <section id="cover" class="hero">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          Module 03 · Network Defense Essentials
+        </div>
+        <h1>Network Security Controls — Administrative Controls</h1>
+        <p class="hero-sub">
+          Ebook &amp; Modul Praktikum — aspek administratif keamanan jaringan: dari regulatory
+          frameworks (PCI DSS, HIPAA, SOX, GDPR, ISO 27000 series, FISMA), cyber law per negara,
+          security policy design (EISP/ISSP/SSSP), password policy, hingga employee awareness training
+          untuk physical security, social engineering, dan data classification.
+        </p>
+        <div class="hero-meta">
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span><strong>Target:</strong> Mahasiswa</span></div>
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span><strong>Durasi:</strong> 5-6 jam</span></div>
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg><span><strong>Level:</strong> Intermediate</span></div>
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span><strong>16</strong> Bagian</span></div>
+        </div>
+
+        <!-- Hero Stats -->
+        <div class="stat-row" style="margin-top:48px">
+          <div class="stat-box"><div class="stat-num">9</div><div class="stat-label">Regulatory Frameworks</div><div class="stat-desc">PCI DSS · HIPAA · SOX · GLBA · GDPR · ISO · DMCA · FISMA · DPA</div></div>
+          <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">Policy Types</div><div class="stat-desc">EISP (enterprise) · ISSP (issue-specific) · SSSP (system-specific)</div></div>
+          <div class="stat-box"><div class="stat-num">4</div><div class="stat-label">Internet Policies</div><div class="stat-desc">Promiscuous · Permissive · Paranoid · Prudent</div></div>
+          <div class="stat-box"><div class="stat-num">5</div><div class="stat-label">Data Classifications</div><div class="stat-desc">Unclassified · Restricted · Confidential · Secret · Top Secret</div></div>
+        </div>
+
+        <!-- Module Flow -->
+        <div class="infographic" style="margin-top:32px">
+          <div class="ig-title">Alur Pembelajaran Modul 03</div>
+          <svg viewBox="0 0 920 280" width="920" height="280" aria-label="Module flow">
+            <defs>
+              <marker id="arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/></marker>
+              <linearGradient id="grad-flow" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#22d3ee" stop-opacity="0.2"/><stop offset="100%" stop-color="#a78bfa" stop-opacity="0.2"/></linearGradient>
+            </defs>
+            <rect x="20" y="30" width="140" height="60" rx="10" class="ig-accent-box"/><text x="90" y="55" text-anchor="middle" class="ig-text-title">1</text><text x="90" y="75" text-anchor="middle" class="ig-text-strong">Compliance</text><text x="90" y="88" text-anchor="middle" class="ig-text">Basics</text><path d="M160 60 L205 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="210" y="30" width="140" height="60" rx="10" class="ig-accent-box"/><text x="280" y="55" text-anchor="middle" class="ig-text-title">2</text><text x="280" y="75" text-anchor="middle" class="ig-text-strong">9 Frameworks</text><text x="280" y="88" text-anchor="middle" class="ig-text">PCI/HIPAA/SOX</text><path d="M350 60 L395 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="400" y="30" width="140" height="60" rx="10" class="ig-accent-box"/><text x="470" y="55" text-anchor="middle" class="ig-text-title">3</text><text x="470" y="75" text-anchor="middle" class="ig-text-strong">Cyber Law</text><text x="470" y="88" text-anchor="middle" class="ig-text">per Negara</text><path d="M540 60 L585 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="590" y="30" width="140" height="60" rx="10" class="ig-warn-box"/><text x="660" y="55" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">4</text><text x="660" y="75" text-anchor="middle" class="ig-text-strong">Security</text><text x="660" y="88" text-anchor="middle" class="ig-text">Policy Design</text>
+            <path d="M660 95 L660 145" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="590" y="150" width="140" height="60" rx="10" class="ig-purple-box"/><text x="660" y="175" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">5</text><text x="660" y="195" text-anchor="middle" class="ig-text-strong">Policy Types</text><text x="660" y="208" text-anchor="middle" class="ig-text">EISP/ISSP/SSSP</text><path d="M585 180 L540 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="400" y="150" width="140" height="60" rx="10" class="ig-purple-box"/><text x="470" y="175" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">6</text><text x="470" y="195" text-anchor="middle" class="ig-text-strong">Password</text><text x="470" y="208" text-anchor="middle" class="ig-text">Policy</text><path d="M395 180 L350 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="210" y="150" width="140" height="60" rx="10" class="ig-success-box"/><text x="280" y="175" text-anchor="middle" class="ig-text-title" style="fill:#34d399">7</text><text x="280" y="195" text-anchor="middle" class="ig-text-strong">Awareness</text><text x="280" y="208" text-anchor="middle" class="ig-text">Training</text><path d="M205 180 L160 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="20" y="150" width="140" height="60" rx="10" class="ig-success-box"/><text x="90" y="175" text-anchor="middle" class="ig-text-title" style="fill:#34d399">8</text><text x="90" y="195" text-anchor="middle" class="ig-text-strong">Praktikum</text><text x="90" y="208" text-anchor="middle" class="ig-text">Hands-on</text>
+            <rect x="380" y="230" width="160" height="40" rx="10" fill="url(#grad-flow)" stroke="#22d3ee" stroke-width="1.5"/><text x="460" y="248" text-anchor="middle" class="ig-text-title">LAB</text><text x="460" y="262" text-anchor="middle" class="ig-text-small">4 Sesi Praktikum</text>
+            <path d="M90 215 L90 250 L375 250" class="ig-accent-line" stroke-width="2" stroke-dasharray="4,3" fill="none"/><path d="M280 215 L280 245 L375 245" class="ig-accent-line" stroke-width="1.5" stroke-dasharray="3,3" fill="none" opacity="0.5"/><path d="M470 215 L470 225" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/><path d="M660 215 L660 245 L545 245" class="ig-accent-line" stroke-width="1.5" stroke-dasharray="3,3" fill="none" opacity="0.5"/>
+          </svg>
+          <div class="infographic-caption">Gambar 1. Alur pembelajaran Modul 03 — dari regulatory frameworks hingga praktikum hands-on.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= TUJUAN PEMBELAJARAN ============= -->
+    <section id="tujuan">
+      <div class="section-header">
+        <span class="section-tag">Bagian 01</span>
+        <h2>Tujuan Pembelajaran</h2>
+        <p>Mengapa compliance, policies, dan governance adalah integral bagi program keamanan informasi.</p>
+      </div>
+      <p>
+        <strong>Compliance, policies, dan governance</strong> adalah integral bagi program keamanan
+        informasi organisasi manapun. Organisasi perlu mematuhi standar regulasi tertentu untuk
+        menjalankan bisnis. Pada saat yang sama, organisasi juga harus memiliki security policies dan
+        governance yang kuat untuk memenuhi standar regulasi. Modul ini membahas aspek administratif
+        dari keamanan jaringan organisasi.
+      </p>
+      <p>Setelah menyelesaikan modul ini, Anda akan mampu:</p>
+      <div class="card-grid grid-2" style="margin-top:20px">
+        <div class="card"><div class="card-title"><div class="card-icon">1</div>Regulatory Frameworks</div><p>Memahami berbagai regulatory frameworks, laws, dan acts — PCI DSS, HIPAA, SOX, GLBA, GDPR, ISO, DMCA, FISMA.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">2</div>Need for Compliance</div><p>Memahami mengapa organisasi perlu compliance — improved security, minimized losses, trust maintenance, increased control.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">3</div>Security Policy</div><p>Mendeskripsikan kebutuhan dan karakteristik good security policy — concise, usable, feasible, understandable, realistic.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">4</div>Policy Design</div><p>Menjelaskan cara design dan develop security policies — 4 implementation aspects, typical document content.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">5</div>Policy Types</div><p>Memahami berbagai tipe security policies — EISP, ISSP, SSSP, plus internet access policies (4 kategori).</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">6</div>Awareness Training</div><p>Memahami berbagai tipe security dan awareness training — security policy, physical, social engineering, data classification.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 2: COMPLIANCE ============= -->
+    <section id="compliance">
+      <div class="section-header">
+        <span class="section-tag">Bagian 02</span>
+        <h2>Regulatory Frameworks Compliance</h2>
+        <p>Sekumpulan guidelines dan best practices yang harus diikuti organisasi untuk memenuhi kebutuhan regulasi.</p>
+      </div>
+      <p>
+        <strong>Regulatory framework compliance</strong> adalah sekumpulan guidelines dan best practices
+        yang ditetapkan agar organisasi mengikutinya sehingga memenuhi kebutuhan regulasi, meningkatkan
+        proses, memperbaiki proteksi, dan mencapai tujuan lain berdasarkan industri dan tipe data yang
+        dikelola. Sering diperlukan bagi organisasi untuk mematuhi beberapa jenis regulasi keamanan.
+        Mematuhi regulatory frameworks adalah upaya kolaboratif antara pemerintah dan badan swasta
+        untuk mendorong perbaikan cybersecurity secara sukarela/mandatori.
+      </p>
+      <p>Regulatory compliance mencegah organisasi dari denda besar atau menjadi korban data breach. Kebanyakan organisasi mematuhi lebih dari satu regulatory framework. Menentukan framework, policies, dan controls mana yang paling kompatibel dengan tujuan compliance organisasi adalah tugas sulit.</p>
+
+      <div class="infographic">
+        <div class="ig-title">4 Komponen Regulatory Framework Compliance</div>
+        <svg viewBox="0 0 900 320" width="900" height="320" aria-label="Compliance components">
+          <defs><radialGradient id="grad-comp" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#22d3ee" stop-opacity="0.3"/><stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/></radialGradient></defs>
+          <circle cx="450" cy="160" r="160" fill="url(#grad-comp)"/>
+          <circle cx="450" cy="160" r="50" fill="#161d2e" stroke="#22d3ee" stroke-width="2"/><text x="450" y="155" text-anchor="middle" class="ig-text-title">Compliance</text><text x="450" y="172" text-anchor="middle" class="ig-text-small">4 Layers</text>
+
+          <rect x="40" y="40" width="260" height="100" rx="10" class="ig-accent-box"/>
+          <text x="170" y="62" text-anchor="middle" class="ig-text-title">① Frameworks</text>
+          <text x="170" y="82" text-anchor="middle" class="ig-text-small">Document policies, standards,</text>
+          <text x="170" y="97" text-anchor="middle" class="ig-text-small">procedures, practices, guidelines</text>
+          <text x="170" y="120" text-anchor="middle" class="ig-text-small" style="font-size:9px;font-style:italic">e.g., PCI DSS Req 3: Protect stored</text>
+          <text x="170" y="132" text-anchor="middle" class="ig-text-small" style="font-size:9px;font-style:italic">cardholder data</text>
+          <line x1="300" y1="100" x2="400" y2="140" stroke="#22d3ee" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+          <rect x="600" y="40" width="260" height="100" rx="10" class="ig-warn-box"/>
+          <text x="730" y="62" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">② Policies</text>
+          <text x="730" y="82" text-anchor="middle" class="ig-text-small">High-level statements, top-down</text>
+          <text x="730" y="97" text-anchor="middle" class="ig-text-small">management, business mandate</text>
+          <text x="730" y="120" text-anchor="middle" class="ig-text-small" style="font-size:9px;font-style:italic">e.g., email policy, encryption policy</text>
+          <line x1="600" y1="100" x2="500" y2="140" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+          <rect x="40" y="180" width="260" height="100" rx="10" class="ig-purple-box"/>
+          <text x="170" y="202" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">③ Standards</text>
+          <text x="170" y="222" text-anchor="middle" class="ig-text-small">Low-level mandatory controls</text>
+          <text x="170" y="237" text-anchor="middle" class="ig-text-small">untuk enforce &amp; support policies</text>
+          <text x="170" y="260" text-anchor="middle" class="ig-text-small" style="font-size:9px;font-style:italic">e.g., DES, AES, RSA algorithms</text>
+          <line x1="300" y1="220" x2="400" y2="180" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+          <rect x="600" y="180" width="260" height="100" rx="10" class="ig-success-box"/>
+          <text x="730" y="202" text-anchor="middle" class="ig-text-title" style="fill:#34d399">④ Procedures &amp; Guidelines</text>
+          <text x="730" y="222" text-anchor="middle" class="ig-text-small">SOP = step-wise instructions</text>
+          <text x="730" y="237" text-anchor="middle" class="ig-text-small">Guidelines = recommendations</text>
+          <text x="730" y="260" text-anchor="middle" class="ig-text-small" style="font-size:9px;font-style:italic">e.g., secure Windows install SOP</text>
+          <line x1="600" y1="220" x2="500" y2="180" stroke="#34d399" stroke-width="1.5" stroke-dasharray="3,2"/>
+        </svg>
+        <div class="infographic-caption">Gambar 2. 4 komponen regulatory compliance — Frameworks → Policies → Standards → Procedures/Guidelines, dari high-level ke low-level.</div>
+      </div>
+
+      <h3 class="sub-title">2.1 Mengapa Organisasi Perlu Compliance</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">🛡</div>Improved Security</div><p>IT security regulations dan standards meningkatkan overall security organisasi dengan memenuhi baseline regulatory requirements. Baseline requirements memastikan consistent data security.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">💰</div>Minimized Losses</div><p>Improved security mencegah security breaches yang dapat menyebabkan losses, repair costs, legal fees, atau denda besar. Investasi compliance jauh lebih murah dari biaya breach.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🤝</div>Maintenance of Trust</div><p>Data breaches menyebabkan perusahaan kehilangan reputasi dan trust dari customer. Compliance membuat customer percaya bahwa informasi mereka aman di organisasi.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">⚡</div>Increased Control</div><p>Security organisasi meningkat dengan controls seperti mencegah kesalahan karyawan, implementasi strong credential systems &amp; encryption, atau monitoring outside threats.</p></div>
+      </div>
+
+      <h3 class="sub-title">2.2 Framework Mapping per Tipe Organisasi</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Regulatory Framework</th><th>Organisasi dalam Scope</th></tr></thead>
+          <tbody>
+            <tr><td><strong>HIPAA</strong></td><td>Perusahaan/kantor yang menangani healthcare data — doctor's offices, insurance companies, business associates, employers</td></tr>
+            <tr><td><strong>Sarbanes-Oxley Act (SOX)</strong></td><td>U.S. public company boards, management, dan public accounting firms</td></tr>
+            <tr><td><strong>FISMA</strong></td><td>Semua federal agencies harus develop method untuk protecting information systems</td></tr>
+            <tr><td><strong>GLBA</strong></td><td>Perusahaan yang menawarkan financial products/services ke individu — loans, financial/investment advice, insurance</td></tr>
+            <tr><td><strong>PCI DSS</strong></td><td>Perusahaan yang menangani credit card information — merchants, processors, acquirers, issuers, service providers</td></tr>
+            <tr><td><strong>GDPR</strong></td><td>Organisasi manapun yang mengumpulkan data orang EU — tidak terbatas lokasi organisasi</td></tr>
+            <tr><td><strong>ISO 27001</strong></td><td>Semua tipe organisasi — commercial enterprises, not-for-profits, charities, government departments</td></tr>
+            <tr><td><strong>DMCA</strong></td><td>Service providers, copyright holders, organisations yang menangani digital content</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box info-tip">
+        <strong>Insight Penting:</strong> Kebanyakan organisasi mematuhi <strong>lebih dari satu framework</strong>.
+        Sebuah bank Indonesia mungkin tunduk pada: PCI DSS (kartu kredit), GLBA (financial), GDPR
+        (jika ada customer EU), ISO 27001 (best practice), UU PDP Indonesia, dan SOX (jika listed di US).
+        Compliance adalah upaya kolaboratif lintas-departemen: IT, Legal, HR, Audit, Operations.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 3: PCI DSS ============= -->
+    <section id="pci-dss">
+      <div class="section-header">
+        <span class="section-tag">Bagian 03</span>
+        <h2>PCI DSS — Payment Card Industry Data Security Standard</h2>
+        <p>Standar keamanan informasi proprietary untuk organisasi yang menangani cardholder information.</p>
+      </div>
+      <p>
+        <strong>PCI DSS</strong> adalah proprietary information security standard untuk organisasi yang
+        menangani cardholder information untuk major debit, credit, prepaid, e-purse, ATM, dan POS cards.
+        Standar ini menawarkan comprehensive standards dan supporting materials untuk meningkatkan
+        payment card data security. PCI DSS berlaku untuk semua entitas yang terlibat dalam payment card
+        processing — merchants, processors, acquirers, issuers, dan service providers — serta semua entitas
+        yang store, process, atau transmit cardholder data.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">PCI DSS — 6 Requirements &amp; 12 Sub-Requirements</div>
+        <svg viewBox="0 0 900 480" width="900" height="480" aria-label="PCI DSS requirements">
+          <!-- 6 main goals -->
+          <rect x="40" y="20" width="820" height="60" rx="10" class="ig-accent-box"/>
+          <text x="60" y="42" class="ig-text-title">① Build and Maintain a Secure Network</text>
+          <text x="60" y="58" class="ig-text-small">1.1 Install &amp; maintain firewall · 1.2 Don't use vendor-supplied defaults for system passwords</text>
+
+          <rect x="40" y="90" width="820" height="60" rx="10" class="ig-warn-box"/>
+          <text x="60" y="112" class="ig-text-title" style="fill:#fbbf24">② Protect Cardholder Data</text>
+          <text x="60" y="128" class="ig-text-small">2.1 Protect stored cardholder data · 2.2 Encrypt transmission of cardholder data across open, public networks</text>
+
+          <rect x="40" y="160" width="820" height="60" rx="10" class="ig-purple-box"/>
+          <text x="60" y="182" class="ig-text-title" style="fill:#a78bfa">③ Maintain a Vulnerability Management Program</text>
+          <text x="60" y="198" class="ig-text-small">3.1 Use and regularly update anti-virus software · 3.2 Develop and maintain secure systems and applications</text>
+
+          <rect x="40" y="230" width="820" height="60" rx="10" class="ig-danger-box"/>
+          <text x="60" y="252" class="ig-text-title" style="fill:#f87171">④ Implement Strong Access Control Measures</text>
+          <text x="60" y="268" class="ig-text-small">4.1 Restrict access by business need-to-know · 4.2 Assign unique ID to each person with computer access · 4.3 Restrict physical access to cardholder data</text>
+
+          <rect x="40" y="300" width="820" height="60" rx="10" class="ig-success-box"/>
+          <text x="60" y="322" class="ig-text-title" style="fill:#34d399">⑤ Regularly Monitor and Test Networks</text>
+          <text x="60" y="338" class="ig-text-small">5.1 Track and monitor all access to network resources and cardholder data · 5.2 Regularly test security systems and processes</text>
+
+          <rect x="40" y="370" width="820" height="60" rx="10" class="ig-accent-box"/>
+          <text x="60" y="392" class="ig-text-title">⑥ Maintain an Information Security Policy</text>
+          <text x="60" y="408" class="ig-text-small">6.1 Maintain a policy that addresses information security for all personnel</text>
+
+          <text x="450" y="460" text-anchor="middle" class="ig-text-small" style="font-style:italic">Failure to meet PCI DSS requirements → fines atau termination of payment-card processing privileges</text>
+        </svg>
+        <div class="infographic-caption">Gambar 3. PCI DSS 6 requirements + 12 sub-requirements — framework komprehensif untuk melindungi cardholder data.</div>
+      </div>
+
+      <h3 class="sub-title">3.1 Contoh PCI DSS Requirements &amp; Controls</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>PCI DSS Requirement</th><th>Policies, Procedures, Controls</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1.1.1</strong> Formal process for approving and testing all network connections and changes to firewall/router configurations</td><td>Provision for detecting all unauthorized network connections to/from IT assets</td></tr>
+            <tr><td><strong>1.2.1</strong> Restrict inbound and outbound traffic to that which is necessary for cardholder data environment, specifically deny all other traffic</td><td>Provision for detecting unauthorized network connections</td></tr>
+            <tr><td><strong>1.1.6</strong> Documentation and business justification for use of all services, protocols, and ports allowed</td><td>Provision for looking insecure protocols and services running on systems</td></tr>
+            <tr><td><strong>1.3.1</strong> Implement DMZ to limit inbound traffic to only authorized publicly accessible services</td><td>Provision for checking how traffic flows across DMZ to/from internal network</td></tr>
+            <tr><td><strong>5.1</strong> Deploy anti-virus software on all systems commonly affected by malicious software</td><td>Provision for detecting malware infection when anti-virus protection is disabled</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box info-danger">
+        <strong>Konsekuensi Non-Compliance:</strong> Failure to meet PCI DSS requirements dapat
+        mengakibatkan <strong>denda $5,000–$100,000 per bulan</strong> dari card brands (Visa, Mastercard),
+        atau termination of payment-card processing privileges — yang berarti organisasi tidak bisa
+        menerima pembayaran kartu. Bagi e-commerce, ini = mati bisnis.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 4: HIPAA ============= -->
+    <section id="hipaa">
+      <div class="section-header">
+        <span class="section-tag">Bagian 04</span>
+        <h2>HIPAA — Health Insurance Portability and Accountability Act</h2>
+        <p>Proteksi federal untuk individually identifiable health information — Privacy Rule, Security Rule, dan Enforcement Rule.</p>
+      </div>
+      <p>
+        <strong>HIPAA Privacy Rule</strong> menyediakan proteksi federal untuk individually identifiable
+        health information yang dipegang oleh covered entities dan business associates, serta memberi
+        pasien array of rights terhadap informasi tersebut. Pada saat yang sama, Privacy Rule mengizinkan
+        disclosure health information yang diperlukan untuk patient care dan tujuan necessary lainnya.
+        <strong>Security Rule</strong> menentukan series administrative, physical, dan technical safeguards
+        untuk covered entities dan business associates guna memastikan confidentiality, integrity, dan
+        availability electronic protected health information (ePHI).
+      </p>
+
+      <h3 class="sub-title">4.1 HIPAA Administrative Simplification Rules</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">📋</div>Electronic Transactions &amp; Code Set Standards</div><p>HIPAA menetapkan covered entities: health plans, health care clearinghouses, dan health care providers. Standard transactions untuk EDI: claims, payment, claim status, eligibility, enrollment, referrals, coordination of benefits, premium payment.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔒</div>Privacy Rule</div><p>Menetapkan standar nasional untuk melindungi medical records dan personal health information. Berlaku untuk health plans, clearinghouses, providers yang conduct electronic transactions. Memberi pasien rights: examine, obtain copy, request corrections.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🛡</div>Security Rule</div><p>Standar nasional untuk melindungi electronic personal health information yang created, received, used, atau maintained oleh covered entity. Memerlukan administrative, physical, dan technical safeguards untuk confidentiality, integrity, security ePHI.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🆔</div>Employer &amp; NPI Standards</div><p><strong>Employer Identifier:</strong> setiap employer punya standard national number. <strong>NPI (National Provider Identifier):</strong> 10-position, intelligence-free numeric identifier untuk covered health care providers.</p></div>
+      </div>
+
+      <div class="infographic">
+        <div class="ig-title">HIPAA Security Rule — 3 Safeguard Categories</div>
+        <svg viewBox="0 0 900 320" width="900" height="320" aria-label="HIPAA safeguards">
+          <rect x="40" y="30" width="260" height="250" rx="12" class="ig-accent-box"/>
+          <text x="170" y="55" text-anchor="middle" class="ig-text-title">Administrative Safeguards</text>
+          <text x="60" y="80" class="ig-text-small">• Security management process</text>
+          <text x="60" y="98" class="ig-text-small">• Assigned security responsibility</text>
+          <text x="60" y="116" class="ig-text-small">• Workforce security &amp; training</text>
+          <text x="60" y="134" class="ig-text-small">• Information access management</text>
+          <text x="60" y="152" class="ig-text-small">• Contingency plan (backup/DR)</text>
+          <text x="60" y="170" class="ig-text-small">• Evaluation (periodic)</text>
+          <text x="60" y="188" class="ig-text-small">• Business associate contracts</text>
+          <text x="60" y="220" class="ig-text-small" style="fill:#fbbf24">50%+ of HIPAA violations</text>
+          <text x="60" y="240" class="ig-text-small" style="font-style:italic">Focus: people &amp; policies</text>
+
+          <rect x="320" y="30" width="260" height="250" rx="12" class="ig-warn-box"/>
+          <text x="450" y="55" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">Physical Safeguards</text>
+          <text x="340" y="80" class="ig-text-small">• Facility access controls</text>
+          <text x="340" y="98" class="ig-text-small">• Workstation security</text>
+          <text x="340" y="116" class="ig-text-small">• Workstation use policies</text>
+          <text x="340" y="134" class="ig-text-small">• Device &amp; media controls</text>
+          <text x="340" y="152" class="ig-text-small">• Asset inventory &amp; tracking</text>
+          <text x="340" y="170" class="ig-text-small">• Media disposal (secure)</text>
+          <text x="340" y="188" class="ig-text-small">• Access control &amp; validation</text>
+          <text x="340" y="220" class="ig-text-small" style="fill:#fbbf24">Physical breach risk</text>
+          <text x="340" y="240" class="ig-text-small" style="font-style:italic">Focus: buildings &amp; devices</text>
+
+          <rect x="600" y="30" width="260" height="250" rx="12" class="ig-purple-box"/>
+          <text x="730" y="55" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">Technical Safeguards</text>
+          <text x="620" y="80" class="ig-text-small">• Access control (unique ID)</text>
+          <text x="620" y="98" class="ig-text-small">• Audit controls (logging)</text>
+          <text x="620" y="116" class="ig-text-small">• Integrity controls</text>
+          <text x="620" y="134" class="ig-text-small">• Person/entity authentication</text>
+          <text x="620" y="152" class="ig-text-small">• Transmission security</text>
+          <text x="620" y="170" class="ig-text-small">• Encryption (required/addressable)</text>
+          <text x="620" y="188" class="ig-text-small">• Automatic logoff</text>
+          <text x="620" y="220" class="ig-text-small" style="fill:#fbbf24">Tech implementation</text>
+          <text x="620" y="240" class="ig-text-small" style="font-style:italic">Focus: systems &amp; data</text>
+        </svg>
+        <div class="infographic-caption">Gambar 4. HIPAA Security Rule 3 safeguard categories — Administrative, Physical, Technical. Compliance memerlukan ketiganya.</div>
+      </div>
+
+      <div class="info-box info-success">
+        <strong>HIPAA Enforcement Rule:</strong> Berisi provisions terkait compliance, investigation,
+        dan imposition of civil monetary penalties untuk violations. Denda HIPAA dapat mencapai
+        <strong>$50,000 per violation</strong> (annual cap $1.5M per identical provision). Violations
+        criminal dapat berupa <strong>1-10 tahun penjara</strong> tergantung intent dan harm.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 5: SOX ============= -->
+    <section id="sox">
+      <div class="section-header">
+        <span class="section-tag">Bagian 05</span>
+        <h2>Sarbanes-Oxley Act (SOX) — 2002</h2>
+        <p>Akti untuk melindungi publik dan investor dengan meningkatkan akurasi dan reliability corporate disclosures.</p>
+      </div>
+      <p>
+        <strong>SOX</strong> dienact tahun 2002, bertujuan melindungi publik dan investor dengan
+        meningkatkan accuracy dan reliability corporate disclosures. Act ini tidak menjelaskan bagaimana
+        organisasi harus menyimpan records, tetapi mendeskripsikan records yang organisasi harus simpan
+        dan durasi penyimpanan. SOX mandated beberapa reforms untuk enhance corporate responsibility,
+        enhance financial disclosures, dan combat corporate dan accounting fraud. Key requirements
+        diorganisasi ke dalam <strong>11 titles</strong>.
+      </p>
+
+      <h3 class="sub-title">5.1 11 Titles SOX</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">I</div>PCAOB</div><p>Public Company Accounting Oversight Board — independent oversight of public accounting firms. Register audit services, define compliance audit processes, inspect conduct, enforce compliance.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">II</div>Auditor Independence</div><p>Standar external auditor independence, limit conflicts of interest. Auditor approval, audit partner rotation, restrict non-audit services (consulting) untuk same clients.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">III</div>Corporate Responsibility</div><p>Senior executives take individual responsibility untuk accuracy &amp; completeness corporate financial reports. Specific forfeitures of benefits dan civil penalties untuk non-compliance.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">IV</div>Enhanced Financial Disclosures</div><p>Enhanced reporting: off-balance-sheet transactions, pro-forma figures, stock transactions corporate officers. Internal controls untuk accuracy financial reports + audits on those controls.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">V-VI</div>Analyst Conflicts &amp; SEC Authority</div><p>Title V: code of conduct securities analysts, disclose conflicts. Title VI: SEC authority censure/bar securities professionals, conditions to bar broker/advisor/dealer.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">VII-XI</div>Studies, Fraud, Tax, Accountability</div><p>VII: studies &amp; reports. VIII: Corporate &amp; Criminal Fraud Accountability (whistleblower protection). IX: White-Collar Crime Penalty Enhancement. X: CEO sign tax return. XI: Corporate Fraud Accountability.</p></div>
+      </div>
+
+      <div class="info-box info-danger">
+        <strong>SOX Section 404 (paling terkenal):</strong> Memerlukan management dan external auditor
+        untuk melaporkan adequacy internal control over financial reporting (ICFR). Ini adalah bagian
+        paling expensive dari SOX compliance — memerlukan dokumentasi extensive, testing, dan audit
+        internal controls. Violation: <strong>hingga 20 tahun penjara</strong> untuk executive yang
+        certify false financial reports.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 6: GDPR & DPA ============= -->
+    <section id="gdpr">
+      <div class="section-header">
+        <span class="section-tag">Bagian 06</span>
+        <h2>GDPR &amp; Data Protection Act 2018</h2>
+        <p>Toughest privacy and security law di dunia — 7 principles + harsh fines untuk violators.</p>
+      </div>
+      <p>
+        <strong>GDPR (General Data Protection Regulation)</strong> adalah toughest privacy and security
+        law di dunia. Meskipun didraft dan dipass oleh European Union (EU), GDPR memberlakukan obligations
+        ke organisasi di manapun, asalkan mereka target atau collect data related to people in the EU.
+        Regulasi ini efektif sejak <strong>25 Mei 2018</strong>. GDPR akan mengenakan denda keras terhadap
+        mereka yang melanggar privacy dan security standards, dengan penalties mencapai puluhan juta euro.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">GDPR — 7 Data Protection Principles (Article 5)</div>
+        <svg viewBox="0 0 900 420" width="900" height="420" aria-label="GDPR 7 principles">
+          <rect x="40" y="20" width="400" height="90" rx="10" class="ig-accent-box"/>
+          <text x="60" y="42" class="ig-text-title">① Lawfulness, Fairness, Transparency</text>
+          <text x="60" y="62" class="ig-text-small">Processing harus lawful, fair, dan transparent</text>
+          <text x="60" y="78" class="ig-text-small">kepada data subject. Legal basis required.</text>
+          <text x="60" y="98" class="ig-text-small" style="font-style:italic">e.g., consent, contract, legitimate interest</text>
+
+          <rect x="460" y="20" width="400" height="90" rx="10" class="ig-warn-box"/>
+          <text x="480" y="42" class="ig-text-title" style="fill:#fbbf24">② Purpose Limitation</text>
+          <text x="480" y="62" class="ig-text-small">Process data hanya untuk legitimate purposes</text>
+          <text x="480" y="78" class="ig-text-small">yang explicitly specified ke data subject saat</text>
+          <text x="480" y="98" class="ig-text-small">collected.</text>
+
+          <rect x="40" y="120" width="400" height="90" rx="10" class="ig-purple-box"/>
+          <text x="60" y="142" class="ig-text-title" style="fill:#a78bfa">③ Data Minimization</text>
+          <text x="60" y="162" class="ig-text-small">Collect dan process hanya sebanyak yang</text>
+          <text x="60" y="178" class="ig-text-small">absolutely necessary untuk purposes specified.</text>
+          <text x="60" y="198" class="ig-text-small" style="font-style:italic">Don't collect "just in case"</text>
+
+          <rect x="460" y="120" width="400" height="90" rx="10" class="ig-danger-box"/>
+          <text x="480" y="142" class="ig-text-title" style="fill:#f87171">④ Accuracy</text>
+          <text x="480" y="162" class="ig-text-small">Keep personal data accurate dan up to date.</text>
+          <text x="480" y="178" class="ig-text-small">Inaccurate data must be erased atau rectified</text>
+          <text x="480" y="198" class="ig-text-small">without delay.</text>
+
+          <rect x="40" y="220" width="400" height="90" rx="10" class="ig-success-box"/>
+          <text x="60" y="242" class="ig-text-title" style="fill:#34d399">⑤ Storage Limitation</text>
+          <text x="60" y="262" class="ig-text-small">Store personally identifying data hanya selama</text>
+          <text x="60" y="278" class="ig-text-small">necessary untuk specified purpose.</text>
+          <text x="60" y="298" class="ig-text-small" style="font-style:italic">Retention policy + deletion schedule</text>
+
+          <rect x="460" y="220" width="400" height="90" rx="10" class="ig-accent-box"/>
+          <text x="480" y="242" class="ig-text-title">⑥ Integrity &amp; Confidentiality</text>
+          <text x="480" y="262" class="ig-text-small">Processing harus ensure appropriate security,</text>
+          <text x="480" y="278" class="ig-text-small">integrity, dan confidentiality (e.g., encryption).</text>
+          <text x="480" y="298" class="ig-text-small" style="font-style:italic">Protection against unauthorized access</text>
+
+          <rect x="40" y="320" width="820" height="80" rx="10" class="ig-warn-box"/>
+          <text x="60" y="345" class="ig-text-title" style="fill:#fbbf24">⑦ Accountability</text>
+          <text x="60" y="365" class="ig-text-small">Data controller responsible untuk demonstrate GDPR compliance dengan semua principles di atas.</text>
+          <text x="60" y="385" class="ig-text-small" style="font-style:italic">Documentation, records of processing, DPIA, breach notification within 72 hours</text>
+        </svg>
+        <div class="infographic-caption">Gambar 5. GDPR 7 principles — Lawfulness, Purpose, Minimization, Accuracy, Storage, Integrity, Accountability.</div>
+      </div>
+
+      <h3 class="sub-title">6.1 GDPR Fines &amp; Penalties</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">💰</div>Tier 1 — Lower Level</div><p>Hingga <strong>€10 juta atau 2% annual global turnover</strong> (mana yang lebih tinggi). Untuk violations terkait: data subject rights, DPIA, records of processing, security obligations, breach notification, data protection by design.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">💰</div>Tier 2 — Upper Level</div><p>Hingga <strong>€20 juta atau 4% annual global turnover</strong> (mana yang lebih tinggi). Untuk violations terkait: basic principles, data subject rights, international transfers, non-compliance dengan order regulator.</p></div>
+      </div>
+
+      <h3 class="sub-title">6.2 Data Protection Act 2018 (UK)</h3>
+      <p>
+        <strong>DPA 2018</strong> menetapkan framework untuk data protection law di UK. Update dan
+        replace Data Protection Act 1998, efektif 25 Mei 2018. Diupdate 1 Januari 2021 untuk reflect
+        UK's status outside EU (post-Brexit). DPA protects individuals dengan regard to processing personal
+        data — requiring lawful &amp; fair processing, conferring rights on data subject (obtain info,
+        rectify inaccurate data), dan conferring functions on Information Commissioner.
+      </p>
+
+      <div class="info-box info-warn">
+        <strong>GDPR Indonesia Equivalent:</strong> Indonesia mengesahkan <strong>UU No. 27 Tahun 2022
+        tentang Perlindungan Data Pribadi (UU PDP)</strong> yang efektif 17 Oktober 2024. Mirip GDPR:
+        7 principles (legitimate purpose, data accuracy, data minimization, transparency, etc.), denda
+        hingga <strong>2% dari annual revenue</strong>, dan wajib appoint Data Protection Officer (DPO).
+        Organisasi Indonesia wajib comply — bukan opsional.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 7: ISO 27000 ============= -->
+    <section id="iso">
+      <div class="section-header">
+        <span class="section-tag">Bagian 07</span>
+        <h2>ISO/IEC 27000 Series — Information Security Standards</h2>
+        <p>Suite standar keamanan informasi paling komprehensif di dunia — dari ISMS hingga cloud, forensics, dan healthcare.</p>
+      </div>
+      <p>
+        ISO/IEC 27000 series adalah keluarga standar keamanan informasi yang paling banyak diadopsi
+        secara global. Standar ini menyediakan framework untuk Information Security Management System
+        (ISMS) dan guidelines untuk berbagai aspek keamanan informasi. Berikut adalah standar-standar
+        utama dalam seri 27000.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">ISO/IEC 27000 Series — Standar Utama</div>
+        <svg viewBox="0 0 900 480" width="900" height="480" aria-label="ISO 27000 series">
+          <rect x="40" y="20" width="200" height="100" rx="10" class="ig-accent-box"/>
+          <text x="140" y="42" text-anchor="middle" class="ig-text-title">27001</text>
+          <text x="140" y="60" text-anchor="middle" class="ig-text-small">ISMS Requirements</text>
+          <text x="140" y="78" text-anchor="middle" class="ig-text-small" style="font-size:9px">Formal spec untuk</text>
+          <text x="140" y="92" text-anchor="middle" class="ig-text-small" style="font-size:9px">Information Security</text>
+          <text x="140" y="106" text-anchor="middle" class="ig-text-small" style="font-size:9px">Management System</text>
+
+          <rect x="260" y="20" width="200" height="100" rx="10" class="ig-warn-box"/>
+          <text x="360" y="42" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">27002</text>
+          <text x="360" y="60" text-anchor="middle" class="ig-text-small">Code of Practice</text>
+          <text x="360" y="78" text-anchor="middle" class="ig-text-small" style="font-size:9px">Control objectives &amp;</text>
+          <text x="360" y="92" text-anchor="middle" class="ig-text-small" style="font-size:9px">controls untuk semua</text>
+          <text x="360" y="106" text-anchor="middle" class="ig-text-small" style="font-size:9px">tipe organisasi</text>
+
+          <rect x="480" y="20" width="200" height="100" rx="10" class="ig-purple-box"/>
+          <text x="580" y="42" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">27005</text>
+          <text x="580" y="60" text-anchor="middle" class="ig-text-small">Risk Management</text>
+          <text x="580" y="78" text-anchor="middle" class="ig-text-small" style="font-size:9px">Guidelines untuk info</text>
+          <text x="580" y="92" text-anchor="middle" class="ig-text-small" style="font-size:9px">security risk</text>
+          <text x="580" y="106" text-anchor="middle" class="ig-text-small" style="font-size:9px">management</text>
+
+          <rect x="700" y="20" width="160" height="100" rx="10" class="ig-success-box"/>
+          <text x="780" y="42" text-anchor="middle" class="ig-text-title" style="fill:#34d399">27006</text>
+          <text x="780" y="60" text-anchor="middle" class="ig-text-small">Accreditation</text>
+          <text x="780" y="78" text-anchor="middle" class="ig-text-small" style="font-size:9px">Certification bodies</text>
+          <text x="780" y="92" text-anchor="middle" class="ig-text-small" style="font-size:9px">audit ISMS vs</text>
+          <text x="780" y="106" text-anchor="middle" class="ig-text-small" style="font-size:9px">27001</text>
+
+          <!-- Row 2 -->
+          <rect x="40" y="140" width="200" height="100" rx="10" class="ig-danger-box"/>
+          <text x="140" y="162" text-anchor="middle" class="ig-text-title" style="fill:#f87171">27017</text>
+          <text x="140" y="180" text-anchor="middle" class="ig-text-small">Cloud Security</text>
+          <text x="140" y="198" text-anchor="middle" class="ig-text-small" style="font-size:9px">Info security aspects</text>
+          <text x="140" y="212" text-anchor="middle" class="ig-text-small" style="font-size:9px">of cloud computing</text>
+
+          <rect x="260" y="140" width="200" height="100" rx="10" class="ig-danger-box"/>
+          <text x="360" y="162" text-anchor="middle" class="ig-text-title" style="fill:#f87171">27018</text>
+          <text x="360" y="180" text-anchor="middle" class="ig-text-small">Cloud Privacy</text>
+          <text x="360" y="198" text-anchor="middle" class="ig-text-small" style="font-size:9px">PII protection in</text>
+          <text x="360" y="212" text-anchor="middle" class="ig-text-small" style="font-size:9px">public cloud</text>
+
+          <rect x="480" y="140" width="200" height="100" rx="10" class="ig-accent-box"/>
+          <text x="580" y="162" text-anchor="middle" class="ig-text-title">27031</text>
+          <text x="580" y="180" text-anchor="middle" class="ig-text-small">Business Continuity</text>
+          <text x="580" y="198" text-anchor="middle" class="ig-text-small" style="font-size:9px">ICT readiness for</text>
+          <text x="580" y="212" text-anchor="middle" class="ig-text-small" style="font-size:9px">business continuity</text>
+
+          <rect x="700" y="140" width="160" height="100" rx="10" class="ig-accent-box"/>
+          <text x="780" y="162" text-anchor="middle" class="ig-text-title">27032</text>
+          <text x="780" y="180" text-anchor="middle" class="ig-text-small">Cybersecurity</text>
+          <text x="780" y="198" text-anchor="middle" class="ig-text-small" style="font-size:9px">Preservation of CIA</text>
+          <text x="780" y="212" text-anchor="middle" class="ig-text-small" style="font-size:9px">in cyberspace</text>
+
+          <!-- Row 3 -->
+          <rect x="40" y="260" width="200" height="100" rx="10" class="ig-warn-box"/>
+          <text x="140" y="282" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">27035</text>
+          <text x="140" y="300" text-anchor="middle" class="ig-text-small">Incident Management</text>
+          <text x="140" y="318" text-anchor="middle" class="ig-text-small" style="font-size:9px">Security incident</text>
+          <text x="140" y="332" text-anchor="middle" class="ig-text-small" style="font-size:9px">handling &amp; response</text>
+
+          <rect x="260" y="260" width="200" height="100" rx="10" class="ig-warn-box"/>
+          <text x="360" y="282" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">27037</text>
+          <text x="360" y="300" text-anchor="middle" class="ig-text-small">Digital Forensics</text>
+          <text x="360" y="318" text-anchor="middle" class="ig-text-small" style="font-size:9px">Identification, collection,</text>
+          <text x="360" y="332" text-anchor="middle" class="ig-text-small" style="font-size:9px">handling digital evidence</text>
+
+          <rect x="480" y="260" width="200" height="100" rx="10" class="ig-purple-box"/>
+          <text x="580" y="282" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">27040</text>
+          <text x="580" y="300" text-anchor="middle" class="ig-text-small">Storage Security</text>
+          <text x="580" y="318" text-anchor="middle" class="ig-text-small" style="font-size:9px">Security aspects of</text>
+          <text x="580" y="332" text-anchor="middle" class="ig-text-small" style="font-size:9px">data storage systems</text>
+
+          <rect x="700" y="260" width="160" height="100" rx="10" class="ig-purple-box"/>
+          <text x="780" y="282" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">27799</text>
+          <text x="780" y="300" text-anchor="middle" class="ig-text-small">Healthcare</text>
+          <text x="780" y="318" text-anchor="middle" class="ig-text-small" style="font-size:9px">Health info security</text>
+          <text x="780" y="332" text-anchor="middle" class="ig-text-small" style="font-size:9px">using 27002</text>
+
+          <!-- Bottom summary -->
+          <rect x="40" y="380" width="820" height="80" rx="8" class="ig-box"/>
+          <text x="60" y="405" class="ig-text-strong">ISO 27000 Series mencakup:</text>
+          <text x="60" y="423" class="ig-text-small">27001 (ISMS) · 27002 (controls) · 27003 (implementation) · 27004 (metrics) · 27005 (risk) · 27006 (accreditation)</text>
+          <text x="60" y="441" class="ig-text-small">27017/18 (cloud) · 27031 (BC) · 27032 (cybersecurity) · 27035 (incident) · 27037 (forensics) · 27040 (storage) · 27799 (healthcare)</text>
+          <text x="60" y="458" class="ig-text-small" style="font-style:italic">Standar lain: 27033 (network), 27034 (application), 27036 (supplier), 27038 (redaction), 27039 (IDS/IPS)</text>
+        </svg>
+        <div class="infographic-caption">Gambar 6. ISO/IEC 27000 series — 12+ standar utama untuk berbagai aspek information security management.</div>
+      </div>
+
+      <div class="info-box info-tip">
+        <strong>ISO 27001 Certification:</strong> ISO 27001 adalah standar yang dapat <em>certified</em>
+        — organisasi dapat audit dan dapat certificate dari accredited certification body (BSI, DNV,
+        TÜV, dll). Certificate valid 3 tahun, surveillance audit per tahun. Manfaat: tender requirement,
+        customer trust, regulatory compliance evidence, continuous improvement framework.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 8: FISMA & OTHER ACTS ============= -->
+    <section id="fisma">
+      <div class="section-header">
+        <span class="section-tag">Bagian 08</span>
+        <h2>FISMA &amp; Other Information Security Acts</h2>
+        <p>FISMA, USA PATRIOT Act, FOIA, ECPA, Computer Fraud and Abuse Act — dan regulasi keamanan lainnya.</p>
+      </div>
+
+      <h3 class="sub-title">8.1 Federal Information Security Management Act (FISMA)</h3>
+      <p>
+        <strong>FISMA 2002</strong> dienact untuk menghasilkan beberapa key security standards dan
+        guidelines yang required oleh Congressional legislation. FISMA menyediakan comprehensive framework
+        untuk memastikan effectiveness information security controls over information resources yang
+        support federal operations dan assets. FISMA memerlukan setiap federal agency untuk develop,
+        document, dan implement agency-wide program untuk information security.
+      </p>
+
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">📋</div>FISMA Framework Includes</div><p>• Standards untuk categorizing information systems by mission impact<br>• Standards untuk minimum security requirements<br>• Guidance untuk selecting appropriate security controls<br>• Guidance untuk assessing security controls effectiveness<br>• Guidance untuk security authorization of information systems</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🏛</div>NIST Publications</div><p>FISMA diimplementasi via NIST publications: <strong>FIPS 199</strong> (categorization), <strong>FIPS 200</strong> (minimum requirements), <strong>SP 800-53</strong> (security controls catalog), <strong>SP 800-37</strong> (RMF — Risk Management Framework), <strong>SP 800-60</strong> (system categorization guide).</p></div>
+      </div>
+
+      <h3 class="sub-title">8.2 Other Information Security Acts</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">🇺🇸</div>USA PATRIOT Act 2001</div><p>Tujuan: deter dan punish terrorist acts di U.S. dan dunia, enhance law enforcement investigatory tools. Strengthen measures prevent/detect/prosecute international money laundering &amp; terrorism financing.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📄</div>Freedom of Information Act (FOIA)</div><p>Memberi public right untuk request access to records dari federal agency. "Law yang keeps citizens informed about their government." 9 exemptions protect personal privacy, national security, law enforcement.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📱</div>Electronic Communications Privacy Act (ECPA) 1986</div><p>Update Federal Wiretap Act 1968 yang tidak cover computer &amp; digital communications. Bersama Stored Wire Electronic Communications Act. USA PATRIOT Act clarify &amp; update ECPA untuk new technologies.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">⚖</div>Computer Fraud and Abuse Act (CFAA) 1986</div><p>Amendment ke Counterfeit Access Device and Abuse Act 1984. "Whoever intentionally accesses a computer without authorization atau exceeds authorized access" shall be punished. Criminal + civil actions.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🎵</div>Digital Millennium Copyright Act (DMCA)</div><p>American copyright law implementing 2 WIPO treaties 1996. Legal prohibitions against circumvention of technological protection measures. 5 titles: WIPO Implementation, Online Infringement, Computer Maintenance, Misc, Vessel Hull Design.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🏦</div>Gramm-Leach-Bliley Act (GLBA)</div><p>US federal law requiring financial institutions explain how they share &amp; protect customer private information. Financial Privacy Rules + Safeguards Rules. Penalty: $100K per violation + officers personally liable $10K + 5 years prison.</p></div>
+      </div>
+
+      <div class="info-box info-success">
+        <strong>Indonesia Cyber Law Equivalents:</strong>
+        <strong>UU ITE (No. 11/2008, amended No. 19/2016, No. 1/2024)</strong> — Informasi dan Transaksi
+        Elektronik. <strong>UU PDP (No. 27/2022)</strong> — Perlindungan Data Pribadi (GDPR equivalent).
+        <strong>UU Cyber Security</strong> — sedang dalam pembahasan. <strong>Permen Kominfo</strong>
+        tentang Penyelenggaraan Sistem Elektronik. Pelanggaran: pidana + denda + sanksi administratif.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 9: CYBER LAW PER NEGARA ============= -->
+    <section id="cyberlaw">
+      <div class="section-header">
+        <span class="section-tag">Bagian 09</span>
+        <h2>Cyber Law di Berbagai Negara</h2>
+        <p>Regulasi cyber security berbeda per yurisdiksi — tabel komparatif 12+ negara.</p>
+      </div>
+      <p>
+        <strong>Cyber law</strong> atau Internet law merujuk pada hukum apapun yang menangani proteksi
+        Internet dan teknologi komunikasi online lainnya. Cyber law mencakup topik seperti Internet
+        access &amp; usage, privacy, freedom of expression, dan jurisdiction. Cyber laws memberikan
+        assurance integrity, security, privacy, dan confidentiality informasi di organisasi governmental
+        maupun private. Cyber laws bervariasi per jurisdiction dan negara, sehingga implementasinya
+        cukup challenging.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Negara</th><th>Laws/Acts</th></tr></thead>
+          <tbody>
+            <tr><td><strong>United States</strong></td><td>Copyright Law (fair use), Online Copyright Infringement Liability Limitation Act, Lanham (Trademark) Act, Foreign Intelligence Surveillance Act, Protect America Act 2007, Privacy Act 1974, Computer Security Act 1987, Federal Identity Theft Act</td></tr>
+            <tr><td><strong>Australia</strong></td><td>Trade Marks Act 1995, Patents Act 1990, Copyright Act 1968, Cybercrime Act 2001</td></tr>
+            <tr><td><strong>United Kingdom</strong></td><td>Copyright &amp; Trademarks (Offenses) Act 2002, Trademarks Act 1994, Computer Misuse Act 1990, Network &amp; Information Systems Regulations 2018, Communications Act 2003, Investigatory Powers Act 2016</td></tr>
+            <tr><td><strong>China</strong></td><td>Copyright Law PRC (amended 2001), Trademark Law PRC (amended 2001), Cybersecurity Law 2017, Data Security Law 2021, Personal Information Protection Law (PIPL) 2021</td></tr>
+            <tr><td><strong>India</strong></td><td>Patents (Amendment) Act 1999, Trade Marks Act 1999, Copyright Act 1957, Information Technology Act 2000 (amended 2008)</td></tr>
+            <tr><td><strong>Germany</strong></td><td>Section 202a (Data Espionage), Section 303a (Alteration of Data), Section 303b (Computer Sabotage), BDSG (Federal Data Protection Act)</td></tr>
+            <tr><td><strong>Japan</strong></td><td>Trademark Law (No. 127/1957), Copyright Management Business Law (2000), Act on Protection of Personal Information (APPI)</td></tr>
+            <tr><td><strong>Singapore</strong></td><td>Computer Misuse Act, Personal Data Protection Act (PDPA) 2012, Cybersecurity Act 2018</td></tr>
+            <tr><td><strong>South Korea</strong></td><td>Copyright Law (Act No. 3916), Industrial Design Protection Act, Personal Information Protection Act (PIPA) 2011</td></tr>
+            <tr><td><strong>Indonesia</strong></td><td>UU ITE (No. 11/2008, amended No. 19/2016 &amp; No. 1/2024), UU PDP (No. 27/2022), UU Hak Cipta (No. 28/2014), Permen Kominfo tentang Penyelenggaraan Sistem Elektronik</td></tr>
+            <tr><td><strong>Brazil</strong></td><td>LGPD (Lei Geral de Proteção de Dados) 2018 — GDPR equivalent, Marco Civil da Internet</td></tr>
+            <tr><td><strong>Canada</strong></td><td>Copyright Act (R.S.C. 1985), Trademark Law, Criminal Code Section 342.1, PIPEDA (Personal Information Protection &amp; Electronic Documents Act)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box info-warn">
+        <strong>Tantangan Multi-Jurisdiction:</strong> Untuk organisasi global, compliance multi-jurisdiction
+        adalah tantangan besar. Data yang di-store di Singapore mungkin tunduk pada PDPA Singapore +
+        GDPR (jika user EU) + UU PDP Indonesia (jika user Indonesia) + US CLOUD Act. Solusi: <strong>data
+        residency</strong> (simpan data di region user), <strong>data localization</strong> (sebagian
+        data harus di negara asal), <strong>legal counsel</strong> per yurisdiksi.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 10: SECURITY POLICY BASICS ============= -->
+    <section id="policy-basics">
+      <div class="section-header">
+        <span class="section-tag">Bagian 10</span>
+        <h2>Security Policy — Basics &amp; Characteristics</h2>
+        <p>Well-documented set of plans, processes, procedures, standards, dan guidelines untuk establish ideal information security status.</p>
+      </div>
+      <p>
+        <strong>Security policy</strong> adalah well-documented set of plans, processes, procedures,
+        standards, dan guidelines yang diperlukan untuk establish ideal information security status
+        organisasi. Security policies digunakan untuk inform people cara kerja yang safe dan secure;
+        mereka define dan guide employee actions cara menangani organisasi sensitive operation, data,
+        atau resources. Security policy adalah integral part dari information security management program
+        untuk organisasi manapun.
+      </p>
+
+      <p>Security policy accomplish <strong>3 goals</strong>:</p>
+      <div class="card-grid grid-3">
+        <div class="card"><div class="card-title"><div class="card-icon">⚖</div>Reduce Legal Liability</div><p>Reduce atau eliminate legal liability ke employees dan third parties. Policy yang documented adalah defense di court.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔒</div>Protect Confidential Info</div><p>Protect confidential dan proprietary information dari theft, misuse, unauthorized disclosure, atau modification.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">⚡</div>Prevent Resource Waste</div><p>Prevent computing resource waste — optimasi usage, prevent abuse, monitor efficiency.</p></div>
+      </div>
+
+      <h3 class="sub-title">10.1 8 Characteristics of a Good Security Policy</h3>
+      <div class="infographic">
+        <div class="ig-title">8 Karakteristik Good Security Policy</div>
+        <svg viewBox="0 0 900 360" width="900" height="360" aria-label="Good policy characteristics">
+          <rect x="40" y="20" width="200" height="80" rx="10" class="ig-accent-box"/>
+          <text x="140" y="42" text-anchor="middle" class="ig-text-title">① Concise</text>
+          <text x="140" y="60" text-anchor="middle" class="ig-text-small">&amp; Clear</text>
+          <text x="140" y="80" text-anchor="middle" class="ig-text-small" style="font-size:9px">Easy deployment</text>
+
+          <rect x="260" y="20" width="200" height="80" rx="10" class="ig-accent-box"/>
+          <text x="360" y="42" text-anchor="middle" class="ig-text-title">② Usable</text>
+          <text x="360" y="60" text-anchor="middle" class="ig-text-small">Easy to use</text>
+          <text x="360" y="80" text-anchor="middle" class="ig-text-small" style="font-size:9px">across org sections</text>
+
+          <rect x="480" y="20" width="200" height="80" rx="10" class="ig-accent-box"/>
+          <text x="580" y="42" text-anchor="middle" class="ig-text-title">③ Economically</text>
+          <text x="580" y="60" text-anchor="middle" class="ig-text-small">Feasible</text>
+          <text x="580" y="80" text-anchor="middle" class="ig-text-small" style="font-size:9px">Cost-effective</text>
+
+          <rect x="700" y="20" width="160" height="80" rx="10" class="ig-accent-box"/>
+          <text x="780" y="42" text-anchor="middle" class="ig-text-title">④ Understandable</text>
+          <text x="780" y="60" text-anchor="middle" class="ig-text-small">Easy to</text>
+          <text x="780" y="80" text-anchor="middle" class="ig-text-small" style="font-size:9px">understand &amp; follow</text>
+
+          <rect x="40" y="120" width="200" height="80" rx="10" class="ig-warn-box"/>
+          <text x="140" y="142" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">⑤ Realistic</text>
+          <text x="140" y="160" text-anchor="middle" class="ig-text-small">Practical based</text>
+          <text x="140" y="178" text-anchor="middle" class="ig-text-small">on reality</text>
+
+          <rect x="260" y="120" width="200" height="80" rx="10" class="ig-warn-box"/>
+          <text x="360" y="142" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">⑥ Consistent</text>
+          <text x="360" y="160" text-anchor="middle" class="ig-text-small">Consistent</text>
+          <text x="360" y="178" text-anchor="middle" class="ig-text-small">implementation</text>
+
+          <rect x="480" y="120" width="200" height="80" rx="10" class="ig-warn-box"/>
+          <text x="580" y="142" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">⑦ Procedurally</text>
+          <text x="580" y="160" text-anchor="middle" class="ig-text-small">Tolerable</text>
+          <text x="580" y="178" text-anchor="middle" class="ig-text-small">Employer-employee</text>
+
+          <rect x="700" y="120" width="160" height="80" rx="10" class="ig-warn-box"/>
+          <text x="780" y="142" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">⑧ Legal</text>
+          <text x="780" y="160" text-anchor="middle" class="ig-text-small">Compliance</text>
+          <text x="780" y="178" text-anchor="middle" class="ig-text-small" style="font-size:9px">Cyber + legal laws</text>
+
+          <!-- Bottom: key elements -->
+          <rect x="40" y="220" width="820" height="120" rx="8" class="ig-box"/>
+          <text x="60" y="245" class="ig-text-strong">Key Elements of Security Policy:</text>
+          <text x="60" y="265" class="ig-text-small">• Clear Communication — no communication gap</text>
+          <text x="60" y="283" class="ig-text-small">• Brief &amp; Clear Information — untuk developers</text>
+          <text x="60" y="301" class="ig-text-small">• Defined Scope &amp; Applicability — what's covered</text>
+          <text x="60" y="319" class="ig-text-small">• Enforceable by Law — penalties for breach</text>
+          <text x="60" y="337" class="ig-text-small">• Recognizes Areas of Responsibility — employees, org, third parties</text>
+        </svg>
+        <div class="infographic-caption">Gambar 7. 8 karakteristik good security policy — dari concise hingga legal compliance. Policy tanpa karakteristik ini akan gagal implementasi.</div>
+      </div>
+
+      <h3 class="sub-title">10.2 Typical Policy Document Content</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">📋</div>Document Control</div><p>Document Control (store/modify/distribute), Document Location, Revision History, Version Number, Approvals, Distribution, Document History. <strong>Tracking &amp; governance</strong> dokumen policy.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📖</div>Overview &amp; Purpose</div><p>Overview (background info), Purpose (detailed explanation why), Scope (who &amp; what covered), Definitions (terms used), Roles &amp; Responsibilities, Target Audience.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📝</div>Policies &amp; Sanctions</div><p>Policies (statements on each aspect), Sanctions &amp; Violations (allow/deny processes), Related Standards/Policies/Processes, Contact Information, Where to Find More Information, Glossary/Acronyms.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔧</div>4 Implementation Aspects</div><p><strong>High-level Security Requirements</strong> (discipline, safeguard, procedural, assurance), <strong>Policy Description</strong>, <strong>Security Concept of Operation</strong>, <strong>Allocation of Security Enforcement</strong> to architecture elements.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 11: POLICY TYPES ============= -->
+    <section id="policy-types">
+      <div class="section-header">
+        <span class="section-tag">Bagian 11</span>
+        <h2>Types of Information Security Policies</h2>
+        <p>3 tipe utama (EISP, ISSP, SSSP) + 4 kategori internet access policies.</p>
+      </div>
+
+      <h3 class="sub-title">11.1 3 Tipe Utama Security Policies</h3>
+      <div class="card-grid grid-3">
+        <div class="card"><div class="card-title"><div class="card-icon">E</div>EISP — Enterprise Info Security Policy</div><p>Drives organisasi's scope dan provides direction ke security policies. Support dengan offering ideology, purpose, methods untuk create secure environment. <strong>Examples:</strong> application policy, network device security policy, security policy auditing, backup/restore policy, system security policy.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">I</div>ISSP — Issue Specific Security Policy</div><p>Directs audience on usage technology-based systems dengan guidelines. Address specific security issues. Specifies necessary technologies + preventive measures: authorization, privacy protection, fair &amp; responsible use. <strong>Examples:</strong> remote access, wireless, incident response, password, personal devices, internet usage.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">S</div>SSSP — System Specific Security Policy</div><p>Directs users saat configuring atau maintaining a system. Focus pada overall security particular system. Addresses implementation &amp; configuration technology + user behavior. <strong>Examples:</strong> DMZ policy, encryption policy, acceptable use, secure cloud computing, IDS/IPS, access control policy.</p></div>
+      </div>
+
+      <h3 class="sub-title">11.2 4 Internet Access Policies</h3>
+      <div class="infographic">
+        <div class="ig-title">4 Internet Access Policies — dari Promiscuous ke Paranoid</div>
+        <svg viewBox="0 0 900 320" width="900" height="320" aria-label="Internet policies">
+          <defs><linearGradient id="grad-inet" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#f87171" stop-opacity="0.6"/><stop offset="100%" stop-color="#34d399" stop-opacity="0.6"/></linearGradient></defs>
+          <rect x="40" y="40" width="820" height="30" rx="6" fill="url(#grad-inet)"/>
+          <text x="60" y="30" class="ig-text-small" style="fill:#f87171">← Less Restrictive (less secure)</text>
+          <text x="860" y="30" text-anchor="end" class="ig-text-small" style="fill:#34d399">More Restrictive (more secure) →</text>
+
+          <rect x="40" y="100" width="200" height="180" rx="10" class="ig-danger-box"/>
+          <text x="140" y="125" text-anchor="middle" class="ig-text-title" style="fill:#f87171">① Promiscuous</text>
+          <text x="140" y="145" text-anchor="middle" class="ig-text-small">No restrictions</text>
+          <text x="60" y="170" class="ig-text-small">• No restriction on</text>
+          <text x="60" y="185" class="ig-text-small">  Internet/remote access</text>
+          <text x="60" y="200" class="ig-text-small">• Nothing blocked</text>
+          <text x="60" y="215" class="ig-text-small">• User access any site</text>
+          <text x="60" y="230" class="ig-text-small">• Download any app</text>
+          <text x="60" y="260" class="ig-text-small" style="font-style:italic">Risk: malware, virus,</text>
+          <text x="60" y="275" class="ig-text-small" style="font-style:italic">Trojan via attachment</text>
+
+          <rect x="260" y="100" width="200" height="180" rx="10" class="ig-warn-box"/>
+          <text x="360" y="125" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">② Permissive</text>
+          <text x="360" y="145" text-anchor="middle" class="ig-text-small">Wide open, block known bad</text>
+          <text x="280" y="170" class="ig-text-small">• Most traffic accepted</text>
+          <text x="280" y="185" class="ig-text-small">• Known dangerous</text>
+          <text x="280" y="200" class="ig-text-small">  services/attacks blocked</text>
+          <text x="280" y="215" class="ig-text-small">• Always catch-up</text>
+          <text x="280" y="260" class="ig-text-small" style="font-style:italic">Risk: new exploits</text>
+          <text x="280" y="275" class="ig-text-small" style="font-style:italic">belum di-block</text>
+
+          <rect x="480" y="100" width="200" height="180" rx="10" class="ig-accent-box"/>
+          <text x="580" y="125" text-anchor="middle" class="ig-text-title">③ Prudent</text>
+          <text x="580" y="145" text-anchor="middle" class="ig-text-small">Default deny, enable safe</text>
+          <text x="500" y="170" class="ig-text-small">• Start: all blocked</text>
+          <text x="500" y="185" class="ig-text-small">• Enable safe services</text>
+          <text x="500" y="200" class="ig-text-small">  individually</text>
+          <text x="500" y="215" class="ig-text-small">• Log all activity</text>
+          <text x="500" y="260" class="ig-text-small" style="font-style:italic">Best practice for</text>
+          <text x="500" y="275" class="ig-text-small" style="font-style:italic">enterprise security</text>
+
+          <rect x="700" y="100" width="160" height="180" rx="10" class="ig-purple-box"/>
+          <text x="780" y="125" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">④ Paranoid</text>
+          <text x="780" y="145" text-anchor="middle" class="ig-text-small">Forbid everything</text>
+          <text x="720" y="170" class="ig-text-small">• No/severely limited</text>
+          <text x="720" y="185" class="ig-text-small">  Internet usage</text>
+          <text x="720" y="200" class="ig-text-small">• Strict restriction all</text>
+          <text x="720" y="215" class="ig-text-small">  computers</text>
+          <text x="720" y="260" class="ig-text-small" style="font-style:italic">Risk: users circumvent</text>
+          <text x="720" y="275" class="ig-text-small" style="font-style:italic">restrictions</text>
+        </svg>
+        <div class="infographic-caption">Gambar 8. 4 internet access policies — Promiscuous (no rules) → Permissive (block known bad) → Prudent (default deny) → Paranoid (forbid all). Prudent = best practice.</div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 12: PASSWORD POLICY ============= -->
+    <section id="password-policy">
+      <div class="section-header">
+        <span class="section-tag">Bagian 12</span>
+        <h2>Password Policy</h2>
+        <p>Set of rules untuk increase system security dengan encouraging strong passwords.</p>
+      </div>
+      <p>
+        <strong>Password policy</strong> adalah set of rules untuk increase system security dengan
+        encouraging users menggunakan strong passwords untuk access organisasi's resources dan keep
+        them secure. Tujuan policy adalah protect organisasi's resources dengan creating robust protected
+        passwords. Policy statement harus include standard practice untuk creating robust password.
+      </p>
+
+      <h3 class="sub-title">12.1 Password Policy Components</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">📏</div>Password Length &amp; Formation</div><p>Length <strong>8-14 characters</strong>. Formation: one or more numerical digits, special characters (@, #, $), uppercase &amp; lowercase letters, avoid personal info, no company name. Case sensitive (username mungkin tidak).</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🚫</div>Password Blacklists</div><p>List of words prohibited from use as passwords karena familiarity. Help prevent usage common passwords. Contoh: "password", "123456", "qwerty", "admin", company name, common names.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">⏰</div>Password Duration</div><p>Suggest users change passwords regularly — usually every <strong>90 or 180 days</strong>. Maximum password age: 60 days. Minimum password age: no limit. Password history: old passwords cannot be reused.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔑</div>Common Password Practices</div><p>Don't share account details, don't keep common password for all accounts, don't share passwords, never write password anywhere, don't communicate via email/phone/IM, don't leave machine unattended (lock/logoff), different passwords for OS &amp; applications.</p></div>
+      </div>
+
+      <div class="info-box info-tip">
+        <strong>Update NIST SP 800-63B (2017):</strong> NIST terbaru merekomendasikan: (1) minimum
+        8 char,鼓励 passphrase panjang 64 char; (2) <strong>NO forced periodic rotation</strong>
+        (rotation justru menurunkan security); (3) check against breach databases; (4) accept semua
+        karakter termasuk emoji; (5) rate limiting + lockout. Update policy Anda sesuai standar terbaru.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 13: SECURITY AWARENESS TRAINING ============= -->
+    <section id="training">
+      <div class="section-header">
+        <span class="section-tag">Bagian 13</span>
+        <h2>Security &amp; Awareness Training</h2>
+        <p>4 tipe training utama: Security Policy, Physical Security, Social Engineering, Data Classification.</p>
+      </div>
+      <p>
+        <strong>Employee dan user training</strong> memainkan peran penting dalam governance overall
+        security organisasi. Untrained employee atau user dapat pose considerable risk ke organisasi.
+        Oleh karena itu, penting untuk membuat mereka aware tentang security policies, dan conduct
+        awareness training programs lain untuk maintain organisasi security.
+      </p>
+
+      <h3 class="sub-title">13.1 Employee Awareness &amp; Training — Security Policy</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">📚</div>Why Policy Training?</div><p>Security policy training teaches employees how perform duties dan comply dengan security policy. Train new employees sebelum grant akses ke network. Help employees recognize &amp; respond security threats real-time. Make aware new updates probable vulnerabilities.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">✓</div>Advantages</div><p>• Effective implementation of security policy<br>• Policies followed, not just enforced<br>• Creates awareness on compliance issues<br>• Helps organization enhance network security<br>• Early identification of breach decreases cost</p></div>
+      </div>
+
+      <h3 class="sub-title">13.2 Physical Security Training</h3>
+      <p>Well-trained dan skilled personnel dapat minimize risk physical security threat. Training harus educate employees tentang: minimize breaches, identify elements prone hardware theft, assess risks handling sensitive data, ensure physical security at workplace.</p>
+
+      <h3 class="sub-title">13.3 Social Engineering Training</h3>
+      <div class="infographic">
+        <div class="ig-title">Social Engineering Attack Awareness &amp; Training</div>
+        <svg viewBox="0 0 900 300" width="900" height="300" aria-label="Social engineering training">
+          <rect x="40" y="20" width="820" height="40" rx="8" class="ig-accent-box"/>
+          <text x="60" y="45" class="ig-text-strong">Social Engineering Techniques yang Harus Dikenali Employee:</text>
+
+          <rect x="40" y="80" width="200" height="100" rx="10" class="ig-warn-box"/>
+          <text x="140" y="102" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">Phone</text>
+          <text x="140" y="120" text-anchor="middle" class="ig-text-small">Impersonation</text>
+          <text x="60" y="145" class="ig-text-small" style="font-size:10px">Train: Don't provide</text>
+          <text x="60" y="160" class="ig-text-small" style="font-size:10px">confidential info via</text>
+          <text x="60" y="175" class="ig-text-small" style="font-size:10px">phone. Verify caller.</text>
+
+          <rect x="260" y="80" width="200" height="100" rx="10" class="ig-warn-box"/>
+          <text x="360" y="102" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">Dumpsters</text>
+          <text x="360" y="120" text-anchor="middle" class="ig-text-small">Dumpster Diving</text>
+          <text x="280" y="145" class="ig-text-small" style="font-size:10px">Train: Don't throw</text>
+          <text x="280" y="160" class="ig-text-small" style="font-size:10px">sensitive docs in trash.</text>
+          <text x="280" y="175" class="ig-text-small" style="font-size:10px">Shred + erase magnetic.</text>
+
+          <rect x="480" y="80" width="200" height="100" rx="10" class="ig-warn-box"/>
+          <text x="580" y="102" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">Email</text>
+          <text x="580" y="120" text-anchor="middle" class="ig-text-small">Phishing, Malicious Attachment</text>
+          <text x="500" y="145" class="ig-text-small" style="font-size:10px">Train: Differentiate legit</text>
+          <text x="500" y="160" class="ig-text-small" style="font-size:10px">vs phishing email. Don't</text>
+          <text x="500" y="175" class="ig-text-small" style="font-size:10px">download attachments.</text>
+
+          <rect x="700" y="80" width="160" height="100" rx="10" class="ig-warn-box"/>
+          <text x="780" y="102" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">Physical</text>
+          <text x="780" y="120" text-anchor="middle" class="ig-text-small">Tail-gaiting, Piggy-backing</text>
+          <text x="720" y="145" class="ig-text-small" style="font-size:10px">Train: Don't allow</text>
+          <text x="720" y="160" class="ig-text-small" style="font-size:10px">strangers tail-gate.</text>
+          <text x="720" y="175" class="ig-text-small" style="font-size:10px">Badge required.</text>
+
+          <!-- Bottom: other techniques -->
+          <rect x="40" y="200" width="820" height="80" rx="8" class="ig-box"/>
+          <text x="60" y="222" class="ig-text-strong">Teknik Lain yang Perlu Diwaspadai:</text>
+          <text x="60" y="242" class="ig-text-small">• Changing passwords — attacker poses as authority, asks to change username/password</text>
+          <text x="60" y="260" class="ig-text-small">• Name-drop — using higher authority's name to gain access</text>
+          <text x="60" y="275" class="ig-text-small">• Relaxing conversation — build rapport dengan employee</text>
+        </svg>
+        <div class="infographic-caption">Gambar 9. Social engineering awareness training — 4 area risiko utama + teknik tambahan yang harus dikenali employee.</div>
+      </div>
+
+      <h3 class="sub-title">13.4 Data Classification Training</h3>
+      <p>Organisasi harus train employees cara mengetahui apakah informasi confidential. <strong>Security labels</strong> digunakan untuk mark security level requirements untuk information assets dan controls access ke mereka. Security labels categorize berdasarkan siapa yang dapat access data atau object.</p>
+
+      <div class="infographic">
+        <div class="ig-title">5 Data Classification Levels (Security Labels)</div>
+        <svg viewBox="0 0 900 320" width="900" height="320" aria-label="Data classification">
+          <defs><linearGradient id="grad-class" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#34d399" stop-opacity="0.4"/><stop offset="100%" stop-color="#f87171" stop-opacity="0.4"/></linearGradient></defs>
+          <rect x="40" y="40" width="820" height="30" rx="6" fill="url(#grad-class)"/>
+          <text x="60" y="30" class="ig-text-small" style="fill:#34d399">← Less Sensitive</text>
+          <text x="860" y="30" text-anchor="end" class="ig-text-small" style="fill:#f87171">More Sensitive →</text>
+
+          <rect x="40" y="90" width="160" height="180" rx="10" class="ig-success-box"/>
+          <text x="120" y="115" text-anchor="middle" class="ig-text-title" style="fill:#34d399">Unclassified</text>
+          <text x="120" y="135" text-anchor="middle" class="ig-text-small">No access</text>
+          <text x="120" y="150" text-anchor="middle" class="ig-text-small">permissions</text>
+          <text x="120" y="165" text-anchor="middle" class="ig-text-small">required.</text>
+          <text x="60" y="195" class="ig-text-small" style="font-size:9px">Any person at any</text>
+          <text x="60" y="210" class="ig-text-small" style="font-size:9px">level may access.</text>
+          <text x="60" y="245" class="ig-text-small" style="font-style:italic">e.g., public website,</text>
+          <text x="60" y="260" class="ig-text-small" style="font-style:italic">marketing brochure</text>
+
+          <rect x="210" y="90" width="160" height="180" rx="10" class="ig-accent-box"/>
+          <text x="290" y="115" text-anchor="middle" class="ig-text-title">Restricted</text>
+          <text x="290" y="135" text-anchor="middle" class="ig-text-small">Only a few</text>
+          <text x="290" y="150" text-anchor="middle" class="ig-text-small">people can access.</text>
+          <text x="230" y="195" class="ig-text-small" style="font-size:9px">Technical, business,</text>
+          <text x="230" y="210" class="ig-text-small" style="font-size:9px">personal issues.</text>
+          <text x="230" y="245" class="ig-text-small" style="font-style:italic">e.g., internal memo,</text>
+          <text x="230" y="260" class="ig-text-small" style="font-style:italic">project timeline</text>
+
+          <rect x="380" y="90" width="160" height="180" rx="10" class="ig-warn-box"/>
+          <text x="460" y="115" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">Confidential</text>
+          <text x="460" y="135" text-anchor="middle" class="ig-text-small">Exposure →</text>
+          <text x="460" y="150" text-anchor="middle" class="ig-text-small">financial/legal</text>
+          <text x="460" y="165" text-anchor="middle" class="ig-text-small">issues.</text>
+          <text x="400" y="195" class="ig-text-small" style="font-size:9px">Highly confidential</text>
+          <text x="400" y="210" class="ig-text-small" style="font-size:9px">or only confidential.</text>
+          <text x="400" y="245" class="ig-text-small" style="font-style:italic">e.g., salary data,</text>
+          <text x="400" y="260" class="ig-text-small" style="font-style:italic">contracts</text>
+
+          <rect x="550" y="90" width="160" height="180" rx="10" class="ig-danger-box"/>
+          <text x="630" y="115" text-anchor="middle" class="ig-text-title" style="fill:#f87171">Secret</text>
+          <text x="630" y="135" text-anchor="middle" class="ig-text-small">Authorized users</text>
+          <text x="630" y="150" text-anchor="middle" class="ig-text-small">may access secret,</text>
+          <text x="630" y="165" text-anchor="middle" class="ig-text-small">confidential, restricted,</text>
+          <text x="630" y="180" text-anchor="middle" class="ig-text-small">unclassified.</text>
+          <text x="570" y="210" class="ig-text-small" style="font-size:9px">Cannot access top</text>
+          <text x="570" y="225" class="ig-text-small" style="font-size:9px">secret.</text>
+          <text x="570" y="245" class="ig-text-small" style="font-style:italic">e.g., trade secrets,</text>
+          <text x="570" y="260" class="ig-text-small" style="font-style:italic">IP, source code</text>
+
+          <rect x="720" y="90" width="140" height="180" rx="10" class="ig-purple-box"/>
+          <text x="790" y="115" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">Top Secret</text>
+          <text x="790" y="135" text-anchor="middle" class="ig-text-small">May access all</text>
+          <text x="790" y="150" text-anchor="middle" class="ig-text-small">levels below.</text>
+          <text x="740" y="180" class="ig-text-small" style="font-size:9px">Highest clearance</text>
+          <text x="740" y="195" class="ig-text-small" style="font-size:9px">required.</text>
+          <text x="740" y="225" class="ig-text-small" style="font-style:italic">e.g., national</text>
+          <text x="740" y="240" class="ig-text-small" style="font-style:italic">security, military,</text>
+          <text x="740" y="255" class="ig-text-small" style="font-style:italic">merger plans</text>
+        </svg>
+        <div class="infographic-caption">Gambar 10. 5 level data classification — Unclassified → Restricted → Confidential → Secret → Top Secret. Setiap level = clearance + controls berbeda.</div>
+      </div>
+
+      <div class="info-box info-success">
+        <strong>Metode Training:</strong> Classroom style training · Online training · Round table
+        discussions · Security awareness website · Providing hints · Making short films · Seminars ·
+        Simulation employee training · Hands-on training · Lectures · Coaching/mentoring · Case studies ·
+        Management specific activities · Group discussions. Kombinasi metode = retention lebih baik.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 14: PRAKTIKUM ============= -->
+    <section id="praktikum">
+      <div class="practicum-banner">
+        <span class="section-tag" style="margin-bottom:8px">Bagian 14 · Hands-on Lab</span>
+        <h2>Modul Praktikum Administrative Controls</h2>
+        <p>Empat sesi praktik hands-on: compliance gap analysis, security policy drafting, phishing simulation, dan data classification implementation.</p>
+      </div>
+
+      <h3 class="sub-title">14.1 Tujuan Praktikum</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">1</div>Compliance Analysis</div><p>Melakukan gap analysis PCI DSS atau ISO 27001 pada case study organisasi fiktif — identifikasi gap &amp; rekomendasi remediasi.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">2</div>Policy Drafting</div><p>Menyusun draft security policy (Acceptable Use Policy + Password Policy) lengkap dengan 8 karakteristik good policy.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">3</div>Phishing Simulation</div><p>Menjalankan phishing simulation campaign menggunakan GoPhish — measure click rate, train response.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">4</div>Data Classification</div><p>Implementasi data classification scheme pada file system — label files, set access controls per classification level.</p></div>
+      </div>
+
+      <h3 class="sub-title">14.2 Alat dan Bahan</h3>
+      <div class="two-col">
+        <div class="col-box left">
+          <h4><span class="ico">💻</span>Perangkat Keras</h4>
+          <ul class="checklist">
+            <li>Laptop/PC dengan 8 GB RAM</li>
+            <li>VM Ubuntu Server (untuk GoPhish)</li>
+            <li>Optional: VM Windows untuk AD/GPO lab</li>
+            <li>Email account untuk phishing simulation test</li>
+          </ul>
+        </div>
+        <div class="col-box right">
+          <h4><span class="ico">🧰</span>Perangkat Lunak</h4>
+          <ul class="checklist">
+            <li><strong>GoPhish</strong> — open-source phishing simulation framework</li>
+            <li><strong>OWASP Risk Rating Calculator</strong> untuk risk assessment</li>
+            <li><strong>Microsoft Word/Google Docs</strong> untuk policy drafting</li>
+            <li><strong>NIST SP 800-53</strong> catalog (online reference)</li>
+            <li><strong>PCI DSS v4.0</strong> requirements document</li>
+            <li><strong>ISO 27001:2022</strong> checklist template</li>
+            <li><strong>HaveIBeenPwned API</strong> untuk password breach check</li>
+            <li><strong>kolide/fleet</strong> untuk device posture (opsional)</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="sub-title">14.3 Workflow Praktikum 4 Sesi</h3>
+      <div class="infographic">
+        <div class="ig-title">Alur Praktikum — 4 Sesi, 20 Langkah, 1 Laporan Akhir</div>
+        <svg viewBox="0 0 900 280" width="900" height="280" aria-label="Practicum workflow">
+          <defs><linearGradient id="grad-lab-m03" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#22d3ee"/><stop offset="33%" stop-color="#34d399"/><stop offset="66%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#fbbf24"/></linearGradient></defs>
+          <path d="M 60 100 L 840 100" stroke="url(#grad-lab-m03)" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="150" cy="100" r="32" fill="#161d2e" stroke="#22d3ee" stroke-width="2.5"/><text x="150" y="98" text-anchor="middle" class="ig-text-title">S1</text><text x="150" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="80" y="150" width="140" height="70" rx="10" class="ig-accent-box"/><text x="150" y="172" text-anchor="middle" class="ig-text-strong">Compliance</text><text x="150" y="188" text-anchor="middle" class="ig-text-small">Gap Analysis</text><text x="150" y="202" text-anchor="middle" class="ig-text-small">PCI/ISO</text>
+          <text x="150" y="65" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">~90 menit</text>
+          <circle cx="380" cy="100" r="32" fill="#161d2e" stroke="#34d399" stroke-width="2.5"/><text x="380" y="98" text-anchor="middle" class="ig-text-title" style="fill:#34d399">S2</text><text x="380" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="310" y="150" width="140" height="70" rx="10" class="ig-success-box"/><text x="380" y="172" text-anchor="middle" class="ig-text-strong">Policy</text><text x="380" y="188" text-anchor="middle" class="ig-text-small">Drafting</text><text x="380" y="202" text-anchor="middle" class="ig-text-small">AUP + Password</text>
+          <text x="380" y="65" text-anchor="middle" class="ig-text-small" style="fill:#34d399">~75 menit</text>
+          <circle cx="610" cy="100" r="32" fill="#161d2e" stroke="#a78bfa" stroke-width="2.5"/><text x="610" y="98" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">S3</text><text x="610" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="540" y="150" width="140" height="70" rx="10" class="ig-purple-box"/><text x="610" y="172" text-anchor="middle" class="ig-text-strong">GoPhish</text><text x="610" y="188" text-anchor="middle" class="ig-text-small">Phishing</text><text x="610" y="202" text-anchor="middle" class="ig-text-small">Simulation</text>
+          <text x="610" y="65" text-anchor="middle" class="ig-text-small" style="fill:#a78bfa">~75 menit</text>
+          <circle cx="820" cy="100" r="32" fill="#161d2e" stroke="#fbbf24" stroke-width="2.5"/><text x="820" y="98" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">S4</text><text x="820" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="750" y="150" width="140" height="70" rx="10" class="ig-warn-box"/><text x="820" y="172" text-anchor="middle" class="ig-text-strong">Data</text><text x="820" y="188" text-anchor="middle" class="ig-text-small">Classification</text><text x="820" y="202" text-anchor="middle" class="ig-text-small">Lab</text>
+          <text x="820" y="65" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">~60 menit</text>
+          <rect x="280" y="240" width="340" height="30" rx="15" fill="#161d2e" stroke="#22d3ee" stroke-width="1.5"/><text x="450" y="260" text-anchor="middle" class="ig-text-strong" style="fill:#22d3ee">Total ~5 jam → Laporan Compliance + Policy + Phishing + Classification</text>
+        </svg>
+        <div class="infographic-caption">Gambar 11. Workflow 4 sesi praktikum Modul 03 — total 20 langkah hands-on.</div>
+      </div>
+
+      <h3 class="sub-title">14.4 Langkah Praktikum</h3>
+
+      <h4 class="mini-title">Sesi 1 — Compliance Gap Analysis (PCI DSS atau ISO 27001)</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Pilih Case Study Organisasi</h5><p>Buat profil organisasi fiktif: "TechMart" — e-commerce dengan 500K customer, process credit card, 100 karyawan. Identifikasi data yang di-handle: cardholder data, PII customer, employee data. Tentukan framework: PCI DSS (karena process credit card).</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Download PCI DSS v4.0 Requirements</h5><p>Download dari <code>pcisecuritystandards.org</code>. Baca 12 requirements utama. Buat spreadsheet dengan kolom: Requirement #, Description, Status (Compliant/Gap/Partial), Evidence, Remediation Plan.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Assess Setiap Requirement</h5><p>Untuk setiap requirement, assess apakah TechMart comply. Contoh: Req 1.1 (firewall) — apakah ada? Req 3 (protect stored cardholder data) — apakah encrypted? Req 8 (unique ID) — apakah ada MFA? Catat gaps yang ditemukan.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>Prioritize Gaps</h5><p>Rate setiap gap berdasarkan: (a) risk severity (Critical/High/Medium/Low), (b) effort to remediate (Low/Medium/High), (c) cost. Buat remediation roadmap: Quick wins (90 hari), Medium-term (6 bulan), Long-term (1 tahun).</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Laporan Gap Analysis</h5><p>Buat laporan: executive summary (untuk C-level), detailed findings (per requirement), risk matrix, remediation roadmap dengan timeline + budget estimate. Sertakan evidence (screenshot, config sample).</p></div></div>
+      </div>
+
+      <h4 class="mini-title">Sesi 2 — Security Policy Drafting</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Pilih Policy untuk Draft</h5><p>Draft 2 policy: <strong>(1) Acceptable Use Policy (AUP)</strong> — bagaimana employee menggunakan IT resources; <strong>(2) Password Policy</strong> — standar password di organisasi.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Struktur Dokumen Policy</h5><p>Gunakan struktur standar: Document Control, Revision History, Overview, Purpose, Scope, Definitions, Roles &amp; Responsibilities, Target Audience, Policies (statements), Sanctions &amp; Violations, Related Standards, Contact Info, Glossary.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Draft AUP Content</h5><p>Tulis: (a) acceptable use (email, internet, software), (b) unacceptable use (piracy, hacking, personal business), (c) monitoring disclaimer, (d) no expectation of privacy, (e) reporting violations, (f) sanctions (verbal warning → termination → legal action).</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>Draft Password Policy</h5><p>Tulis: (a) minimum 12 char (NIST 800-63B), (b) no forced rotation (breach-based instead), (c) breach check via HIBP, (d) MFA required for admin/remote, (e) password manager encouraged, (f) account lockout after 5 failed, (g) storage: Argon2/bcrypt.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Review &amp; Presentation</h5><p>Review policy terhadap 8 characteristics good policy (concise, usable, feasible, etc.). Present ke peer review — dapat feedback. Final draft dengan version control, approval workflow, distribution list.</p></div></div>
+      </div>
+
+      <h4 class="mini-title">Sesi 3 — Phishing Simulation dengan GoPhish</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Install GoPhish</h5><p>Download dari <code>getgophish.com</code>. Run: <code>./gophish</code>. Akses <code>https://localhost:3333</code> (admin: gophish/gophish). Ganti password admin. Setup SMTP relay (boleh Mailtrap untuk test).</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Import Email Targets</h5><p>Buat CSV dengan 10-15 email target (kawan kelas, email pribadi — dengan consent). Upload ke GoPhish → Users &amp; Groups. Buat group "Test-Employees".</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Design Phishing Template</h5><p>Buat email template "Your password will expire" — impersonate IT department. Landing page: fake login form yang capture credentials (untuk demo). <strong>Penting: jangan benar-benar capture credentials — gunakan educational landing page</strong> yang langsung bilang "This was a phishing simulation".</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>Launch Campaign</h5><p>Launch campaign ke group "Test-Employees". Tunggu 24-48 jam. Monitor dashboard: email sent, email opened, link clicked, credentials submitted (harusnya tidak ada karena educational landing page).</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Analisis &amp; Laporan</h5><p>Catat metrics: open rate, click rate, report rate (berapa yang report ke IT). Buat laporan: campaign summary, per-user result, rekomendasi training untuk yang click. Diskusikan: cara improve — quarterly simulation, targeted training, reward reporting.</p></div></div>
+      </div>
+
+      <h4 class="mini-title">Sesi 4 — Data Classification Implementation</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Define Classification Scheme</h5><p>Adopsi 5 level: Public, Internal, Confidential, Restricted, Top Secret. Buat matrix: data type → classification. Contoh: marketing brochure = Public, internal memo = Internal, salary data = Confidential, trade secret = Restricted, merger plan = Top Secret.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Create Labeling System</h5><p>Di Linux/Windows, buat labeling convention: filename prefix [PUB], [INT], [CONF], [REST], [TS]. Atau gunakan metadata: file properties → classification tag. Buat script Python untuk auto-label berdasarkan content keyword.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Set Access Controls per Level</h5><p>Implementasi: Public = all read; Internal = all employees read; Confidential = department read; Restricted = need-to-know; Top Secret = named individuals. Gunakan ACL: <code>setfacl -m g:finance:rw--- salary_data.xlsx</code> untuk Confidential finance-only.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>DLP Proof of Concept</h5><p>Install <code>openDLP</code> atau buat script sederhana yang scan file system untuk classification labels. Setup alert: jika file [REST] di-copy ke USB → alert. Jika file [TS] di-email → block. Dokumentasikan DLP rules.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Laporan &amp; Recommendations</h5><p>Buat laporan: classification scheme, labeling convention, access control matrix, DLP rule examples. Rekomendasi: training untuk semua employee, periodic audit, automated discovery tool, integration dengan SIEM.</p></div></div>
+      </div>
+
+      <h3 class="sub-title">14.5 Lembar Kerja / Tugas</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">Q1</div>Compliance Priority</div><p>Dari Sesi 1, identifikasi 3 gap paling critical di TechMart. Mengapa gap tersebut critical? Apa dampak bisnis jika tidak diperbaiki? Berapa estimasi biaya remediasi vs biaya breach?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q2</div>Policy Trade-off</div><p>Dari Sesi 2, jelaskan trade-off antara policy yang ketat (prudent) vs fleksibel (permissive). Kapan masing-masing cocok? Bagaimana memastikan employee comply tanpa menjadi paranoid?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q3</div>Phishing Metrics</div><p>Dari Sesi 3, apa click rate campaign Anda? Bandingkan dengan industry average (15-25%). Apa faktor yang membuat user click? Bagaimana training dapat menurunkan click rate?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q4</div>Classification Challenge</div><p>Dari Sesi 4, apa tantangan terbesar implementasi data classification? Bagaimana menangani data yang ambigu (e.g., email yang berisi info confidential + internal)? Apa otomatisasi yang mungkin?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q5</div>Multi-Framework Compliance</div><p>Jika TechMart juga melayani customer EU dan US public company, framework apa lagi yang harus comply? Bagaimana mengelola overlap dan konflik antar framework?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q6</div>Indonesia Context</div><p>Bagaimana UU PDP Indonesia (No. 27/2022) membandingkan dengan GDPR? Apa persamaan dan perbedaan utama? Apa implikasinya untuk organisasi Indonesia yang juga melayani customer EU?</p></div>
+      </div>
+
+      <h3 class="sub-title">14.6 Checklist Evaluasi</h3>
+      <p>Praktikum dinyatakan <strong>lulus</strong> jika minimal 10 dari 12 kriteria berikut terpenuhi:</p>
+      <ul class="checklist">
+        <li>Gap analysis spreadsheet lengkap untuk 12 PCI DSS requirements</li>
+        <li>Minimal 5 gaps teridentifikasi dengan severity rating</li>
+        <li>Remediation roadmap dengan timeline + budget estimate</li>
+        <li>Draft AUP lengkap dengan 13 section standar</li>
+        <li>Draft Password Policy mengikuti NIST SP 800-63B (2017+)</li>
+        <li>Policy melewati review 8 characteristics good policy</li>
+        <li>GoPhish terinstall dan campaign sukses launch</li>
+        <li>Minimal 10 target email dalam campaign</li>
+        <li>Phishing metrics (open rate, click rate) terdokumentasi</li>
+        <li>Classification scheme 5 level terdefinisi dengan contoh per level</li>
+        <li>Access control matrix per classification level implemented</li>
+        <li>DLP proof-of-concept atau rule examples terdokumentasi</li>
+      </ul>
+
+      <div class="info-box info-success">
+        <strong>Bonus:</strong> Mahasiswa yang dapat mendemonstrasikan: (a) integrasi policy dengan
+        HR onboarding system, (b) automated compliance dashboard menggunakan GRC tool (like Drata,
+        Vanta), (c) phishing simulation dengan scenario spear-phishing customized per department,
+        atau (d) implementasi classification di cloud (AWS Macie / Azure Purview) — akan mendapat
+        nilai tambahan.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 15: RINGKASAN ============= -->
+    <section id="ringkasan">
+      <div class="section-header">
+        <span class="section-tag">Bagian 15</span>
+        <h2>Ringkasan Modul</h2>
+        <p>Rangkuman poin-poin kritis yang telah dibahas dalam Modul 03 Administrative Controls.</p>
+      </div>
+
+      <div class="summary-box">
+        <h3>📋 Yang Telah Dipelajari</h3>
+
+        <div class="infographic" style="margin-bottom:24px">
+          <div class="ig-title">Perjalanan Pembelajaran Modul 03 — Dari Compliance ke Training</div>
+          <svg viewBox="0 0 900 180" width="900" height="180" aria-label="Recap journey">
+            <defs><linearGradient id="grad-recap-m03" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#34d399"/></linearGradient></defs>
+            <path d="M 60 90 Q 220 30 380 90 T 700 90 T 840 90" stroke="url(#grad-recap-m03)" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <g>
+              <circle cx="60" cy="90" r="10" fill="#22d3ee" stroke="#0a0e1a" stroke-width="2"/><text x="60" y="115" text-anchor="middle" class="ig-text-small">Compliance</text>
+              <circle cx="220" cy="55" r="10" fill="#22d3ee" stroke="#0a0e1a" stroke-width="2"/><text x="220" y="35" text-anchor="middle" class="ig-text-small">9 Frameworks</text>
+              <circle cx="380" cy="90" r="10" fill="#34d399" stroke="#0a0e1a" stroke-width="2"/><text x="380" y="115" text-anchor="middle" class="ig-text-small">Cyber Law</text>
+              <circle cx="540" cy="55" r="10" fill="#fbbf24" stroke="#0a0e1a" stroke-width="2"/><text x="540" y="35" text-anchor="middle" class="ig-text-small">Policy Design</text>
+              <circle cx="700" cy="90" r="10" fill="#a78bfa" stroke="#0a0e1a" stroke-width="2"/><text x="700" y="115" text-anchor="middle" class="ig-text-small">Policy Types</text>
+              <circle cx="840" cy="90" r="12" fill="#34d399" stroke="#0a0e1a" stroke-width="3"/><text x="840" y="95" text-anchor="middle" style="font-size:14px;fill:#0a0e1a;font-weight:800">✓</text><text x="840" y="115" text-anchor="middle" class="ig-text-small" style="fill:#34d399">Training</text>
+            </g>
+            <rect x="60" y="140" width="780" height="30" rx="15" fill="#161d2e" stroke="#22d3ee" stroke-width="1"/><text x="450" y="160" text-anchor="middle" class="ig-text-strong" style="fill:#22d3ee">Administrative Controls = Compliance × Policy × Training × Classification</text>
+          </svg>
+          <div class="infographic-caption">Gambar 12. Ringkasan perjalanan Modul 03 — dari compliance frameworks hingga awareness training.</div>
+        </div>
+
+        <ul class="checklist">
+          <li>Regulatory framework compliance — 4 komponen: Frameworks, Policies, Standards, Procedures/Guidelines.</li>
+          <li>Mengapa organisasi perlu compliance — Improved Security, Minimized Losses, Trust Maintenance, Increased Control.</li>
+          <li>PCI DSS — 6 requirements + 12 sub-requirements untuk protect cardholder data. Non-compliance = denda + termination.</li>
+          <li>HIPAA — Privacy Rule, Security Rule (3 safeguards: Administrative, Physical, Technical), Enforcement Rule. NPI 10-digit identifier.</li>
+          <li>SOX (2002) — 11 titles untuk protect investors via accurate corporate disclosures. Section 404 = ICFR (paling expensive).</li>
+          <li>GLBA — Financial institutions privacy rules + safeguards rules. Penalty $100K per violation + officers liable.</li>
+          <li>GDPR (2018) — 7 principles: Lawfulness, Purpose Limitation, Data Minimization, Accuracy, Storage Limitation, Integrity, Accountability. Fines up to €20M / 4% global turnover.</li>
+          <li>DPA 2018 (UK) — UK's GDPR implementation post-Brexit. Information Commissioner oversight.</li>
+          <li>ISO/IEC 27000 series — 27001 (ISMS), 27002 (controls), 27005 (risk), 27017/18 (cloud), 27031 (BC), 27035 (incident), 27037 (forensics), 27799 (healthcare).</li>
+          <li>DMCA — 5 titles implementing WIPO treaties. Anti-circumvention + safe harbor for service providers.</li>
+          <li>FISMA — Federal agencies security framework via NIST SP 800-53. Categorization, controls, assessment, authorization.</li>
+          <li>Other acts — USA PATRIOT Act, FOIA, ECPA, CFAA, Human Rights Act, Computer Misuse Act.</li>
+          <li>Cyber law per negara — US, UK, Australia, China, India, Germany, Japan, Singapore, Indonesia (UU ITE + UU PDP), Brazil (LGPD), Canada (PIPEDA).</li>
+          <li>Security policy — 3 goals (reduce liability, protect confidential, prevent waste). 8 characteristics (concise, usable, feasible, understandable, realistic, consistent, procedurally tolerable, legal compliance).</li>
+          <li>3 tipe policy — EISP (enterprise), ISSP (issue-specific), SSSP (system-specific).</li>
+          <li>4 internet access policies — Promiscuous, Permissive, Prudent (best practice), Paranoid.</li>
+          <li>Password policy — components (length, blacklist, duration, common practices). NIST 800-63B update: 12+ char, no forced rotation, breach check.</li>
+          <li>Security awareness training — 4 tipe: Security Policy, Physical Security, Social Engineering (4 attack areas), Data Classification (5 levels: Unclassified → Top Secret).</li>
+          <li>Praktikum 4 sesi — Compliance Gap Analysis, Policy Drafting, GoPhish Phishing Simulation, Data Classification Lab.</li>
+        </ul>
+      </div>
+
+      <div class="info-box info-tip" style="margin-top:24px">
+        <strong>Key Takeaway:</strong> Administrative controls adalah <strong>pondasi governance</strong>
+        keamanan informasi. Tanpa compliance, policy, dan training yang tepat, semua technical controls
+        (firewall, IDS, encryption) menjadi tidak efektif — karena manusia dan proses adalah weakest link.
+        <strong>Compliance is not optional, policy is not paperwork, training is not optional</strong>.
+        Modul ini adalah jembatan antara technical security dan business risk management.
+      </div>
+    </section>
+
+    <footer>
+      <p><strong>Modul 03: Network Security Controls — Administrative Controls</strong> · Network Defense Essentials</p>
+      <p>Disusun sebagai materi pembelajaran — bebas digunakan untuk tujuan edukasi.</p>
+      <div class="next-modul"><span>Modul Selanjutnya →</span><strong>Modul 04: Network Security Controls — Physical Controls</strong></div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  (function(){
+    const tocLinks = document.querySelectorAll('#toc a');
+    const sections = Array.from(tocLinks).map(a => {
+      const id = a.getAttribute('href').slice(1);
+      return document.getElementById(id);
+    }).filter(Boolean);
+    function setActive(){
+      const scrollY = window.scrollY + 100;
+      let currentIdx = 0;
+      for(let i=0;i<sections.length;i++){
+        if(sections[i].offsetTop <= scrollY) currentIdx = i;
+      }
+      tocLinks.forEach((a, i) => a.classList.toggle('active', i === currentIdx));
+    }
+    setActive();
+    window.addEventListener('scroll', setActive, {passive:true});
+    tocLinks.forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = a.getAttribute('href').slice(1);
+        const target = document.getElementById(id);
+        if(target){
+          const offset = 80;
+          const top = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({top, behavior:'smooth'});
+          document.querySelector('.sidebar').classList.remove('open');
+        }
+      });
+    });
+  })();
+</script>
+</body>
+</html>

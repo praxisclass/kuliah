@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modul 06: Virtualization and Cloud Computing — Network Defense Essentials</title>
+<meta name="description" content="Ebook &amp; Modul Praktikum Virtualization and Cloud Computing - Network Defense Essentials">
+<style>
+  :root{
+    --bg:#0a0e1a;
+    --bg-2:#0d1320;
+    --bg-elevated:#131a2a;
+    --bg-card:#161d2e;
+    --bg-card-hover:#1b2438;
+    --border:#242c40;
+    --border-strong:#344057;
+    --text:#e6edf3;
+    --text-2:#a8b3cf;
+    --text-muted:#6b7591;
+    --accent:#22d3ee;
+    --accent-2:#06b6d4;
+    --accent-glow:rgba(34,211,238,.15);
+    --accent-dim:rgba(34,211,238,.08);
+    --warn:#fbbf24;
+    --warn-bg:rgba(251,191,36,.08);
+    --danger:#f87171;
+    --danger-bg:rgba(248,113,113,.08);
+    --success:#34d399;
+    --success-bg:rgba(52,211,153,.08);
+    --purple:#a78bfa;
+    --purple-bg:rgba(167,139,250,.08);
+    --pink:#f472b6;
+    --shadow:0 4px 24px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:24px}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.7;
+    font-size:15px;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% 0%,rgba(34,211,238,.08),transparent),
+      radial-gradient(ellipse 60% 40% at 80% 100%,rgba(167,139,250,.06),transparent);
+    background-attachment:fixed;
+  }
+  h1,h2,h3,h4{font-family:'Space Grotesk','Inter',sans-serif;font-weight:700;line-height:1.3;letter-spacing:-.01em}
+  code,pre,.mono{font-family:'JetBrains Mono','Consolas','Monaco',monospace}
+  a{color:var(--accent);text-decoration:none}
+
+  /* Layout */
+  .layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+  .sidebar{
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+    background:var(--bg-2);
+    border-right:1px solid var(--border);
+    padding:24px 20px;
+    z-index:10;
+  }
+  .sidebar-brand{
+    display:flex;align-items:center;gap:12px;padding-bottom:20px;
+    border-bottom:1px solid var(--border);margin-bottom:20px;
+  }
+  .brand-logo{
+    width:40px;height:40px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;color:#0a0e1a;font-size:18px;
+    box-shadow:0 0 24px var(--accent-glow);
+  }
+  .brand-text{font-size:13px;color:var(--text-2);line-height:1.4}
+  .brand-text strong{display:block;color:var(--text);font-size:14px;font-weight:600}
+  .toc-title{
+    font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--text-muted);margin:16px 0 12px;font-weight:600;
+  }
+  .toc-list{list-style:none;display:flex;flex-direction:column;gap:2px}
+  .toc-list a{
+    display:block;padding:8px 12px;color:var(--text-2);
+    font-size:13.5px;border-radius:6px;border-left:2px solid transparent;
+    transition:all .15s ease;line-height:1.4;
+  }
+  .toc-list a:hover{background:var(--bg-card);color:var(--text)}
+  .toc-list a.active{
+    background:var(--accent-dim);color:var(--accent);
+    border-left-color:var(--accent);font-weight:500;
+  }
+  .toc-list a .num{
+    display:inline-block;width:24px;color:var(--text-muted);font-size:12px;
+  }
+  .toc-list a.active .num{color:var(--accent)}
+  .toc-sub{padding-left:14px;font-size:12.5px;color:var(--text-muted)}
+  .toc-sub a{padding:6px 12px;font-size:12.5px}
+
+  /* Content */
+  .content{max-width:980px;padding:0 56px 80px;min-width:0}
+  @media (max-width:1024px){
+    .layout{grid-template-columns:1fr}
+    .sidebar{position:fixed;left:-300px;width:280px;transition:left .25s ease}
+    .sidebar.open{left:0}
+    .content{padding:0 24px 60px}
+    .menu-toggle{display:flex!important}
+  }
+  .menu-toggle{
+    display:none;position:fixed;top:16px;right:16px;z-index:50;
+    width:44px;height:44px;border-radius:10px;
+    background:var(--bg-elevated);border:1px solid var(--border);
+    color:var(--text);align-items:center;justify-content:center;
+    cursor:pointer;font-size:20px;
+  }
+
+  /* Hero / Cover */
+  .hero{
+    position:relative;padding:80px 0 60px;
+    border-bottom:1px solid var(--border);margin-bottom:48px;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+    background-image:
+      linear-gradient(rgba(34,211,238,.04) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(34,211,238,.04) 1px,transparent 1px);
+    background-size:48px 48px;
+    mask-image:radial-gradient(ellipse 60% 70% at 50% 40%,#000 30%,transparent 75%);
+    -webkit-mask-image:radial-gradient(ellipse 60% 70% at 50% 40%,#000 30%,transparent 75%);
+    pointer-events:none;
+  }
+  .hero-content{position:relative;z-index:1}
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 14px;border-radius:999px;
+    background:var(--accent-dim);border:1px solid rgba(34,211,238,.3);
+    color:var(--accent);font-size:12px;font-weight:600;
+    letter-spacing:.08em;text-transform:uppercase;margin-bottom:24px;
+  }
+  .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+  .hero h1{
+    font-size:clamp(36px,5vw,56px);margin-bottom:16px;
+    background:linear-gradient(135deg,#fff 30%,var(--accent) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero-sub{
+    font-size:18px;color:var(--text-2);max-width:680px;margin-bottom:32px;
+  }
+  .hero-meta{
+    display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;
+  }
+  .meta-chip{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:10px 16px;background:var(--bg-card);
+    border:1px solid var(--border);border-radius:8px;
+    font-size:13px;color:var(--text-2);
+  }
+  .meta-chip strong{color:var(--text);font-weight:600}
+  .meta-chip svg{width:16px;height:16px;color:var(--accent)}
+
+  /* Section base */
+  section{margin-bottom:64px;scroll-margin-top:24px}
+  .section-header{margin-bottom:28px}
+  .section-tag{
+    display:inline-block;font-size:11px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.12em;
+    color:var(--accent);margin-bottom:8px;
+  }
+  .section-header h2{
+    font-size:30px;margin-bottom:8px;color:var(--text);
+  }
+  .section-header p{color:var(--text-2);font-size:15px;max-width:720px}
+  h3.sub-title{
+    font-size:20px;color:var(--text);margin:32px 0 14px;
+    padding-left:12px;border-left:3px solid var(--accent);
+  }
+  h4.mini-title{
+    font-size:15px;color:var(--accent);margin:20px 0 10px;
+    font-weight:600;text-transform:uppercase;letter-spacing:.05em;
+  }
+  p{margin-bottom:14px;color:var(--text-2)}
+  p strong{color:var(--text);font-weight:600}
+  ul,ol{margin:12px 0 20px;padding-left:24px;color:var(--text-2)}
+  ul li,ol li{margin-bottom:6px}
+  ul li::marker{color:var(--accent)}
+  ol li::marker{color:var(--accent);font-weight:600}
+
+  /* Card grid */
+  .card-grid{display:grid;gap:16px;margin:20px 0}
+  .grid-2{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:768px){
+    .grid-2,.grid-3{grid-template-columns:1fr}
+  }
+  .card{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:12px;padding:20px;transition:all .2s ease;
+  }
+  .card:hover{
+    border-color:var(--border-strong);background:var(--bg-card-hover);
+    transform:translateY(-2px);
+  }
+  .card-title{
+    display:flex;align-items:center;gap:10px;
+    font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px;
+  }
+  .card-icon{
+    width:32px;height:32px;border-radius:8px;
+    background:var(--accent-dim);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;flex-shrink:0;
+  }
+  .card p{font-size:13.5px;color:var(--text-2);margin:0}
+  .card .meta{
+    margin-top:10px;padding-top:10px;border-top:1px solid var(--border);
+    font-size:12px;color:var(--text-muted);display:flex;gap:12px;flex-wrap:wrap;
+  }
+  .card .meta span{display:inline-flex;align-items:center;gap:4px}
+
+  /* Info boxes */
+  .info-box{
+    border-left:3px solid;padding:14px 18px;border-radius:8px;
+    margin:16px 0;font-size:14px;
+  }
+  .info-tip{background:var(--accent-dim);border-color:var(--accent);color:var(--text)}
+  .info-tip strong{color:var(--accent)}
+  .info-warn{background:var(--warn-bg);border-color:var(--warn);color:var(--text)}
+  .info-warn strong{color:var(--warn)}
+  .info-danger{background:var(--danger-bg);border-color:var(--danger);color:var(--text)}
+  .info-danger strong{color:var(--danger)}
+  .info-success{background:var(--success-bg);border-color:var(--success);color:var(--text)}
+  .info-success strong{color:var(--success)}
+
+  /* Definition list */
+  .def-list{display:flex;flex-direction:column;gap:14px;margin:16px 0}
+  .def-item{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:10px;padding:16px 20px;
+  }
+  .def-item dt{
+    font-weight:600;color:var(--accent);font-size:14.5px;
+    margin-bottom:6px;display:flex;align-items:center;gap:8px;
+  }
+  .def-item dt::before{
+    content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);
+  }
+  .def-item dd{color:var(--text-2);font-size:14px;margin-left:14px}
+
+  /* Comparison table */
+  .table-wrap{overflow-x:auto;margin:20px 0;border-radius:12px;border:1px solid var(--border)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--bg-card)}
+  th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--border)}
+  th{background:var(--bg-elevated);color:var(--accent);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+  td{color:var(--text-2)}
+  td strong{color:var(--text)}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--bg-card-hover)}
+
+  /* Checklist */
+  .checklist{list-style:none;padding:0;margin:16px 0;display:flex;flex-direction:column;gap:8px}
+  .checklist li{
+    display:flex;gap:12px;padding:10px 14px;
+    background:var(--bg-card);border:1px solid var(--border);border-radius:8px;
+    font-size:14px;color:var(--text-2);line-height:1.5;
+  }
+  .checklist li::before{
+    content:'✓';flex-shrink:0;width:20px;height:20px;border-radius:50%;
+    background:var(--success-bg);color:var(--success);
+    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+  }
+  .checklist.warn li::before{background:var(--warn-bg);color:var(--warn)}
+  .checklist.danger li::before{content:'!';background:var(--danger-bg);color:var(--danger)}
+
+  /* Pill / badge */
+  .pill{
+    display:inline-block;padding:2px 10px;border-radius:999px;
+    font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-2);
+  }
+  .pill.accent{background:var(--accent-dim);color:var(--accent);border-color:rgba(34,211,238,.3)}
+  .pill.warn{background:var(--warn-bg);color:var(--warn);border-color:rgba(251,191,36,.3)}
+  .pill.danger{background:var(--danger-bg);color:var(--danger);border-color:rgba(248,113,113,.3)}
+  .pill.success{background:var(--success-bg);color:var(--success);border-color:rgba(52,211,153,.3)}
+  .pill.purple{background:var(--purple-bg);color:var(--purple);border-color:rgba(167,139,250,.3)}
+
+  /* Two column */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
+  @media (max-width:768px){.two-col{grid-template-columns:1fr}}
+  .col-box{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:12px;
+    padding:22px;
+  }
+  .col-box h4{
+    display:flex;align-items:center;gap:10px;
+    font-size:15px;color:var(--text);margin-bottom:14px;
+    padding-bottom:12px;border-bottom:1px solid var(--border);
+  }
+  .col-box h4 .ico{
+    width:28px;height:28px;border-radius:7px;display:flex;
+    align-items:center;justify-content:center;font-size:14px;
+  }
+  .col-box.left h4 .ico{background:var(--accent-dim);color:var(--accent)}
+  .col-box.right h4 .ico{background:var(--purple-bg);color:var(--purple)}
+
+  /* Steps */
+  .steps{position:relative;padding-left:32px;margin:24px 0}
+  .steps::before{
+    content:'';position:absolute;left:11px;top:8px;bottom:8px;
+    width:2px;background:var(--border-strong);
+  }
+  .step{position:relative;margin-bottom:24px}
+  .step-num{
+    position:absolute;left:-32px;top:0;width:24px;height:24px;border-radius:50%;
+    background:var(--bg-elevated);border:2px solid var(--accent);
+    color:var(--accent);font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;z-index:1;
+  }
+  .step-content{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+    padding:16px 20px;
+  }
+  .step-content h5{font-size:14px;color:var(--accent);margin-bottom:6px;font-weight:600}
+  .step-content p{font-size:13.5px;color:var(--text-2);margin:0}
+  .step-content ul{margin:8px 0 0;padding-left:18px;font-size:13px}
+
+  /* Practicum box */
+  .practicum-banner{
+    background:linear-gradient(135deg,var(--purple-bg),var(--accent-dim));
+    border:1px solid var(--border-strong);border-radius:16px;
+    padding:32px;margin:24px 0;text-align:center;
+  }
+  .practicum-banner h2{
+    font-size:28px;background:linear-gradient(135deg,var(--accent),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px;
+  }
+  .practicum-banner p{color:var(--text-2);max-width:600px;margin:0 auto}
+
+  /* Lab tools grid */
+  .tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px 0}
+  @media (max-width:600px){.tools-grid{grid-template-columns:1fr}}
+  .tool-card{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+    padding:14px 16px;display:flex;align-items:flex-start;gap:12px;
+  }
+  .tool-card .ico{
+    width:36px;height:36px;border-radius:8px;flex-shrink:0;
+    background:var(--bg-elevated);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;
+    color:var(--accent);
+  }
+  .tool-card .info{flex:1;min-width:0}
+  .tool-card .name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px}
+  .tool-card .desc{font-size:12.5px;color:var(--text-2);line-height:1.5}
+  .tool-card .url{font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace;margin-top:4px;display:block}
+
+  /* Summary */
+  .summary-box{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:14px;padding:28px;margin-top:24px;
+  }
+  .summary-box h3{
+    font-size:18px;color:var(--accent);margin-bottom:16px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .summary-box ul{margin:0;padding-left:20px}
+
+  /* Footer */
+  footer{
+    border-top:1px solid var(--border);padding:32px 0;
+    text-align:center;color:var(--text-muted);font-size:13px;
+  }
+  footer .next-modul{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:12px 20px;background:var(--bg-card);
+    border:1px solid var(--border);border-radius:10px;
+    color:var(--text-2);margin-top:16px;font-size:13px;
+  }
+  footer .next-modul strong{color:var(--accent)}
+
+  /* ===== INFOGRAPHICS / SVG STYLING ===== */
+  .infographic{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:14px;padding:24px;margin:24px 0;overflow:hidden;
+  }
+  .infographic-caption{
+    text-align:center;font-size:12.5px;color:var(--text-muted);
+    margin-top:12px;font-style:italic;
+  }
+  .infographic svg{display:block;margin:0 auto;max-width:100%;height:auto}
+  .ig-title{
+    font-size:13px;font-weight:600;color:var(--accent);
+    text-transform:uppercase;letter-spacing:.08em;
+    text-align:center;margin-bottom:16px;
+  }
+  .ig-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+  .ig-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:4px 10px;border-radius:6px;
+    font-size:11.5px;font-weight:500;
+    background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-2);
+  }
+  .ig-badge .dot{width:8px;height:8px;border-radius:50%}
+  .ig-badge.cyan{border-color:rgba(34,211,238,.4);color:var(--accent);background:var(--accent-dim)}
+  .ig-badge.cyan .dot{background:var(--accent)}
+  .ig-badge.purple{border-color:rgba(167,139,250,.4);color:var(--purple);background:var(--purple-bg)}
+  .ig-badge.purple .dot{background:var(--purple)}
+  .ig-badge.warn{border-color:rgba(251,191,36,.4);color:var(--warn);background:var(--warn-bg)}
+  .ig-badge.warn .dot{background:var(--warn)}
+  .ig-badge.danger{border-color:rgba(248,113,113,.4);color:var(--danger);background:var(--danger-bg)}
+  .ig-badge.danger .dot{background:var(--danger)}
+  .ig-badge.success{border-color:rgba(52,211,153,.4);color:var(--success);background:var(--success-bg)}
+  .ig-badge.success .dot{background:var(--success)}
+
+  /* Stat block */
+  .stat-row{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:24px 0;
+  }
+  @media (max-width:768px){.stat-row{grid-template-columns:repeat(2,1fr)}}
+  .stat-box{
+    background:linear-gradient(135deg,var(--bg-card),var(--bg-elevated));
+    border:1px solid var(--border);border-radius:12px;
+    padding:20px;text-align:center;position:relative;overflow:hidden;
+  }
+  .stat-box::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,var(--accent),var(--purple));
+  }
+  .stat-num{
+    font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;
+    background:linear-gradient(135deg,var(--accent),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    line-height:1;margin-bottom:6px;
+  }
+  .stat-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+  .stat-desc{font-size:12px;color:var(--text-2);margin-top:8px;line-height:1.4}
+
+  /* SVG text */
+  svg .ig-text{font-family:'Inter',sans-serif;font-size:11px;fill:var(--text-2)}
+  svg .ig-text-strong{font-family:'Inter',sans-serif;font-size:12px;fill:var(--text);font-weight:600}
+  svg .ig-text-title{font-family:'Space Grotesk',sans-serif;font-size:14px;fill:var(--accent);font-weight:700}
+  svg .ig-text-small{font-family:'Inter',sans-serif;font-size:10px;fill:var(--text-muted)}
+  svg .ig-line{stroke:var(--border-strong);fill:none}
+  svg .ig-accent-line{stroke:var(--accent);fill:none}
+  svg .ig-box{fill:var(--bg-elevated);stroke:var(--border-strong);stroke-width:1}
+  svg .ig-accent-box{fill:var(--accent-dim);stroke:var(--accent);stroke-width:1.5}
+  svg .ig-danger-box{fill:var(--danger-bg);stroke:var(--danger);stroke-width:1.5}
+  svg .ig-warn-box{fill:var(--warn-bg);stroke:var(--warn);stroke-width:1.5}
+  svg .ig-success-box{fill:var(--success-bg);stroke:var(--success);stroke-width:1.5}
+  svg .ig-purple-box{fill:var(--purple-bg);stroke:var(--purple);stroke-width:1.5}
+
+  /* Print */
+  @media print{
+    .sidebar,.menu-toggle{display:none}
+    .layout{grid-template-columns:1fr}
+    .content{padding:0 20px}
+    body{background:#fff;color:#000}
+    .hero h1{color:#000!important;-webkit-text-fill-color:#000}
+    .card,.col-box,.step-content,.tool-card,.summary-box,.info-box{
+      background:#f7f7f7;border-color:#ccc;color:#000;break-inside:avoid;
+    }
+  }
+
+  /* Anchor heading offset */
+  section[id],h3[id],h4[id]{scroll-margin-top:80px}
+</style>
+</head>
+<body>
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Toggle menu">☰</button>
+
+<div class="layout">
+
+  <!-- ===== SIDEBAR / TOC ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">M06</div>
+      <div class="brand-text"><strong>Virtualization &amp; Cloud</strong> Network Defense Essentials</div>
+    </div>
+    <div class="toc-title">Daftar Isi</div>
+    <ul class="toc-list" id="toc">
+      <li><a href="#cover"><span class="num">00</span>Cover</a></li>
+      <li><a href="#tujuan"><span class="num">01</span>Tujuan Pembelajaran</a></li>
+      <li><a href="#virtualization"><span class="num">02</span>Virtualization Concepts</a></li>
+      <li><a href="#approaches"><span class="num">03</span>4 Virtualization Approaches</a></li>
+      <li><a href="#types"><span class="num">04</span>7 Types of Virtualization</a></li>
+      <li><a href="#hypervisor"><span class="num">05</span>Hypervisor (Type 1 &amp; 2)</a></li>
+      <li><a href="#virt-security"><span class="num">06</span>Virtualization Security</a></li>
+      <li><a href="#virt-best"><span class="num">07</span>Virtualization Best Practices</a></li>
+      <li><a href="#cloud"><span class="num">08</span>Cloud Computing</a></li>
+      <li><a href="#cloud-services"><span class="num">09</span>IaaS, PaaS, SaaS</a></li>
+      <li><a href="#cloud-models"><span class="num">10</span>Cloud Deployment Models</a></li>
+      <li><a href="#cloud-security"><span class="num">11</span>Cloud Security &amp; Best Practices</a></li>
+      <li><a href="#praktikum"><span class="num">12</span>Modul Praktikum</a></li>
+      <li><a href="#ringkasan"><span class="num">13</span>Ringkasan</a></li>
+    </ul>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="content">
+
+    <!-- ============= HERO ============= -->
+    <section id="cover" class="hero">
+      <div class="hero-content">
+        <div class="hero-badge"><span class="dot"></span> Module 06 · Network Defense Essentials</div>
+        <h1>Virtualization and Cloud Computing</h1>
+        <p class="hero-sub">
+          Ebook &amp; Modul Praktikum — dari virtualization concepts (4 approaches, 7 types, hypervisor Type 1/2),
+          virtualization security concerns (VM escape, snapshot vulnerabilities, migration risks), best practices,
+          hingga cloud computing (IaaS/PaaS/SaaS, 4 deployment models, shared responsibility, cloud security
+          best practices dan tools).
+        </p>
+        <div class="hero-meta">
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span><strong>Target:</strong> Mahasiswa</span></div>
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span><strong>Durasi:</strong> 5-6 jam</span></div>
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg><span><strong>Level:</strong> Intermediate-Advanced</span></div>
+          <div class="meta-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span><strong>14</strong> Bagian</span></div>
+        </div>
+
+        <div class="stat-row" style="margin-top:48px">
+          <div class="stat-box"><div class="stat-num">4</div><div class="stat-label">Virtualization Approaches</div><div class="stat-desc">Full · Para · Hardware-assisted · Hybrid</div></div>
+          <div class="stat-box"><div class="stat-num">7</div><div class="stat-label">Types of Virtualization</div><div class="stat-desc">OS · Network · Server · Desktop · Storage · File System · Fabric</div></div>
+          <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">Cloud Service Models</div><div class="stat-desc">IaaS · PaaS · SaaS</div></div>
+          <div class="stat-box"><div class="stat-num">4</div><div class="stat-label">Cloud Deployment Models</div><div class="stat-desc">Public · Private · Hybrid · Community</div></div>
+        </div>
+
+        <div class="infographic" style="margin-top:32px">
+          <div class="ig-title">Alur Pembelajaran Modul 06</div>
+          <svg viewBox="0 0 920 280" width="920" height="280" aria-label="Module flow">
+            <defs><marker id="arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/></marker><linearGradient id="grad-flow" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#22d3ee" stop-opacity="0.2"/><stop offset="100%" stop-color="#a78bfa" stop-opacity="0.2"/></linearGradient></defs>
+            <rect x="20" y="30" width="140" height="60" rx="10" class="ig-accent-box"/><text x="90" y="55" text-anchor="middle" class="ig-text-title">1</text><text x="90" y="75" text-anchor="middle" class="ig-text-strong">Virtualization</text><text x="90" y="88" text-anchor="middle" class="ig-text">Concepts</text><path d="M160 60 L205 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="210" y="30" width="140" height="60" rx="10" class="ig-accent-box"/><text x="280" y="55" text-anchor="middle" class="ig-text-title">2</text><text x="280" y="75" text-anchor="middle" class="ig-text-strong">4 Approaches</text><text x="280" y="88" text-anchor="middle" class="ig-text">7 Types</text><path d="M350 60 L395 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="400" y="30" width="140" height="60" rx="10" class="ig-accent-box"/><text x="470" y="55" text-anchor="middle" class="ig-text-title">3</text><text x="470" y="75" text-anchor="middle" class="ig-text-strong">Hypervisor</text><text x="470" y="88" text-anchor="middle" class="ig-text">Type 1 &amp; 2</text><path d="M540 60 L585 60" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="590" y="30" width="140" height="60" rx="10" class="ig-warn-box"/><text x="660" y="55" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">4</text><text x="660" y="75" text-anchor="middle" class="ig-text-strong">Virt Security</text><text x="660" y="88" text-anchor="middle" class="ig-text">Concerns</text>
+            <path d="M660 95 L660 145" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="590" y="150" width="140" height="60" rx="10" class="ig-purple-box"/><text x="660" y="175" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">5</text><text x="660" y="195" text-anchor="middle" class="ig-text-strong">Cloud</text><text x="660" y="208" text-anchor="middle" class="ig-text">Computing</text><path d="M585 180 L540 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="400" y="150" width="140" height="60" rx="10" class="ig-purple-box"/><text x="470" y="175" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">6</text><text x="470" y="195" text-anchor="middle" class="ig-text-strong">IaaS/PaaS</text><text x="470" y="208" text-anchor="middle" class="ig-text">/SaaS</text><path d="M395 180 L350 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="210" y="150" width="140" height="60" rx="10" class="ig-success-box"/><text x="280" y="175" text-anchor="middle" class="ig-text-title" style="fill:#34d399">7</text><text x="280" y="195" text-anchor="middle" class="ig-text-strong">Cloud Sec</text><text x="280" y="208" text-anchor="middle" class="ig-text">Best Practice</text><path d="M205 180 L160 180" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/>
+            <rect x="20" y="150" width="140" height="60" rx="10" class="ig-success-box"/><text x="90" y="175" text-anchor="middle" class="ig-text-title" style="fill:#34d399">8</text><text x="90" y="195" text-anchor="middle" class="ig-text-strong">Praktikum</text><text x="90" y="208" text-anchor="middle" class="ig-text">Hands-on</text>
+            <rect x="380" y="230" width="160" height="40" rx="10" fill="url(#grad-flow)" stroke="#22d3ee" stroke-width="1.5"/><text x="460" y="248" text-anchor="middle" class="ig-text-title">LAB</text><text x="460" y="262" text-anchor="middle" class="ig-text-small">4 Sesi Praktikum</text>
+            <path d="M90 215 L90 250 L375 250" class="ig-accent-line" stroke-width="2" stroke-dasharray="4,3" fill="none"/><path d="M280 215 L280 245 L375 245" class="ig-accent-line" stroke-width="1.5" stroke-dasharray="3,3" fill="none" opacity="0.5"/><path d="M470 215 L470 225" class="ig-accent-line" stroke-width="2" marker-end="url(#arrow-cyan)"/><path d="M660 215 L660 245 L545 245" class="ig-accent-line" stroke-width="1.5" stroke-dasharray="3,3" fill="none" opacity="0.5"/>
+          </svg>
+          <div class="infographic-caption">Gambar 1. Alur pembelajaran Modul 06 — dari virtualization concepts hingga cloud security.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============= TUJUAN ============= -->
+    <section id="tujuan">
+      <div class="section-header">
+        <span class="section-tag">Bagian 01</span>
+        <h2>Tujuan Pembelajaran</h2>
+        <p>Virtualization dan cloud computing telah mengubah konsep security di modern IT environments.</p>
+      </div>
+      <p>
+        Modern IT environments menggunakan <strong>server virtualization, network virtualization, storage
+        virtualization, dan desktop virtualization</strong> untuk fast provisioning of network environments.
+        Virtualization telah mengubah konsep security di modern IT environments, karena berbagai security
+        challenges yang terkait dengan virtualization bersifat unik dan berbeda dari conventional environments.
+        <strong>Cloud computing</strong> adalah emerging technology yang delivers computing services —
+        online business applications, online data storage, webmail — over the Internet.
+      </p>
+      <p>Setelah menyelesaikan modul ini, Anda akan mampu:</p>
+      <div class="card-grid grid-2" style="margin-top:20px">
+        <div class="card"><div class="card-title"><div class="card-icon">1</div>Virtualization</div><p>Memahami virtualization, komponennya, dan virtualization enablers — 4 approaches dan 7 types.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">2</div>OS Virtualization Security</div><p>Memahami OS virtualization security concerns dan best practices untuk secure virtualization.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">3</div>Cloud Computing</div><p>Memahami cloud computing dan benefits-nya — IaaS, PaaS, SaaS service models.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">4</div>Cloud Models &amp; Security</div><p>Overview cloud deployment models (Public, Private, Hybrid, Community) dan cloud security best practices.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 2: VIRTUALIZATION CONCEPTS ============= -->
+    <section id="virtualization">
+      <div class="section-header">
+        <span class="section-tag">Bagian 02</span>
+        <h2>Virtualization Concepts</h2>
+        <p>Software-based virtual representation of resources — dari single physical ke multiple virtual.</p>
+      </div>
+      <p>
+        <strong>Virtualization</strong> merujuk pada software-based virtual representation of resources.
+        Virtualization memungkinkan satu physical resource (server, storage, network) muncul sebagai
+        multiple virtual resources. Sebaliknya, multiple physical resources dapat muncul sebagai single
+        virtual resource. Virtualization adalah <strong>enabler</strong> untuk cloud computing — tanpa
+        virtualization, cloud computing tidak mungkin.
+      </p>
+
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">🖥</div>What is Virtualization?</div><p>Virtualization memungkinkan <strong>multiple operating systems</strong> dan applications berjalan di single physical server secara simultan. Setiap VM (Virtual Machine) bersifat isolated — crash di satu VM tidak mempengaruhi VM lain. Virtualization dipowered oleh <strong>hypervisor</strong> (VMM — Virtual Machine Monitor).</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">⚙</div>Virtualization Components</div><p><strong>Host</strong> = physical machine yang run hypervisor. <strong>Guest</strong> = virtual machine yang run di atas hypervisor. <strong>Hypervisor/VMM</strong> = software yang create, manage, dan monitor VMs. <strong>Virtual Resources</strong> = vCPU, vRAM, vDisk, vNIC yang allocated ke VMs.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 3: APPROACHES ============= -->
+    <section id="approaches">
+      <div class="section-header">
+        <span class="section-tag">Bagian 03</span>
+        <h2>4 Virtualization Approaches</h2>
+        <p>Full, OS-assisted (Para), Hardware-assisted, dan Hybrid Virtualization.</p>
+      </div>
+
+      <div class="infographic">
+        <div class="ig-title">4 Virtualization Approaches — Comparison</div>
+        <svg viewBox="0 0 900 380" width="900" height="380" aria-label="Virtualization approaches">
+          <rect x="40" y="20" width="400" height="160" rx="10" class="ig-accent-box"/>
+          <text x="240" y="42" text-anchor="middle" class="ig-text-title">① Full Virtualization</text>
+          <text x="60" y="65" class="ig-text-small">Guest OS <strong>not aware</strong> it is virtualized.</text>
+          <text x="60" y="82" class="ig-text-small">Uses VMM (Virtual Machine Monitor) untuk</text>
+          <text x="60" y="98" class="ig-text-small">translate instructions to computer hardware.</text>
+          <text x="60" y="120" class="ig-text-small" style="fill:#34d399">✓ Full isolation · Run unmodified OS</text>
+          <text x="60" y="138" class="ig-text-small" style="fill:#f87171">✗ Performance overhead (binary translation)</text>
+          <text x="60" y="160" class="ig-text-small" style="font-style:italic">Examples: VMware ESX, VirtualBox (full mode)</text>
+
+          <rect x="460" y="20" width="400" height="160" rx="10" class="ig-warn-box"/>
+          <text x="660" y="42" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">② Para Virtualization (OS-assisted)</text>
+          <text x="480" y="65" class="ig-text-small">Guest OS is <strong>aware</strong> it is virtualized.</text>
+          <text x="480" y="82" class="ig-text-small">Modified guest OS directly interacts with VMM.</text>
+          <text x="480" y="98" class="ig-text-small">No binary translation needed.</text>
+          <text x="480" y="120" class="ig-text-small" style="fill:#34d399">✓ Better performance · Less overhead</text>
+          <text x="480" y="138" class="ig-text-small" style="fill:#f87171">✗ Requires modified OS (kernel patch)</text>
+          <text x="480" y="160" class="ig-text-small" style="font-style:italic">Examples: Xen (para-virt drivers)</text>
+
+          <rect x="40" y="200" width="400" height="160" rx="10" class="ig-purple-box"/>
+          <text x="240" y="222" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">③ Hardware-assisted Virtualization</text>
+          <text x="60" y="245" class="ig-text-small">Modern microprocessors have <strong>special</strong></text>
+          <text x="60" y="262" class="ig-text-small">instructions untuk assist virtualization.</text>
+          <text x="60" y="278" class="ig-text-small">CPU-level support: Intel VT-x, AMD-V.</text>
+          <text x="60" y="300" class="ig-text-small" style="fill:#34d399">✓ Best performance · Unmodified OS</text>
+          <text x="60" y="318" class="ig-text-small" style="fill:#f87171">✗ Requires modern CPU with VT support</text>
+          <text x="60" y="340" class="ig-text-small" style="font-style:italic">Examples: KVM, VMware ESXi, Hyper-V, Xen HVM</text>
+
+          <rect x="460" y="200" width="400" height="160" rx="10" class="ig-danger-box"/>
+          <text x="660" y="222" text-anchor="middle" class="ig-text-title" style="fill:#f87171">④ Hybrid Virtualization</text>
+          <text x="480" y="245" class="ig-text-small">Combines <strong>para-virtualization</strong> with</text>
+          <text x="480" y="262" class="ig-text-small">hardware-assisted virtualization.</text>
+          <text x="480" y="278" class="ig-text-small">Guest OS uses paravirt + VMM for binary translation.</text>
+          <text x="480" y="300" class="ig-text-small" style="fill:#34d399">✓ Balance performance &amp; compatibility</text>
+          <text x="480" y="318" class="ig-text-small" style="fill:#f87171">✗ Complex implementation</text>
+          <text x="480" y="340" class="ig-text-small" style="font-style:italic">Examples: Xen with PVH mode</text>
+        </svg>
+        <div class="infographic-caption">Gambar 2. 4 virtualization approaches — Full (unmodified, VMM translate), Para (modified OS), Hardware-assisted (CPU support), Hybrid (combination).</div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 4: TYPES ============= -->
+    <section id="types">
+      <div class="section-header">
+        <span class="section-tag">Bagian 04</span>
+        <h2>7 Types of Virtualization</h2>
+        <p>Dari OS virtualization hingga fabric virtualization — setiap type virtualizes resource berbeda.</p>
+      </div>
+
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">💻</div>Operating System Virtualization</div><p>Hardware run multiple virtualized OS instances. VM diisolasi satu sama lain. <strong>Most common type</strong>. Examples: VMware Workstation, VirtualBox, Hyper-V, KVM.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🌐</div>Network Virtualization</div><p>Virtualization network resources — bandwidth, IP addresses, routing, firewalls. <strong>SDN (Software-Defined Networking)</strong> dan NFV (Network Function Virtualization). Examples: VMware NSX, Cisco ACI, Open vSwitch.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🖥</div>Server Virtualization</div><p>Partition (virtualization) server resources — CPU, RAM, storage, network. Multiple VMs di single physical server. <strong>Maximize utilization</strong>, reduce hardware cost.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📱</div>Desktop Virtualization</div><p>OS desktop run di server, accessed remotely. <strong>VDI (Virtual Desktop Infrastructure)</strong>. User access virtual desktop dari thin client/any device. Examples: Citrix, VMware Horizon, Microsoft RDS.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">💾</div>Storage Device Virtualization</div><p>Virtualization storage devices menggunakan software. Multiple physical storage appear sebagai single virtual storage. <strong>Storage pooling</strong>, thin provisioning. Examples: vSAN, Ceph, GlusterFS.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📁</div>File System Virtualization</div><p>Virtualization data at level of file system. Multiple file systems accessible via single virtual interface. Examples: NFS, CIFS virtualization, global namespace.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔌</div>Fabric Virtualization</div><p>Makes virtual devices <strong>independent</strong> of physical location. Enable migration of VMs antar hosts without downtime. SAN fabric, FCoE, virtual HBA.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 5: HYPERVISOR ============= -->
+    <section id="hypervisor">
+      <div class="section-header">
+        <span class="section-tag">Bagian 05</span>
+        <h2>Hypervisor — Type 1 &amp; Type 2</h2>
+        <p>VMM (Virtual Machine Monitor) — software yang create, manage, dan monitor virtual machines.</p>
+      </div>
+
+      <div class="infographic">
+        <div class="ig-title">Type 1 (Bare-Metal) vs Type 2 (Hosted) Hypervisor</div>
+        <svg viewBox="0 0 900 320" width="900" height="320" aria-label="Hypervisor types">
+          <!-- Type 1 -->
+          <rect x="40" y="20" width="400" height="280" rx="12" class="ig-accent-box"/>
+          <text x="240" y="45" text-anchor="middle" class="ig-text-title">Type 1: Bare-Metal Hypervisor</text>
+          <text x="240" y="62" text-anchor="middle" class="ig-text-small">Hypervisor runs directly on hardware</text>
+
+          <rect x="70" y="80" width="140" height="40" rx="6" fill="#0d1320" stroke="#fbbf24"/>
+          <text x="140" y="98" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">VM1 (Guest OS)</text>
+          <text x="140" y="112" text-anchor="middle" class="ig-text-small" style="font-size:9px">Apps</text>
+          <rect x="230" y="80" width="140" height="40" rx="6" fill="#0d1320" stroke="#fbbf24"/>
+          <text x="300" y="98" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">VM2 (Guest OS)</text>
+          <text x="300" y="112" text-anchor="middle" class="ig-text-small" style="font-size:9px">Apps</text>
+
+          <rect x="70" y="135" width="300" height="30" rx="4" fill="#0d1320" stroke="#22d3ee" stroke-width="2"/>
+          <text x="220" y="155" text-anchor="middle" class="ig-text-strong" style="fill:#22d3ee">HYPERVISOR (VMM)</text>
+
+          <rect x="70" y="180" width="300" height="30" rx="4" fill="#0d1320" stroke="#a78bfa"/>
+          <text x="220" y="200" text-anchor="middle" class="ig-text-small" style="fill:#a78bfa">HARDWARE (CPU, RAM, Disk, NIC)</text>
+
+          <text x="240" y="235" text-anchor="middle" class="ig-text-small" style="fill:#34d399">✓ Best performance · Direct hardware access</text>
+          <text x="240" y="253" text-anchor="middle" class="ig-text-small" style="fill:#34d399">✓ Enterprise-grade · High consolidation ratio</text>
+          <text x="240" y="275" text-anchor="middle" class="ig-text-small" style="font-style:italic">Examples: VMware ESXi, Hyper-V, Xen, KVM</text>
+
+          <!-- Type 2 -->
+          <rect x="460" y="20" width="400" height="280" rx="12" class="ig-warn-box"/>
+          <text x="660" y="45" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">Type 2: Hosted Hypervisor</text>
+          <text x="660" y="62" text-anchor="middle" class="ig-text-small">Hypervisor runs on top of host OS</text>
+
+          <rect x="490" y="80" width="140" height="40" rx="6" fill="#0d1320" stroke="#fbbf24"/>
+          <text x="560" y="98" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">VM (Guest OS)</text>
+          <text x="560" y="112" text-anchor="middle" class="ig-text-small" style="font-size:9px">Apps</text>
+          <rect x="650" y="80" width="140" height="40" rx="6" fill="#0d1320" stroke="#34d399"/>
+          <text x="720" y="98" text-anchor="middle" class="ig-text-small" style="fill:#34d399">Host Apps</text>
+
+          <rect x="490" y="135" width="300" height="30" rx="4" fill="#0d1320" stroke="#22d3ee" stroke-width="2"/>
+          <text x="640" y="155" text-anchor="middle" class="ig-text-strong" style="fill:#22d3ee">HYPERVISOR</text>
+
+          <rect x="490" y="180" width="300" height="30" rx="4" fill="#0d1320" stroke="#34d399" stroke-width="2"/>
+          <text x="640" y="200" text-anchor="middle" class="ig-text-strong" style="fill:#34d399">HOST OPERATING SYSTEM</text>
+
+          <rect x="490" y="225" width="300" height="30" rx="4" fill="#0d1320" stroke="#a78bfa"/>
+          <text x="640" y="245" text-anchor="middle" class="ig-text-small" style="fill:#a78bfa">HARDWARE (CPU, RAM, Disk, NIC)</text>
+
+          <text x="660" y="275" text-anchor="middle" class="ig-text-small" style="font-style:italic">Examples: VirtualBox, VMware Workstation, Parallels</text>
+          <text x="660" y="293" text-anchor="middle" class="ig-text-small" style="fill:#f87171">✗ Performance overhead · For desktop/testing</text>
+        </svg>
+        <div class="infographic-caption">Gambar 3. Type 1 (bare-metal, direct on hardware, enterprise) vs Type 2 (hosted, on OS, desktop/testing).</div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 6: VIRTUALIZATION SECURITY ============= -->
+    <section id="virt-security">
+      <div class="section-header">
+        <span class="section-tag">Bagian 06</span>
+        <h2>Virtualization Security Concerns</h2>
+        <p>Security challenges yang unique dan distinct dari conventional environments.</p>
+      </div>
+      <p>
+        Virtualization telah mengubah konsep security di modern IT environments. Berbagai security
+        challenges yang terkait dengan virtualization bersifat <strong>unique dan distinct</strong>
+        dari conventional environments. Virtualization security concerns meliputi:
+      </p>
+
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon" style="background:var(--danger-bg);color:var(--danger)">⚠</div>VM Escape</div><p>Attacker <strong>escapes dari VM</strong> ke hypervisor atau host OS. Dapat mengkompromi semua VM di host. Contoh: VENOM (2015), Cloudbleed. <strong>Paling berbahaya</strong> — blast radius = entire host.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon" style="background:var(--danger-bg);color:var(--danger)">⚠</div>VM-to-VM Attack</div><p>Attacker mengkompromi satu VM, lalu pivot ke VM lain di <strong>sama host</strong>. Bypass network security controls (VMs di same host tidak necessarily melalui firewall).</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon" style="background:var(--danger-bg);color:var(--danger)">⚠</div>Snapshot Vulnerabilities</div><p>VM snapshots mengandung <strong>state lengkap VM</strong> termasuk password, keys, active sessions. Snapshot yang tidak terenkripsi = data breach. Old snapshots = security debt.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon" style="background:var(--danger-bg);color:var(--danger)">⚠</div>Migration Risks</div><p>Live migration (vMotion) memindahkan VM antar hosts — traffic <strong>bisa di-intercept</strong> jika network migration tidak encrypted. VM state di-expose saat transit.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon" style="background:var(--danger-bg);color:var(--danger)">⚠</div>Hypervisor Malware</div><p>Malware yang target <strong>hypervisor langsung</strong> — rootkit di hypervisor level. Sangat sulit dideteksi karena berjalan <em>di bawah</em> OS. Contoh: Blue Pill, Vitriol.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon" style="background:var(--danger-bg);color:var(--danger)">⚠</div>Resource Exhaustion</div><p>Satu VM yang <strong>consume semua resource</strong> (CPU, RAM, disk I/O) host = DoS untuk semua VM lain. Tidak ada network-level control yang dapat mencegah ini — perlu hypervisor-level limits.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 7: VIRTUALIZATION BEST PRACTICES ============= -->
+    <section id="virt-best">
+      <div class="section-header">
+        <span class="section-tag">Bagian 07</span>
+        <h2>Virtualization Security Best Practices</h2>
+        <p>Mitigasi security concerns via defense-in-depth di hypervisor, VM, dan network level.</p>
+      </div>
+
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">🛡</div>Patch Hypervisor</div><p>Update hypervisor secara <strong>reguler</strong> dengan latest security patches. Hypervisor vulnerability = all VMs at risk. Enable auto-update atau scheduled maintenance window.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔒</div>Isolate VMs</div><p>Gunakan <strong>VLAN</strong> dan virtual firewall untuk isolate VMs. VM sensitif (database) tidak boleh di same host dengan VM publik (web server) tanpa proper isolation.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📊</div>Resource Limits</div><p>Set <strong>CPU, RAM, dan I/O limits</strong> per VM. Prevent resource exhaustion DoS. Monitor resource usage — alert saat satu VM consume abnormal.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📸</div>Secure Snapshots</div><p>Encrypt snapshots. <strong>Delete old snapshots</strong> — jangan biarkan accumulate. Audit snapshot access. Treat snapshot seperti backup — secure storage.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔐</div>Encrypt Migration</div><p>Enable <strong>encrypted vMotion/live migration</strong>. Jangan migrasi VM via unencrypted network. Use dedicated migration network (VLAN).</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📋</div>VM Hardening</div><p>Hardened VM template: disable unnecessary services, install AV, enable firewall, minimal OS install. <strong>CIS Benchmarks</strong> untuk OS hardening per guest.</p></div>
+      </div>
+    </section>
+    <!-- ============= BAGIAN 8: CLOUD COMPUTING ============= -->
+    <section id="cloud">
+      <div class="section-header">
+        <span class="section-tag">Bagian 08</span>
+        <h2>Cloud Computing</h2>
+        <p>Emerging technology yang delivers computing services over the Internet.</p>
+      </div>
+      <p>
+        <strong>Cloud computing</strong> adalah emerging technology yang delivers computing services
+        — online business applications, online data storage, webmail — over the Internet. Cloud
+        implementation enables <strong>distributed workforce</strong>, reduces organization expenses,
+        provides data security, dll. Karena benefits ini, banyak business organizations telah migrating
+        data dan infrastructure mereka ke cloud.
+      </p>
+
+      <div class="infographic">
+        <div class="ig-title">Cloud Computing — 5 Essential Characteristics</div>
+        <svg viewBox="0 0 900 320" width="900" height="320" aria-label="Cloud characteristics">
+          <rect x="40" y="20" width="260" height="120" rx="10" class="ig-accent-box"/>
+          <text x="170" y="42" text-anchor="middle" class="ig-text-title">① On-Demand</text>
+          <text x="170" y="60" text-anchor="middle" class="ig-text-small">Self-Service</text>
+          <text x="170" y="80" text-anchor="middle" class="ig-text-small" style="font-size:10px">User provision capabilities</text>
+          <text x="170" y="96" text-anchor="middle" class="ig-text-small" style="font-size:10px">as needed automatically</text>
+          <text x="170" y="120" text-anchor="middle" class="ig-text-small" style="font-size:9px;font-style:italic">No human interaction with provider</text>
+
+          <rect x="320" y="20" width="260" height="120" rx="10" class="ig-warn-box"/>
+          <text x="450" y="42" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">② Broad Network</text>
+          <text x="450" y="60" text-anchor="middle" class="ig-text-small">Access</text>
+          <text x="450" y="80" text-anchor="middle" class="ig-text-small" style="font-size:10px">Available over network via</text>
+          <text x="450" y="96" text-anchor="middle" class="ig-text-small" style="font-size:10px">standard mechanisms</text>
+          <text x="450" y="120" text-anchor="middle" class="ig-text-small" style="font-size:9px;font-style:italic">Access from any device, anywhere</text>
+
+          <rect x="600" y="20" width="260" height="120" rx="10" class="ig-purple-box"/>
+          <text x="730" y="42" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">③ Resource Pooling</text>
+          <text x="730" y="62" text-anchor="middle" class="ig-text-small" style="font-size:10px">Multi-tenant model —</text>
+          <text x="730" y="78" text-anchor="middle" class="ig-text-small" style="font-size:10px">resources pooled, served</text>
+          <text x="730" y="94" text-anchor="middle" class="ig-text-small" style="font-size:10px">on demand to multiple</text>
+          <text x="730" y="110" text-anchor="middle" class="ig-text-small" style="font-size:10px">consumers</text>
+
+          <rect x="180" y="160" width="260" height="120" rx="10" class="ig-danger-box"/>
+          <text x="310" y="182" text-anchor="middle" class="ig-text-title" style="fill:#f87171">④ Rapid Elasticity</text>
+          <text x="310" y="202" text-anchor="middle" class="ig-text-small" style="font-size:10px">Scale up/down quickly</text>
+          <text x="310" y="218" text-anchor="middle" class="ig-text-small" style="font-size:10px">based on demand —</text>
+          <text x="310" y="234" text-anchor="middle" class="ig-text-small" style="font-size:10px">appears unlimited</text>
+          <text x="310" y="265" text-anchor="middle" class="ig-text-small" style="font-size:9px;font-style:italic">Auto-scale: add/remove instances</text>
+
+          <rect x="460" y="160" width="260" height="120" rx="10" class="ig-success-box"/>
+          <text x="590" y="182" text-anchor="middle" class="ig-text-title" style="fill:#34d399">⑤ Measured Service</text>
+          <text x="590" y="202" text-anchor="middle" class="ig-text-small" style="font-size:10px">Pay-per-use model</text>
+          <text x="590" y="218" text-anchor="middle" class="ig-text-small" style="font-size:10px">— metered &amp; billed</text>
+          <text x="590" y="234" text-anchor="middle" class="ig-text-small" style="font-size:10px">based on consumption</text>
+          <text x="590" y="265" text-anchor="middle" class="ig-text-small" style="font-size:9px;font-style:italic">Pay only for what you use</text>
+        </svg>
+        <div class="infographic-caption">Gambar 4. 5 essential characteristics cloud computing — On-Demand, Broad Access, Resource Pooling, Rapid Elasticity, Measured Service (NIST definition).</div>
+      </div>
+
+      <h3 class="sub-title">8.1 Benefits of Cloud Computing</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">💰</div>Cost Reduction</div><p>Reduce organization expenses — no upfront hardware cost, pay-per-use, no maintenance overhead. <strong>CapEx → OpEx</strong> transformation.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🌍</div>Distributed Workforce</div><p>Enable <strong>remote work</strong> — employees access apps &amp; data from anywhere. Collaboration across geographies.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">⚡</div>Scalability</div><p>Scale up/down instantly based on demand. <strong>No capacity planning</strong> needed. Auto-scale handles traffic spikes.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔄</div>Disaster Recovery</div><p>Cloud provides <strong>built-in redundancy</strong> across availability zones. Backup &amp; DR easier than on-premise.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 9: CLOUD SERVICES ============= -->
+    <section id="cloud-services">
+      <div class="section-header">
+        <span class="section-tag">Bagian 09</span>
+        <h2>Cloud Service Models — IaaS, PaaS, SaaS</h2>
+        <p>3 jenis layanan cloud berdasarkan level abstraction.</p>
+      </div>
+
+      <div class="infographic">
+        <div class="ig-title">3 Cloud Service Models — Shared Responsibility Matrix</div>
+        <svg viewBox="0 0 900 380" width="900" height="380" aria-label="Cloud service models">
+          <!-- Header -->
+          <text x="150" y="25" text-anchor="middle" class="ig-text-strong">On-Premise</text>
+          <text x="370" y="25" text-anchor="middle" class="ig-text-strong">IaaS</text>
+          <text x="590" y="25" text-anchor="middle" class="ig-text-strong">PaaS</text>
+          <text x="780" y="25" text-anchor="middle" class="ig-text-strong">SaaS</text>
+
+          <!-- Rows: layers -->
+          <g class="ig-text-small">
+            <!-- Applications -->
+            <rect x="60" y="40" width="180" height="35" rx="4" fill="#0d1320" stroke="#f87171"/>
+            <text x="150" y="62" text-anchor="middle">Applications</text>
+            <text x="280" y="62" text-anchor="middle" style="fill:#f87171;font-weight:bold">You</text>
+            <rect x="320" y="40" width="100" height="35" rx="4" fill="#0d1320" stroke="#f87171"/>
+            <text x="370" y="62" text-anchor="middle" style="fill:#f87171;font-weight:bold">You</text>
+            <text x="460" y="62" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <rect x="500" y="40" width="100" height="35" rx="4" fill="#0d1320" stroke="#34d399"/>
+            <text x="550" y="62" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <text x="690" y="62" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <rect x="730" y="40" width="100" height="35" rx="4" fill="#0d1320" stroke="#34d399"/>
+            <text x="780" y="62" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+
+            <!-- Data -->
+            <rect x="60" y="85" width="180" height="35" rx="4" fill="#0d1320" stroke="#f87171"/>
+            <text x="150" y="107" text-anchor="middle">Data</text>
+            <text x="280" y="107" text-anchor="middle" style="fill:#f87171;font-weight:bold">You</text>
+            <rect x="320" y="85" width="100" height="35" rx="4" fill="#0d1320" stroke="#f87171"/>
+            <text x="370" y="107" text-anchor="middle" style="fill:#f87171;font-weight:bold">You</text>
+            <text x="460" y="107" text-anchor="middle" style="fill:#34d399;font-weight:bold">You</text>
+            <rect x="500" y="85" width="100" height="35" rx="4" fill="#0d1320" stroke="#f87171"/>
+            <text x="550" y="107" text-anchor="middle" style="fill:#f87171;font-weight:bold">You</text>
+            <text x="690" y="107" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <rect x="730" y="85" width="100" height="35" rx="4" fill="#0d1320" stroke="#34d399"/>
+            <text x="780" y="107" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+
+            <!-- Runtime -->
+            <rect x="60" y="130" width="180" height="35" rx="4" fill="#0d1320" stroke="#f87171"/>
+            <text x="150" y="152" text-anchor="middle">Runtime</text>
+            <text x="280" y="152" text-anchor="middle" style="fill:#f87171;font-weight:bold">You</text>
+            <rect x="320" y="130" width="100" height="35" rx="4" fill="#0d1320" stroke="#f87171"/>
+            <text x="370" y="152" text-anchor="middle" style="fill:#f87171;font-weight:bold">You</text>
+            <text x="460" y="152" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <rect x="500" y="130" width="100" height="35" rx="4" fill="#0d1320" stroke="#34d399"/>
+            <text x="550" y="152" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <text x="690" y="152" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <rect x="730" y="130" width="100" height="35" rx="4" fill="#0d1320" stroke="#34d399"/>
+            <text x="780" y="152" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+
+            <!-- Middleware -->
+            <rect x="60" y="175" width="180" height="35" rx="4" fill="#0d1320" stroke="#f87171"/>
+            <text x="150" y="197" text-anchor="middle">Middleware</text>
+            <text x="280" y="197" text-anchor="middle" style="fill:#f87171;font-weight:bold">You</text>
+            <rect x="320" y="175" width="100" height="35" rx="4" fill="#0d1320" stroke="#f87171"/>
+            <text x="370" y="197" text-anchor="middle" style="fill:#f87171;font-weight:bold">You</text>
+            <text x="460" y="197" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <rect x="500" y="175" width="100" height="35" rx="4" fill="#0d1320" stroke="#34d399"/>
+            <text x="550" y="197" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <text x="690" y="197" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <rect x="730" y="175" width="100" height="35" rx="4" fill="#0d1320" stroke="#34d399"/>
+            <text x="780" y="197" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+
+            <!-- OS -->
+            <rect x="60" y="220" width="180" height="35" rx="4" fill="#0d1320" stroke="#f87171"/>
+            <text x="150" y="242" text-anchor="middle">Operating System</text>
+            <text x="280" y="242" text-anchor="middle" style="fill:#f87171;font-weight:bold">You</text>
+            <rect x="320" y="220" width="100" height="35" rx="4" fill="#0d1320" stroke="#f87171"/>
+            <text x="370" y="242" text-anchor="middle" style="fill:#f87171;font-weight:bold">You</text>
+            <text x="460" y="242" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <rect x="500" y="220" width="100" height="35" rx="4" fill="#0d1320" stroke="#34d399"/>
+            <text x="550" y="242" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <text x="690" y="242" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <rect x="730" y="220" width="100" height="35" rx="4" fill="#0d1320" stroke="#34d399"/>
+            <text x="780" y="242" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+
+            <!-- Virtualization -->
+            <rect x="60" y="265" width="180" height="35" rx="4" fill="#0d1320" stroke="#f87171"/>
+            <text x="150" y="287" text-anchor="middle">Virtualization</text>
+            <text x="280" y="287" text-anchor="middle" style="fill:#f87171;font-weight:bold">You</text>
+            <text x="320" y="287" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <rect x="300" y="265" width="120" height="35" rx="4" fill="#0d1320" stroke="#34d399"/>
+            <text x="360" y="287" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <text x="460" y="287" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <rect x="500" y="265" width="100" height="35" rx="4" fill="#0d1320" stroke="#34d399"/>
+            <text x="550" y="287" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <text x="690" y="287" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <rect x="730" y="265" width="100" height="35" rx="4" fill="#0d1320" stroke="#34d399"/>
+            <text x="780" y="287" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+
+            <!-- Servers/Storage/Network -->
+            <rect x="60" y="310" width="180" height="35" rx="4" fill="#0d1320" stroke="#f87171"/>
+            <text x="150" y="332" text-anchor="middle">Servers/Storage/Network</text>
+            <text x="280" y="332" text-anchor="middle" style="fill:#f87171;font-weight:bold">You</text>
+            <text x="320" y="332" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <rect x="300" y="310" width="120" height="35" rx="4" fill="#0d1320" stroke="#34d399"/>
+            <text x="360" y="332" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <text x="460" y="332" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <rect x="500" y="310" width="100" height="35" rx="4" fill="#0d1320" stroke="#34d399"/>
+            <text x="550" y="332" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <text x="690" y="332" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+            <rect x="730" y="310" width="100" height="35" rx="4" fill="#0d1320" stroke="#34d399"/>
+            <text x="780" y="332" text-anchor="middle" style="fill:#34d399;font-weight:bold">Provider</text>
+          </g>
+
+          <text x="450" y="370" text-anchor="middle" class="ig-text-small" style="font-style:italic">Red = You manage · Green = Provider manages · SaaS = provider manages almost everything</text>
+        </svg>
+        <div class="infographic-caption">Gambar 5. Shared Responsibility Matrix — On-Premise (you manage all) → IaaS → PaaS → SaaS (provider manages most).</div>
+      </div>
+
+      <div class="card-grid grid-3">
+        <div class="card"><div class="card-title"><div class="card-icon">I</div>IaaS — Infrastructure as a Service</div><p>Provider supplies <strong>compute, storage, network</strong> infrastructure. You manage OS, apps, data. Examples: AWS EC2, Azure VM, Google Compute Engine. <strong>Most control, most responsibility.</strong></p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">P</div>PaaS — Platform as a Service</div><p>Provider supplies <strong>platform + runtime</strong>. You manage apps &amp; data only. Examples: Heroku, Google App Engine, Azure App Service. <strong>Focus on development, not infrastructure.</strong></p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">S</div>SaaS — Software as a Service</div><p>Provider supplies <strong>complete application</strong>. You just use it. Examples: Gmail, Office 365, Salesforce, Dropbox. <strong>Least control, least responsibility.</strong></p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 10: CLOUD MODELS ============= -->
+    <section id="cloud-models">
+      <div class="section-header">
+        <span class="section-tag">Bagian 10</span>
+        <h2>Cloud Deployment Models</h2>
+        <p>4 model deployment: Public, Private, Hybrid, Community Cloud.</p>
+      </div>
+
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">🌍</div>Public Cloud</div><p>Infrastructure dimiliki dan dioperasikan oleh <strong>cloud provider</strong> (AWS, Azure, GCP). Shared among multiple tenants. <strong>Kelebihan:</strong> low cost, no maintenance, unlimited scale. <strong>Kekurangan:</strong> less control, multi-tenant security concern, data residency.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🏢</div>Private Cloud</div><p>Infrastructure dimiliki dan dioperasikan oleh <strong>organisasi sendiri</strong> (on-premise atau hosted). Single tenant. <strong>Kelebihan:</strong> full control, maximum security, compliance. <strong>Kekurangan:</strong> high cost, maintenance burden, limited scalability.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔄</div>Hybrid Cloud</div><p>Kombinasi <strong>public + private cloud</strong>. Sensitive data di private, scalable workload di public. Cloud bursting: run di private, burst ke public saat peak. <strong>Best of both worlds.</strong></p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">👥</div>Community Cloud</div><p>Infrastructure shared among <strong>several organizations</strong> dengan common concerns (compliance, mission). Contoh: government community cloud, healthcare community cloud. <strong>Collaborative</strong> approach.</p></div>
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 11: CLOUD SECURITY ============= -->
+    <section id="cloud-security">
+      <div class="section-header">
+        <span class="section-tag">Bagian 11</span>
+        <h2>Cloud Security &amp; Best Practices</h2>
+        <p>Cloud environment poses threats &amp; risks — mitigasi via shared responsibility &amp; best practices.</p>
+      </div>
+      <p>
+        Cloud environment juga menimbulkan banyak threats dan risks ke organisasi. <strong>Shared
+        responsibility model</strong> adalah konsep kunci: cloud provider bertanggung jawab untuk
+        security OF the cloud (infrastructure), customer bertanggung jawab untuk security IN the cloud
+        (data, apps, access). Pemahaman batas tanggung jawab adalah kritikal.
+      </p>
+
+      <h3 class="sub-title">11.1 Cloud Security Threats</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon" style="background:var(--danger-bg);color:var(--danger)">⚠</div>Data Breach</div><p>Data breach di cloud bisa terjadi via <strong>misconfigured storage</strong> (S3 bucket public), weak access control, atau compromised credentials. Impact: lebih besar karena multi-tenant.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon" style="background:var(--danger-bg);color:var(--danger)">⚠</div>Account Hijacking</div><p>Cloud account credentials dicuri → attacker <strong>full control</strong> ke semua cloud resources. Phishing, credential stuffing, atau insider threat.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon" style="background:var(--danger-bg);color:var(--danger)">⚠</div>Insecure API</div><p>Cloud APIs yang insecure (weak auth, no rate limiting) dapat dieksploitasi untuk <strong>unauthorized access</strong> atau DoS.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon" style="background:var(--danger-bg);color:var(--danger)">⚠</div>Denial of Service</div><p>Attacker target cloud resources dengan <strong>massive traffic</strong>. Cloud auto-scale dapat memperburuk — resources scale up = cost increase = economic DoS.</p></div>
+      </div>
+
+      <h3 class="sub-title">11.2 Cloud Security Best Practices</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">🔐</div>Identity &amp; Access Management</div><p>Implement <strong>strong IAM</strong>: MFA, role-based access, least privilege, rotate credentials, use IAM roles not access keys. SSO via SAML/OIDC. Regular access review.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔒</div>Data Encryption</div><p>Encrypt data <strong>at rest</strong> (KMS, customer-managed keys) dan <strong>in transit</strong> (TLS 1.3). Tokenize sensitive data. Backup encryption.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🛡</div>Network Security</div><p><strong>Security groups</strong>, network ACLs, VPC segmentation, private subnets, NAT gateway. WAF untuk web apps. DDoS protection (CloudFront, Cloudflare).</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📊</div>Monitoring &amp; Logging</div><p>Enable <strong>CloudTrail/Activity Log</strong> untuk audit. SIEM integration. Alert untuk suspicious activity (login from new geo, privilege escalation, mass data download).</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">📋</div>Compliance</div><p>Use <strong>compliance-ready</strong> cloud services (HIPAA, PCI DSS, FedRAMP, ISO 27001). Regular compliance assessment. Data residency control.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">🔍</div>Configuration Management</div><p><strong>Infrastructure as Code</strong> (Terraform, CloudFormation) untuk consistent config. CSPM (Cloud Security Posture Management) untuk detect misconfiguration. Baseline drift detection.</p></div>
+      </div>
+
+      <div class="info-box info-success">
+        <strong>Cloud Security Tools:</strong> CSPM — Palo Alto Prisma Cloud, Wiz, Check Point CloudGuard;
+        CWPP (Cloud Workload Protection) — CrowdStrike Falcon, Aqua Security, Sysdig;
+        CASB — Netskope, Microsoft Defender for Cloud Apps, Zscaler;
+        Cloud SIEM — Microsoft Sentinel, Splunk Cloud, Google Chronicle.
+      </div>
+    </section>
+    <!-- ============= BAGIAN 12: PRAKTIKUM ============= -->
+    <section id="praktikum">
+      <div class="practicum-banner">
+        <span class="section-tag" style="margin-bottom:8px">Bagian 12 · Hands-on Lab</span>
+        <h2>Modul Praktikum Virtualization &amp; Cloud</h2>
+        <p>Empat sesi praktik hands-on: VM deployment dengan VirtualBox/KVM, Docker containerization, cloud IAM (AWS Free Tier), dan cloud security audit.</p>
+      </div>
+
+      <h3 class="sub-title">12.1 Tujuan Praktikum</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">1</div>VM Deployment</div><p>Deploy multiple VMs dengan VirtualBox/KVM — konfigurasi network, snapshots, resource limits, dan VM isolation.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">2</div>Docker Containers</div><p>Containerize aplikasi dengan Docker — build image, run container, docker-compose, dan container security.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">3</div>Cloud IAM</div><p>Setup AWS Free Tier — configure IAM users, roles, policies, MFA, dan S3 bucket dengan proper access control.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">4</div>Cloud Security Audit</div><p>Audit cloud security posture — identify misconfigurations, test IAM policies, scan for public S3 buckets.</p></div>
+      </div>
+
+      <h3 class="sub-title">12.2 Alat dan Bahan</h3>
+      <div class="two-col">
+        <div class="col-box left">
+          <h4><span class="ico">💻</span>Perangkat Keras</h4>
+          <ul class="checklist">
+            <li>PC/Laptop minimum 8 GB RAM (16 GB disarankan)</li>
+            <li>VirtualBox atau KVM/QEMU</li>
+            <li>AWS Free Tier account (gratis 12 bulan)</li>
+            <li>Koneksi internet untuk download ISO/images</li>
+          </ul>
+        </div>
+        <div class="col-box right">
+          <h4><span class="ico">🧰</span>Perangkat Lunak</h4>
+          <ul class="checklist">
+            <li><strong>VirtualBox</strong> atau <strong>KVM/QEMU</strong></li>
+            <li><strong>Docker</strong> + Docker Compose</li>
+            <li><strong>AWS CLI</strong> untuk cloud management</li>
+            <li><strong>Ubuntu Server ISO</strong> (untuk VM)</li>
+            <li><strong>Prowler</strong> (AWS security assessment tool)</li>
+            <li><strong>Scout Suite</strong> (multi-cloud security auditing)</li>
+            <li><strong>Terraform</strong> (IaC — opsional)</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="sub-title">12.3 Workflow Praktikum 4 Sesi</h3>
+      <div class="infographic">
+        <div class="ig-title">Alur Praktikum — 4 Sesi, 20 Langkah, 1 Laporan Akhir</div>
+        <svg viewBox="0 0 900 280" width="900" height="280" aria-label="Practicum workflow">
+          <defs><linearGradient id="grad-lab-m06" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#22d3ee"/><stop offset="33%" stop-color="#34d399"/><stop offset="66%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#fbbf24"/></linearGradient></defs>
+          <path d="M 60 100 L 840 100" stroke="url(#grad-lab-m06)" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="150" cy="100" r="32" fill="#161d2e" stroke="#22d3ee" stroke-width="2.5"/><text x="150" y="98" text-anchor="middle" class="ig-text-title">S1</text><text x="150" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="80" y="150" width="140" height="70" rx="10" class="ig-accent-box"/><text x="150" y="172" text-anchor="middle" class="ig-text-strong">VM Deploy</text><text x="150" y="188" text-anchor="middle" class="ig-text-small">VirtualBox/</text><text x="150" y="202" text-anchor="middle" class="ig-text-small">KVM + network</text>
+          <text x="150" y="65" text-anchor="middle" class="ig-text-small" style="fill:#22d3ee">~75 menit</text>
+          <circle cx="380" cy="100" r="32" fill="#161d2e" stroke="#34d399" stroke-width="2.5"/><text x="380" y="98" text-anchor="middle" class="ig-text-title" style="fill:#34d399">S2</text><text x="380" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="310" y="150" width="140" height="70" rx="10" class="ig-success-box"/><text x="380" y="172" text-anchor="middle" class="ig-text-strong">Docker</text><text x="380" y="188" text-anchor="middle" class="ig-text-small">Containerize</text><text x="380" y="202" text-anchor="middle" class="ig-text-small">+ Security</text>
+          <text x="380" y="65" text-anchor="middle" class="ig-text-small" style="fill:#34d399">~75 menit</text>
+          <circle cx="610" cy="100" r="32" fill="#161d2e" stroke="#a78bfa" stroke-width="2.5"/><text x="610" y="98" text-anchor="middle" class="ig-text-title" style="fill:#a78bfa">S3</text><text x="610" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="540" y="150" width="140" height="70" rx="10" class="ig-purple-box"/><text x="610" y="172" text-anchor="middle" class="ig-text-strong">AWS IAM</text><text x="610" y="188" text-anchor="middle" class="ig-text-small">Users, Roles</text><text x="610" y="202" text-anchor="middle" class="ig-text-small">MFA, S3</text>
+          <text x="610" y="65" text-anchor="middle" class="ig-text-small" style="fill:#a78bfa">~90 menit</text>
+          <circle cx="820" cy="100" r="32" fill="#161d2e" stroke="#fbbf24" stroke-width="2.5"/><text x="820" y="98" text-anchor="middle" class="ig-text-title" style="fill:#fbbf24">S4</text><text x="820" y="113" text-anchor="middle" class="ig-text-small">5 step</text>
+          <rect x="750" y="150" width="140" height="70" rx="10" class="ig-warn-box"/><text x="820" y="172" text-anchor="middle" class="ig-text-strong">Cloud Sec</text><text x="820" y="188" text-anchor="middle" class="ig-text-small">Audit + Prowler</text><text x="820" y="202" text-anchor="middle" class="ig-text-small">+ Scout Suite</text>
+          <text x="820" y="65" text-anchor="middle" class="ig-text-small" style="fill:#fbbf24">~75 menit</text>
+          <rect x="280" y="240" width="340" height="30" rx="15" fill="#161d2e" stroke="#22d3ee" stroke-width="1.5"/><text x="450" y="260" text-anchor="middle" class="ig-text-strong" style="fill:#22d3ee">Total ~5.5 jam → Laporan VM + Docker + IAM + Cloud Audit</text>
+        </svg>
+        <div class="infographic-caption">Gambar 6. Workflow 4 sesi praktikum Modul 06 — total 20 langkah hands-on.</div>
+      </div>
+
+      <h3 class="sub-title">12.4 Langkah Praktikum</h3>
+
+      <h4 class="mini-title">Sesi 1 — VM Deployment dengan VirtualBox/KVM</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Install VirtualBox &amp; Create VMs</h5><p>Install VirtualBox. Create 3 VMs: VM1 (Ubuntu Server — web server), VM2 (Ubuntu Server — database), VM3 (Kali Linux — attacker). Allocate: 2 vCPU, 2 GB RAM each. Set network: VM1 &amp; VM2 di Internal Network, VM3 di NAT.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Configure Network &amp; Isolation</h5><p>Setup internal network antara VM1 &amp; VM2. VM1 dapat reach VM2, tetapi VM3 (NAT) tidak dapat reach VM1/VM2 langsung. Test: <code>ping</code> antar VMs. Konfigurasi firewall (UFW) di VM1 &amp; VM2 untuk restrict access.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Snapshots &amp; Resource Limits</h5><p>Take snapshot VM1 setelah install. Test: modify VM1 (install package), lalu restore snapshot — VM kembali ke state sebelum. Set resource limits: CPU cap 50%, RAM 1 GB. Test: run stress test di VM1, amati tidak exceed limit.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>VM Security Hardening</h5><p>Hardening: (a) disable root login SSH, (b) enable key-based auth only, (c) install UFW firewall, (d) enable automatic security updates, (e) install fail2ban. Test dari VM3 (attacker): brute force SSH → fail2ban block IP.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Laporan VM Lab</h5><p>Buat laporan: (a) network diagram 3 VM, (b) isolation test results, (c) snapshot demo, (d) resource limit verification, (e) hardening checklist. Diskusikan: VM escape risk, migration security, snapshot security.</p></div></div>
+      </div>
+
+      <h4 class="mini-title">Sesi 2 — Docker Containerization</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Install Docker</h5><p>Install Docker di Ubuntu VM: <code>curl -fsSL https://get.docker.com | sh</code>. Verifikasi: <code>docker --version</code>, <code>docker run hello-world</code>. Add user ke docker group: <code>usermod -aG docker $USER</code>.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Build Custom Docker Image</h5><p>Buat Dockerfile untuk web app sederhana (nginx + custom HTML). <code>docker build -t mywebapp:v1 .</code>. Run: <code>docker run -d -p 8080:80 mywebapp:v1</code>. Test: <code>curl http://localhost:8080</code>. Inspect: <code>docker ps</code>, <code>docker exec -it &lt;container&gt; /bin/bash</code>.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Docker Compose Multi-Container</h5><p>Buat <code>docker-compose.yml</code> dengan 2 services: web (nginx) + db (postgres). Set network antar containers. <code>docker-compose up -d</code>. Test: web container dapat reach db container via service name. <code>docker-compose down</code> untuk cleanup.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>Container Security</h5><p>Security best practices: (a) run container as non-root user, (b) read-only filesystem <code>--read-only</code>, (c) drop capabilities <code>--cap-drop ALL</code>, (d) resource limits <code>--memory=512m --cpus=0.5</code>, (e) scan image dengan Trivy: <code>trivy image mywebapp:v1</code>.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Laporan Docker</h5><p>Laporan: (a) Dockerfile + docker-compose.yml, (b) container run demo, (c) security hardening checklist, (d) Trivy scan results, (e) comparison VM vs Container (overhead, startup time, isolation). Diskusikan: container escape risk.</p></div></div>
+      </div>
+
+      <h4 class="mini-title">Sesi 3 — AWS IAM &amp; S3 Setup</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Create AWS Free Tier Account</h5><p>Daftar di <code>aws.amazon.com</code> dengan Free Tier. Setup MFA di root account. <strong>Jangan gunakan root untuk daily tasks</strong>. Install AWS CLI: <code>pip install awscli</code>. Configure: <code>aws configure</code> dengan access key &amp; secret key.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>IAM Users, Groups &amp; Roles</h5><p>Buat IAM Group "Developers" dengan policy: AmazonEC2ReadOnlyAccess. Buat IAM User "dev-user" dan add ke group. Buat IAM Role "EC2-S3-Access" dengan S3 read policy. Test: login sebagai dev-user, coba create EC2 → denied (read-only). Attach role ke EC2 instance.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>S3 Bucket dengan Access Control</h5><p>Buat S3 bucket "my-secure-bucket-lab". Set: (a) Block ALL public access, (b) Enable default encryption (SSE-S3), (c) Versioning enabled, (d) Bucket policy: allow only dari specific VPC. Upload test file. Test: public access → denied. Access via IAM role → allowed.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>VPC &amp; Security Groups</h5><p>Buat custom VPC: public subnet (web) + private subnet (db). Security group web: allow 80, 443 dari Internet. Security group db: allow 3306 hanya dari web security group. Launch EC2 di masing-masing subnet. Test: Internet → web = OK, Internet → db = blocked, web → db = OK.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Laporan Cloud IAM</h5><p>Laporan: (a) IAM structure (users, groups, roles, policies), (b) S3 bucket configuration, (c) VPC network diagram, (d) security group rules, (e) shared responsibility analysis — apa yang Anda manage vs AWS manage. Diskusikan: least privilege, MFA, data residency.</p></div></div>
+      </div>
+
+      <h4 class="mini-title">Sesi 4 — Cloud Security Audit</h4>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-content"><h5>Install Prowler</h5><p>Prowler adalah open-source AWS security assessment tool. Install: <code>pip install prowler</code> atau clone dari GitHub. Configure AWS credentials. Run basic scan: <code>prowler aws</code>. Tunggu 5-10 menit untuk assessment lengkap.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><h5>Analyze Prowler Results</h5><p>Review findings: (a) Critical — root MFA not enabled, (b) High — IAM access keys older than 90 days, (c) Medium — S3 bucket without encryption, (d) Low — password policy too weak. Catat setiap finding dengan severity &amp; recommendation.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content"><h5>Remediate Findings</h5><p>Fix critical findings: (a) Enable MFA untuk semua IAM users, (b) Rotate old access keys, (c) Enable S3 encryption untuk all buckets, (d) Strengthen IAM password policy (min 14 char, require symbols), (e) Delete unused security groups. Re-run Prowler untuk verify.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content"><h5>Scout Suite Multi-Cloud Audit</h5><p>Install Scout Suite: <code>pip install scoutsuite</code>. Run: <code>scout aws --report-dir ./report</code>. Compare dengan Prowler — Scout Suite berikan dashboard yang lebih visual. Identifikasi findings yang miss oleh Prowler (atau sebaliknya).</p></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content"><h5>Cloud Security Laporan</h5><p>Laporan: (a) Prowler + Scout Suite findings, (b) remediation actions taken, (c) before/after comparison, (d) cloud security posture score, (e) recommendations untuk continuous improvement. Diskusikan: CSPM, CWPP, CASB — mana yang paling relevant untuk organisasi?</p></div></div>
+      </div>
+
+      <h3 class="sub-title">12.5 Lembar Kerja / Tugas</h3>
+      <div class="card-grid grid-2">
+        <div class="card"><div class="card-title"><div class="card-icon">Q1</div>VM vs Container</div><p>Dari Sesi 1 &amp; 2, bandingkan VM dan Docker container. Mana yang lebih aman? Mana yang lebih efisien? Kapan menggunakan masing-masing?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q2</div>VM Escape</div><p>Apa itu VM escape? Mengapa ini ancaman paling berbahaya di virtualization? Bagaimana mitigasinya? Berikan contoh kasus nyata.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q3</div>Shared Responsibility</div><p>Dari Sesi 3, jelaskan shared responsibility model AWS. Apa yang Anda manage di IaaS vs SaaS? Apa konsekuensi jika tidak memahami batas tanggung jawab?</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q4</div>Cloud Misconfiguration</div><p>Dari Sesi 4, apa cloud misconfiguration yang paling sering ditemukan? Mengapa S3 bucket public adalah masalah serius? Berikan contoh breach nyata akibat misconfiguration.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q5</div>Hybrid Cloud</div><p>Kapan menggunakan hybrid cloud? Apa kelebihan dan tantangannya? Berikan contoh skenario organisasi yang benefit dari hybrid cloud.</p></div>
+        <div class="card"><div class="card-title"><div class="card-icon">Q6</div>Container Security</div><p>Apa risiko keamanan unik dari Docker container? Bagaimana container escape berbeda dari VM escape? Apa mitigasi yang Anda implementasi di Sesi 2?</p></div>
+      </div>
+
+      <h3 class="sub-title">12.6 Checklist Evaluasi</h3>
+      <p>Praktikum dinyatakan <strong>lulus</strong> jika minimal 10 dari 12 kriteria berikut terpenuhi:</p>
+      <ul class="checklist">
+        <li>3 VMs terdeploy dengan network isolation (internal + NAT)</li>
+        <li>VM snapshot &amp; restore teruji</li>
+        <li>VM hardening (SSH key, UFW, fail2ban) terimplementasi</li>
+        <li>Docker terinstall, custom image di-build &amp; di-run</li>
+        <li>Docker Compose multi-container (web + db) berfungsi</li>
+        <li>Container security hardening (non-root, read-only, cap-drop) teruji</li>
+        <li>AWS IAM users, groups, roles terkonfigurasi dengan least privilege</li>
+        <li>S3 bucket dengan block public access + encryption terkonfigurasi</li>
+        <li>VPC dengan public/private subnet + security groups berfungsi</li>
+        <li>Prowler scan lengkap dengan minimal 10 findings teridentifikasi</li>
+        <li>Minimal 5 critical/high findings teremediasi</li>
+        <li>Scout Suite report ter-generate dengan dashboard</li>
+      </ul>
+
+      <div class="info-box info-success">
+        <strong>Bonus:</strong> Mahasiswa yang dapat mendemonstrasikan: (a) Terraform IaC untuk
+        provision secure AWS infrastructure, (b) Kubernetes deployment dengan network policies,
+        (c) AWS GuardDuty + Security Hub integration, atau (d) multi-cloud audit (AWS + Azure) —
+        akan mendapat nilai tambahan.
+      </div>
+    </section>
+
+    <!-- ============= BAGIAN 13: RINGKASAN ============= -->
+    <section id="ringkasan">
+      <div class="section-header">
+        <span class="section-tag">Bagian 13</span>
+        <h2>Ringkasan Modul</h2>
+        <p>Rangkuman poin-poin kritis yang telah dibahas dalam Modul 06 Virtualization and Cloud Computing.</p>
+      </div>
+
+      <div class="summary-box">
+        <h3>📋 Yang Telah Dipelajari</h3>
+        <ul class="checklist">
+          <li>Virtualization — software-based virtual representation of resources. Components: host, guest, hypervisor (VMM), virtual resources.</li>
+          <li>4 virtualization approaches — Full (unmodified OS, VMM translate), Para (modified OS, aware), Hardware-assisted (CPU VT-x/AMD-V), Hybrid (para + hardware).</li>
+          <li>7 types of virtualization — OS, Network (SDN/NFV), Server, Desktop (VDI), Storage Device, File System, Fabric.</li>
+          <li>Hypervisor Type 1 (bare-metal, direct on hardware, enterprise — ESXi, Hyper-V, KVM, Xen) vs Type 2 (hosted, on OS, desktop — VirtualBox, VMware Workstation).</li>
+          <li>Virtualization security concerns — VM Escape, VM-to-VM attack, snapshot vulnerabilities, migration risks, hypervisor malware, resource exhaustion.</li>
+          <li>Virtualization best practices — patch hypervisor, isolate VMs, resource limits, secure snapshots, encrypt migration, VM hardening (CIS benchmarks).</li>
+          <li>Cloud computing — 5 characteristics: On-Demand self-service, Broad network access, Resource pooling, Rapid elasticity, Measured service. Benefits: cost reduction, distributed workforce, scalability, DR.</li>
+          <li>3 cloud service models — IaaS (infrastructure, you manage OS+apps), PaaS (platform, you manage apps only), SaaS (software, you just use). Shared responsibility matrix.</li>
+          <li>4 cloud deployment models — Public (shared, low cost), Private (single tenant, max security), Hybrid (public+private, cloud bursting), Community (shared among similar orgs).</li>
+          <li>Cloud security threats — Data breach (misconfigured S3), Account hijacking, Insecure API, DoS (economic DoS via auto-scale).</li>
+          <li>Cloud security best practices — IAM (MFA, least privilege), Data encryption (at rest + in transit), Network security (VPC, security groups), Monitoring (CloudTrail, SIEM), Compliance, Configuration management (IaC, CSPM).</li>
+          <li>Cloud security tools — CSPM (Prisma Cloud, Wiz), CWPP (CrowdStrike, Aqua), CASB (Netskope, Defender for Cloud Apps), Cloud SIEM (Sentinel, Splunk Cloud).</li>
+          <li>Praktikum 4 sesi — VM deployment (VirtualBox), Docker containerization, AWS IAM &amp; S3, Cloud security audit (Prowler + Scout Suite).</li>
+        </ul>
+      </div>
+
+      <div class="info-box info-tip" style="margin-top:24px">
+        <strong>Key Takeaway:</strong> Virtualization dan cloud computing telah <strong>mentransformasi
+        IT landscape</strong> — dari on-premise ke hybrid/multi-cloud. Security challenges bersifat
+        unique: VM escape, shared tenancy, misconfiguration, shared responsibility. <strong>Identity
+        is the new perimeter</strong> di cloud — tanpa IAM yang tepat, semua technical controls tidak
+        efektif. <strong>Shared responsibility model</strong> harus dipahami: provider secure the cloud,
+        you secure IN the cloud. Modul ini melengkapi Modul 03-05 (administrative → physical → technical
+        controls) dengan konteks virtualization dan cloud.
+      </div>
+    </section>
+
+    <footer>
+      <p><strong>Modul 06: Virtualization and Cloud Computing</strong> · Network Defense Essentials</p>
+      <p>Disusun sebagai materi pembelajaran — bebas digunakan untuk tujuan edukasi.</p>
+      <div class="next-modul"><span>Modul Selanjutnya →</span><strong>Modul 07: Wireless Network Security</strong></div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  (function(){
+    const tocLinks = document.querySelectorAll('#toc a');
+    const sections = Array.from(tocLinks).map(a => {
+      const id = a.getAttribute('href').slice(1);
+      return document.getElementById(id);
+    }).filter(Boolean);
+    function setActive(){
+      const scrollY = window.scrollY + 100;
+      let currentIdx = 0;
+      for(let i=0;i<sections.length;i++){
+        if(sections[i].offsetTop <= scrollY) currentIdx = i;
+      }
+      tocLinks.forEach((a, i) => a.classList.toggle('active', i === currentIdx));
+    }
+    setActive();
+    window.addEventListener('scroll', setActive, {passive:true});
+    tocLinks.forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = a.getAttribute('href').slice(1);
+        const target = document.getElementById(id);
+        if(target){
+          const offset = 80;
+          const top = target.getBoundingClientRect().top + window.scrollY - offset;
+          window.scrollTo({top, behavior:'smooth'});
+          document.querySelector('.sidebar').classList.remove('open');
+        }
+      });
+    });
+  })();
+</script>
+</body>
+</html>
