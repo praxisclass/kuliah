@@ -1,7 +1,3 @@
----
-layout: default
-title: Kemanan Sistem Informasi
----
 <div align="center">
 
 # 🔐 eBook MATA KULIAH KEAMANAN SISTEM INFORMASI
