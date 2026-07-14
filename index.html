@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Perkuliahan | Bambang Pujiarto, S.Kom., M.Kom.</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Config for Web3 Aesthetic -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        web3: {
+                            dark: '#0a0a0f',
+                            card: 'rgba(20, 20, 30, 0.6)',
+                            border: 'rgba(255, 255, 255, 0.08)',
+                            primary: '#6366f1', // Indigo
+                            secondary: '#a855f7', // Purple
+                            accent: '#06b6d4' // Cyan
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0a0a0f;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        /* Glassmorphism utility */
+        .glass {
+            background: rgba(20, 20, 30, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: linear-gradient(145deg, rgba(30, 30, 45, 0.6) 0%, rgba(15, 15, 20, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Animated background gradient texts */
+        .text-gradient {
+            background: linear-gradient(to right, #a855f7, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen relative">
+
+    <!-- Background Decorative Blobs -->
+    <div class="fixed inset-0 w-full h-full pointer-events-none z-[-1] overflow-hidden">
+        <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob"></div>
+        <div class="absolute top-[20%] right-[-10%] w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-indigo-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob animation-delay-4000"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass border-b border-web3-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-4">
+                    <!-- PLACEHOLDER LOGO KAMPUS -->
+                    <img src="https://lh3.googleusercontent.com/d/1ztF1DOciPmC2GPUK-s7fXUCRO48htbfn" alt="Logo UNIMMA" class="w-12 h-12 rounded-full object-cover bg-black border border-gray-600 hover:border-web3-accent transition-colors" title="Logo UNIMMA">
+                    
+                    <div>
+                        <h1 class="text-xl font-bold tracking-wider">UNIMMA<span class="text-web3-accent">.</span></h1>
+                        <p class="text-xs text-gray-400">Portal Materi Kuliah</p>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="flex items-center space-x-8">
+                        <a href="#profil" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Profil</a>
+                        <a href="#matakuliah" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Mata Kuliah</a>
+                        <a href="#" class="px-5 py-2 rounded-full bg-gradient-to-r from-web3-primary to-web3-secondary text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-[0_0_15px_rgba(168,85,247,0.4)]">
+                            Login Portal
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero / Profile Section -->
+    <section id="profil" class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[70vh]">
+        <div class="text-center relative z-10 w-full max-w-4xl mx-auto">
+            
+            <!-- PLACEHOLDER FOTO PROFIL -->
+            <div class="relative w-32 h-32 mx-auto mb-8 animate-float">
+                <div class="absolute inset-0 bg-gradient-to-r from-web3-secondary to-web3-accent rounded-2xl rotate-6 opacity-50 blur-lg"></div>
+                <div class="relative w-full h-full bg-web3-card rounded-2xl border border-web3-border flex items-center justify-center overflow-hidden group cursor-pointer" title="PakBe">
+                    <!-- Gunakan tag img di bawah ini saat sudah ada URL foto profilnya -->
+                    <img src="https://lh3.googleusercontent.com/d/1GCo_udPbjnQOtCZZGHDmAy_rI-2tXZCr" alt="Bambang Pujiarto" class="w-full h-full object-cover">
+                    <i data-lucide="user" class="w-12 h-12 text-gray-400 group-hover:scale-110 transition-transform"></i>
+                </div>
+                <!-- Badge Status -->
+                <div class="absolute -bottom-3 -right-3 bg-green-500/20 border border-green-500/50 px-3 py-1 rounded-full backdrop-blur-sm flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    <span class="text-xs text-green-400 font-medium">Dosen Aktif</span>
+                </div>
+            </div>
+
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 tracking-tight">
+                Bambang Pujiarto, <span class="text-gradient">S.Kom., M.Kom.</span>
+            </h1>
+            
+            <p class="text-lg md:text-xl text-gray-400 mb-8 max-w-2xl mx-auto leading-relaxed">
+                Dosen Program Studi <span class="text-white font-medium">Teknologi Informasi (D3)</span> & <span class="text-white font-medium">Teknik Informatika (S1)</span> di Universitas Muhammadiyah Magelang (UNIMMA).
+            </p>
+
+            <div class="flex flex-wrap items-center justify-center gap-4">
+                <a href="#matakuliah" class="px-8 py-3 rounded-xl bg-white text-black font-semibold hover:bg-gray-200 transition-colors flex items-center gap-2">
+                    Lihat Materi <i data-lucide="arrow-down" class="w-4 h-4"></i>
+                </a>
+                <button class="px-8 py-3 rounded-xl glass hover:bg-white/5 transition-colors font-medium flex items-center gap-2">
+                    <i data-lucide="mail" class="w-4 h-4"></i> Hubungi Dosen
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses Section -->
+    <section id="matakuliah" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+            <div>
+                <h2 class="text-3xl md:text-4xl font-bold mb-2">Daftar <span class="text-gradient">Mata Kuliah</span></h2>
+                <p class="text-gray-400">Akses modul, tugas, dan referensi perkuliahan semester ini.</p>
+            </div>
+            <!-- Search/Filter Placeholder -->
+            <div class="relative w-full md:w-64 glass rounded-full px-4 py-2 flex items-center">
+                <i data-lucide="search" class="w-4 h-4 text-gray-400 mr-2"></i>
+                <input type="text" placeholder="Cari matkul..." class="bg-transparent border-none outline-none text-sm w-full text-white placeholder-gray-500">
+            </div>
+        </div>
+
+        <!-- Grid Kartu -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+            <!-- Card 1: Cyber Security -->
+            <div class="glass-card rounded-2xl p-6 group flex flex-col h-full relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
+                <div class="w-12 h-12 rounded-xl bg-red-500/20 border border-red-500/30 flex items-center justify-center mb-6 text-red-400">
+                    <i data-lucide="shield-alert" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Cyber Security</h3>
+                <p class="text-sm text-gray-400 mb-6 flex-grow">Mempelajari konsep keamanan siber, ancaman, kerentanan, dan strategi pertahanan modern.</p>
+                <div class="pt-4 border-t border-white/10 flex justify-between items-center">
+                    <span class="text-xs text-gray-500 font-medium">S1 Teknik Informatika</span>
+                    <a href="#" class="text-sm text-web3-accent hover:text-white transition-colors flex items-center gap-1 font-medium">
+                        Masuk Materi <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 2: Keamanan Sistem Informasi -->
+            <div class="glass-card rounded-2xl p-6 group flex flex-col h-full relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
+                <div class="w-12 h-12 rounded-xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center mb-6 text-blue-400">
+                    <i data-lucide="lock-keyhole" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Keamanan Sistem Informasi</h3>
+                <p class="text-sm text-gray-400 mb-6 flex-grow">Manajemen risiko, kriptografi dasar, dan kebijakan keamanan untuk melindungi data sistem.</p>
+                <div class="pt-4 border-t border-white/10 flex justify-between items-center">
+                    <span class="text-xs text-gray-500 font-medium">S1 & D3</span>
+                    <a href="#" class="text-sm text-web3-accent hover:text-white transition-colors flex items-center gap-1 font-medium">
+                        Masuk Materi <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 3: Ethical Hacking -->
+            <div class="glass-card rounded-2xl p-6 group flex flex-col h-full relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-green-500/10 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
+                <div class="w-12 h-12 rounded-xl bg-green-500/20 border border-green-500/30 flex items-center justify-center mb-6 text-green-400">
+                    <i data-lucide="terminal-square" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Ethical Hacking</h3>
+                <p class="text-sm text-gray-400 mb-6 flex-grow">Teknik penetrasi, identifikasi celah keamanan, dan audit sistem menggunakan metode peretas etis.</p>
+                <div class="pt-4 border-t border-white/10 flex justify-between items-center">
+                    <span class="text-xs text-gray-500 font-medium">S1 Teknik Informatika</span>
+                    <a href="#" class="text-sm text-web3-accent hover:text-white transition-colors flex items-center gap-1 font-medium">
+                        Masuk Materi <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 4: Keamanan Jaringan -->
+            <div class="glass-card rounded-2xl p-6 group flex flex-col h-full relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
+                <div class="w-12 h-12 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center mb-6 text-purple-400">
+                    <i data-lucide="network" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Keamanan Jaringan</h3>
+                <p class="text-sm text-gray-400 mb-6 flex-grow">Implementasi firewall, IDS/IPS, VPN, dan pengamanan topologi jaringan enterprise.</p>
+                <div class="pt-4 border-t border-white/10 flex justify-between items-center">
+                    <span class="text-xs text-gray-500 font-medium">D3 Teknologi Informasi</span>
+                    <a href="#" class="text-sm text-web3-accent hover:text-white transition-colors flex items-center gap-1 font-medium">
+                        Masuk Materi <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 5: Jaringan Komputer -->
+            <div class="glass-card rounded-2xl p-6 group flex flex-col h-full relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
+                <div class="w-12 h-12 rounded-xl bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center mb-6 text-cyan-400">
+                    <i data-lucide="server" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Jaringan Komputer</h3>
+                <p class="text-sm text-gray-400 mb-6 flex-grow">Dasar arsitektur jaringan, protokol OSI, TCP/IP, routing, dan switching.</p>
+                <div class="pt-4 border-t border-white/10 flex justify-between items-center">
+                    <span class="text-xs text-gray-500 font-medium">S1 & D3</span>
+                    <a href="#" class="text-sm text-web3-accent hover:text-white transition-colors flex items-center gap-1 font-medium">
+                        Masuk Materi <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 6: Network Administrator -->
+            <div class="glass-card rounded-2xl p-6 group flex flex-col h-full relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
+                <div class="w-12 h-12 rounded-xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center mb-6 text-orange-400">
+                    <i data-lucide="wifi" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Network Administrator</h3>
+                <p class="text-sm text-gray-400 mb-6 flex-grow">Praktik konfigurasi server, manajemen bandwidth, dan pemeliharaan infrastruktur IT harian.</p>
+                <div class="pt-4 border-t border-white/10 flex justify-between items-center">
+                    <span class="text-xs text-gray-500 font-medium">D3 Teknologi Informasi</span>
+                    <a href="#" class="text-sm text-web3-accent hover:text-white transition-colors flex items-center gap-1 font-medium">
+                        Masuk Materi <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 7: Content Development -->
+            <div class="glass-card rounded-2xl p-6 group flex flex-col h-full relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-pink-500/10 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
+                <div class="w-12 h-12 rounded-xl bg-pink-500/20 border border-pink-500/30 flex items-center justify-center mb-6 text-pink-400">
+                    <i data-lucide="layout-template" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">Content Development</h3>
+                <p class="text-sm text-gray-400 mb-6 flex-grow">Pengembangan konten digital interaktif, multimedia, dan UI/UX untuk aplikasi dan web.</p>
+                <div class="pt-4 border-t border-white/10 flex justify-between items-center">
+                    <span class="text-xs text-gray-500 font-medium">S1 & D3</span>
+                    <a href="#" class="text-sm text-web3-accent hover:text-white transition-colors flex items-center gap-1 font-medium">
+                        Masuk Materi <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- PLACEHOLDER CARD: Tambah Mata Kuliah Baru -->
+            <div class="rounded-2xl p-6 flex flex-col items-center justify-center h-full min-h-[250px] border-2 border-dashed border-gray-600 hover:border-web3-primary hover:bg-web3-primary/5 transition-all cursor-pointer group">
+                <div class="w-16 h-16 rounded-full bg-gray-800 group-hover:bg-web3-primary/20 flex items-center justify-center mb-4 transition-colors">
+                    <i data-lucide="plus" class="w-8 h-8 text-gray-400 group-hover:text-web3-primary transition-colors"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-400 group-hover:text-white transition-colors">Tambah Mata Kuliah</h3>
+                <p class="text-xs text-gray-500 mt-2 text-center">Klik untuk menambahkan materi perkuliahan baru (Mode Admin)</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-web3-border mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <i data-lucide="book-open" class="w-5 h-5 text-web3-accent"></i>
+                <span class="text-sm font-semibold text-gray-300">UNIMMA IT Learning</span>
+            </div>
+            <p class="text-sm text-gray-500 text-center md:text-left">
+                &copy; <span id="year"></span> Bambang Pujiarto, S.Kom., M.Kom. | FTI Universitas Muhammadiyah Magelang.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Initialize Icons and Scripts -->
+    <script>
+        // Inisialisasi ikon Lucide
+        lucide.createIcons();
+        
+        // Set tahun hak cipta otomatis
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
