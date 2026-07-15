@@ -1,3 +1,8 @@
+---
+layout: default
+title: Jaringan Komputer
+---
+
 # 🌐 Bab 4: Network Services
 
 ## DHCP, DNS, NAT, dan Wireless
