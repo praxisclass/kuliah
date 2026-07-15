@@ -21,11 +21,18 @@
         <p>© 2026 Blog Saya</p>
     </footer>
 
-    <!-- SCRIPT MERMAID DI LETAKKAN DI SINI (Sebelum tag tutup body) -->
-    <script type="module">
-      import mermaid from 'https://jsdelivr.net';
-      mermaid.initialize({ startOnLoad: true });
-    </script>
+    <!-- Menggunakan file JS siap pakai (Compiled) -->
+<script src="https://jsdelivr.net"></script>
+<script>
+  // Memastikan skrip berjalan setelah seluruh halaman selesai dimuat
+  window.addEventListener('load', function() {
+    mermaid.initialize({ 
+      startOnLoad: true,
+      securityLevel: 'loose'
+    });
+  });
+</script>
+
 
 </body>
 </html>
