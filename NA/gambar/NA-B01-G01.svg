@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="700" viewBox="0 0 960 700" font-family="Helvetica, Arial, sans-serif">
+  <rect width="960" height="700" fill="#ffffff"/>
+
+  <text x="40" y="38" font-size="18" font-weight="bold" fill="#111827">Gambar 1.1  Model OSI, model TCP/IP, dan enkapsulasi</text>
+  <text x="40" y="60" font-size="13" fill="#4b5563">Sumber: diolah untuk buku ini</text>
+
+  <text x="60" y="82" font-size="14" font-weight="bold" fill="#1e3a8a">Model OSI</text>
+  <text x="470" y="82" font-size="14" font-weight="bold" fill="#14532d">Model TCP/IP</text>
+
+  <g font-size="13" fill="#111827">
+    <rect x="60" y="90" width="230" height="48" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="76" y="119">7  Aplikasi</text>
+
+    <rect x="60" y="144" width="230" height="48" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="76" y="173">6  Presentasi</text>
+
+    <rect x="60" y="198" width="230" height="48" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="76" y="227">5  Sesi</text>
+
+    <rect x="60" y="252" width="230" height="48" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="76" y="281">4  Transport</text>
+
+    <rect x="60" y="306" width="230" height="48" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="76" y="335">3  Jaringan</text>
+
+    <rect x="60" y="360" width="230" height="48" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="76" y="389">2  Taut Data</text>
+
+    <rect x="60" y="414" width="230" height="48" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="76" y="443">1  Fisik</text>
+  </g>
+
+  <g font-size="13" fill="#111827">
+    <rect x="470" y="90" width="230" height="162" fill="#dcfce7" stroke="#16a34a"/>
+    <text x="486" y="162">Aplikasi  (mencakup 5 - 7)</text>
+
+    <rect x="470" y="252" width="230" height="54" fill="#dcfce7" stroke="#16a34a"/>
+    <text x="486" y="283">Transport  (4)</text>
+
+    <rect x="470" y="306" width="230" height="54" fill="#dcfce7" stroke="#16a34a"/>
+    <text x="486" y="337">Internet  (3)</text>
+
+    <rect x="470" y="360" width="230" height="102" fill="#dcfce7" stroke="#16a34a"/>
+    <text x="486" y="412">Akses Jaringan  (1 - 2)</text>
+  </g>
+
+  <g stroke="#9ca3af" stroke-width="1.5" fill="none">
+    <line x1="290" y1="216" x2="470" y2="171"/>
+    <line x1="290" y1="279" x2="470" y2="279"/>
+    <line x1="290" y1="333" x2="470" y2="333"/>
+    <line x1="290" y1="411" x2="470" y2="411"/>
+  </g>
+
+  <text x="40" y="512" font-size="14" font-weight="bold" fill="#111827">Enkapsulasi: data dibungkus berlapis dari atas ke bawah</text>
+
+  <g stroke="#6b7280" stroke-width="1.5" fill="none">
+    <path d="M60 552 L60 544 L900 544 L900 552"/>
+    <path d="M240 570 L240 562 L900 562 L900 570"/>
+    <path d="M420 588 L420 580 L840 580 L840 588"/>
+  </g>
+  <g font-size="11" fill="#6b7280">
+    <text x="66" y="540">Bingkai (lapis 2)</text>
+    <text x="246" y="558">Paket (lapis 3)</text>
+    <text x="426" y="576">Segmen (lapis 4)</text>
+  </g>
+
+  <g font-size="12" fill="#111827" text-anchor="middle">
+    <rect x="60" y="592" width="180" height="60" fill="#e5e7eb" stroke="#4b5563"/>
+    <text x="150" y="627">Kepala Ethernet</text>
+
+    <rect x="240" y="592" width="180" height="60" fill="#e5e7eb" stroke="#4b5563"/>
+    <text x="330" y="627">Kepala IP</text>
+
+    <rect x="420" y="592" width="180" height="60" fill="#e5e7eb" stroke="#4b5563"/>
+    <text x="510" y="627">Kepala TCP</text>
+
+    <rect x="600" y="592" width="240" height="60" fill="#fef3c7" stroke="#b45309"/>
+    <text x="720" y="627">Data pengguna</text>
+
+    <rect x="840" y="592" width="60" height="60" fill="#e5e7eb" stroke="#4b5563"/>
+    <text x="870" y="627">Ekor</text>
+  </g>
+
+  <text x="40" y="682" font-size="12" fill="#4b5563">Penerima membuka lapisan itu satu per satu, dari bingkai sampai data.</text>
+</svg>

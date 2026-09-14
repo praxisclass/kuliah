@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" font-family="Helvetica, Arial, sans-serif">
+  <rect width="960" height="560" fill="#ffffff"/>
+
+  <text x="40" y="38" font-size="18" font-weight="bold" fill="#111827">Gambar 6.2  Urutan pemilihan jalur pada BGP</text>
+  <text x="40" y="60" font-size="13" fill="#4b5563">Sumber: diolah untuk buku ini</text>
+
+  <text x="40" y="94" font-size="13" fill="#374151">Periksa dari atas ke bawah. Berhenti pada baris pertama yang berbeda.</text>
+
+  <g font-size="12" fill="#111827">
+    <rect x="60" y="112" width="60" height="40" fill="#e5e7eb" stroke="#4b5563"/>
+    <text x="90" y="137" text-anchor="middle">1</text>
+    <rect x="120" y="112" width="420" height="40" fill="#f3f4f6" stroke="#6b7280"/>
+    <text x="136" y="137">Bobot, berlaku setempat pada perangkat ini</text>
+    <rect x="540" y="112" width="300" height="40" fill="#f3f4f6" stroke="#6b7280"/>
+    <text x="556" y="137">Makin besar makin dipilih</text>
+
+    <rect x="60" y="162" width="60" height="40" fill="#e5e7eb" stroke="#4b5563"/>
+    <text x="90" y="187" text-anchor="middle">2</text>
+    <rect x="120" y="162" width="420" height="40" fill="#fee2e2" stroke="#dc2626"/>
+    <text x="136" y="187">Preferensi setempat, kehendak organisasi sendiri</text>
+    <rect x="540" y="162" width="300" height="40" fill="#fee2e2" stroke="#dc2626"/>
+    <text x="556" y="187">Makin besar makin dipilih</text>
+
+    <rect x="60" y="212" width="60" height="40" fill="#e5e7eb" stroke="#4b5563"/>
+    <text x="90" y="237" text-anchor="middle">3</text>
+    <rect x="120" y="212" width="420" height="40" fill="#f3f4f6" stroke="#6b7280"/>
+    <text x="136" y="237">Awalan yang berasal dari organisasi sendiri</text>
+    <rect x="540" y="212" width="300" height="40" fill="#f3f4f6" stroke="#6b7280"/>
+    <text x="556" y="237">Diutamakan atas yang dari luar</text>
+
+    <rect x="60" y="262" width="60" height="40" fill="#e5e7eb" stroke="#4b5563"/>
+    <text x="90" y="287" text-anchor="middle">4</text>
+    <rect x="120" y="262" width="420" height="40" fill="#f3f4f6" stroke="#6b7280"/>
+    <text x="136" y="287">Panjang lintasan, jumlah nomor sistem otonom</text>
+    <rect x="540" y="262" width="300" height="40" fill="#f3f4f6" stroke="#6b7280"/>
+    <text x="556" y="287">Makin pendek makin dipilih</text>
+
+    <rect x="60" y="312" width="60" height="40" fill="#e5e7eb" stroke="#4b5563"/>
+    <text x="90" y="337" text-anchor="middle">5</text>
+    <rect x="120" y="312" width="420" height="40" fill="#f3f4f6" stroke="#6b7280"/>
+    <text x="136" y="337">Jenis asal, cara awalan itu masuk ke BGP</text>
+    <rect x="540" y="312" width="300" height="40" fill="#f3f4f6" stroke="#6b7280"/>
+    <text x="556" y="337">Yang lebih dapat dipercaya diutamakan</text>
+
+    <rect x="60" y="362" width="60" height="40" fill="#e5e7eb" stroke="#4b5563"/>
+    <text x="90" y="387" text-anchor="middle">6</text>
+    <rect x="120" y="362" width="420" height="40" fill="#f3f4f6" stroke="#6b7280"/>
+    <text x="136" y="387">Pemisah keluar, saran kepada organisasi tetangga</text>
+    <rect x="540" y="362" width="300" height="40" fill="#f3f4f6" stroke="#6b7280"/>
+    <text x="556" y="387">Makin kecil makin dipilih</text>
+
+    <rect x="60" y="412" width="60" height="40" fill="#e5e7eb" stroke="#4b5563"/>
+    <text x="90" y="437" text-anchor="middle">7</text>
+    <rect x="120" y="412" width="420" height="40" fill="#f3f4f6" stroke="#6b7280"/>
+    <text x="136" y="437">Ongkos menuju pengirim berikutnya</text>
+    <rect x="540" y="412" width="300" height="40" fill="#f3f4f6" stroke="#6b7280"/>
+    <text x="556" y="437">Makin kecil makin dipilih</text>
+  </g>
+
+  <rect x="60" y="472" width="780" height="52" fill="#fef3c7" stroke="#b45309"/>
+  <text x="76" y="496" font-size="12" fill="#111827">Bila seluruhnya sama, dipergunakan aturan pemutus seri, misalnya sesi yang lebih dulu terbentuk atau penanda pengenal terkecil.</text>
+  <text x="76" y="514" font-size="12" fill="#111827">Nama atribut dan urutannya dapat berbeda menurut jenis perangkat, karena itu periksa dokumentasi perangkat yang kalian pegang.</text>
+</svg>

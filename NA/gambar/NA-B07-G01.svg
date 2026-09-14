@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" font-family="Helvetica, Arial, sans-serif">
+  <rect width="960" height="520" fill="#ffffff"/>
+
+  <text x="40" y="38" font-size="18" font-weight="bold" fill="#111827">Gambar 7.1  Kanal pada pita 2,4 GHz</text>
+  <text x="40" y="60" font-size="13" fill="#4b5563">Sumber: diolah untuk buku ini</text>
+
+  <text x="40" y="94" font-size="13" fill="#374151">Tiap kanal selebar 20 MHz. Hanya kanal 1, 6, dan 11 yang tidak saling bertumpukan.</text>
+
+  <g font-size="10" fill="#6b7280" text-anchor="middle">
+    <text x="100" y="130">2401</text>
+    <text x="300" y="130">2421</text>
+    <text x="500" y="130">2441</text>
+    <text x="700" y="130">2461</text>
+    <text x="880" y="130">2483 MHz</text>
+  </g>
+
+  <g stroke="#9ca3af" stroke-width="1">
+    <line x1="100" y1="140" x2="100" y2="380"/>
+    <line x1="300" y1="140" x2="300" y2="380"/>
+    <line x1="500" y1="140" x2="500" y2="380"/>
+    <line x1="700" y1="140" x2="700" y2="380"/>
+    <line x1="880" y1="140" x2="880" y2="380"/>
+  </g>
+
+  <g opacity="0.5">
+    <rect x="100" y="160" width="80" height="40" fill="#e5e7eb" stroke="#9ca3af"/>
+    <text x="140" y="186" font-size="11" fill="#374151" text-anchor="middle">1</text>
+    <rect x="120" y="160" width="80" height="40" fill="none"/>
+  </g>
+
+  <g font-size="11" fill="#111827" text-anchor="middle">
+    <rect x="100" y="210" width="80" height="40" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text x="140" y="236">Kanal 1</text>
+    <rect x="300" y="210" width="80" height="40" fill="#fee2e2" stroke="#dc2626"/>
+    <text x="340" y="236">Kanal 6a</text>
+    <rect x="500" y="210" width="80" height="40" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text x="540" y="236">Kanal 6</text>
+    <rect x="700" y="210" width="80" height="40" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text x="740" y="236">Kanal 11</text>
+  </g>
+
+  <g font-size="11" fill="#374151" text-anchor="middle">
+    <rect x="120" y="270" width="80" height="36" fill="#fee2e2" stroke="#dc2626"/>
+    <text x="160" y="293">Kanal 2</text>
+    <rect x="140" y="270" width="80" height="36" fill="#fee2e2" stroke="#dc2626"/>
+    <text x="180" y="293">Kanal 3</text>
+    <rect x="520" y="270" width="80" height="36" fill="#fee2e2" stroke="#dc2626"/>
+    <text x="560" y="293">Kanal 7</text>
+    <rect x="540" y="270" width="80" height="36" fill="#fee2e2" stroke="#dc2626"/>
+    <text x="580" y="293">Kanal 8</text>
+  </g>
+
+  <text x="40" y="344" font-size="12" fill="#991b1b">Kanal 2, 3, 7, dan 8 bertumpukan dengan kanal lainnya, sehingga memakainya membuat dua jaringan saling menunggu giliran.</text>
+
+  <rect x="60" y="366" width="840" height="60" fill="#f9fafb" stroke="#6b7280"/>
+  <g font-size="12" fill="#111827">
+    <text x="76" y="390">Hijau: kanal yang tidak saling bertumpukan, gunakan ketiganya secara bergiliran.</text>
+    <text x="76" y="412">Merah: kanal yang bertumpukan, hindari bila ada lebih dari satu titik akses pada area yang sama.</text>
+  </g>
+
+  <g font-size="12" fill="#374151">
+    <text x="40" y="462">Pada pita 5 GHz tersedia jauh lebih banyak kanal, sehingga perencanaannya lebih lapang.</text>
+    <text x="40" y="486">Sebagian kanal pada pita 5 GHz tunduk pada aturan berbagi dengan pemakai lain, sehingga perangkat dapat berpindah kanal sendiri.</text>
+    <text x="40" y="510">Karena itu pada tempat ramai, pita 5 GHz hampir selalu lebih baik daripada pita 2,4 GHz.</text>
+  </g>
+</svg>

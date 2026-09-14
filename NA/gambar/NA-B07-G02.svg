@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" font-family="Helvetica, Arial, sans-serif">
+  <rect width="960" height="560" fill="#ffffff"/>
+
+  <text x="40" y="38" font-size="18" font-weight="bold" fill="#111827">Gambar 7.2  Titik akses mandiri dan pengontrol nirkabel</text>
+  <text x="40" y="60" font-size="13" fill="#4b5563">Sumber: diolah untuk buku ini</text>
+
+  <text x="60" y="98" font-size="14" font-weight="bold" fill="#1e3a8a">Kiri: titik akses mandiri</text>
+  <text x="560" y="98" font-size="14" font-weight="bold" fill="#7c2d12">Kanan: pengontrol nirkabel</text>
+
+  <rect x="60" y="118" width="80" height="46" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="100" y="147" font-size="12" fill="#111827" text-anchor="middle">Switch</text>
+
+  <line x1="140" y1="141" x2="230" y2="141" stroke="#374151" stroke-width="4"/>
+  <text x="185" y="131" font-size="10" fill="#374151" text-anchor="middle">trunk</text>
+
+  <g font-size="11" fill="#111827" text-anchor="middle">
+    <rect x="230" y="118" width="130" height="46" fill="#fef3c7" stroke="#b45309"/>
+    <text x="295" y="147">AP 1, kanal 1</text>
+    <rect x="230" y="182" width="130" height="46" fill="#fef3c7" stroke="#b45309"/>
+    <text x="295" y="211">AP 2, kanal 6</text>
+    <rect x="230" y="246" width="130" height="46" fill="#fef3c7" stroke="#b45309"/>
+    <text x="295" y="275">AP 3, kanal 11</text>
+  </g>
+
+  <g font-size="10" fill="#374151">
+    <text x="380" y="140">diatur sendiri</text>
+    <text x="380" y="204">diatur sendiri</text>
+    <text x="380" y="268">diatur sendiri</text>
+  </g>
+
+  <g font-size="11" fill="#374151">
+    <text x="60" y="330">Tiap perangkat menyimpan pengaturannya</text>
+    <text x="60" y="350">sendiri, sehingga mengubah satu kebijakan</text>
+    <text x="60" y="370">berarti membuka tiap perangkat satu per satu.</text>
+    <text x="60" y="398">Cocok untuk satu atau dua perangkat.</text>
+    <text x="60" y="418">Tidak cocok untuk belasan perangkat.</text>
+  </g>
+
+  <rect x="560" y="118" width="80" height="46" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="600" y="147" font-size="12" fill="#111827" text-anchor="middle">Switch</text>
+
+  <line x1="640" y1="141" x2="730" y2="141" stroke="#374151" stroke-width="4"/>
+  <text x="685" y="131" font-size="10" fill="#374151" text-anchor="middle">trunk</text>
+
+  <g font-size="11" fill="#111827" text-anchor="middle">
+    <rect x="730" y="118" width="130" height="46" fill="#fef3c7" stroke="#b45309"/>
+    <text x="795" y="147">AP 1</text>
+    <rect x="730" y="182" width="130" height="46" fill="#fef3c7" stroke="#b45309"/>
+    <text x="795" y="211">AP 2</text>
+    <rect x="730" y="246" width="130" height="46" fill="#fef3c7" stroke="#b45309"/>
+    <text x="795" y="275">AP 3</text>
+  </g>
+
+  <g stroke="#b45309" stroke-width="2" stroke-dasharray="5 3">
+    <line x1="795" y1="164" x2="860" y2="200"/>
+    <line x1="795" y1="182" x2="860" y2="205"/>
+    <line x1="795" y1="246" x2="860" y2="210"/>
+  </g>
+
+  <rect x="860" y="180" width="60" height="46" fill="#e0e7ff" stroke="#4338ca"/>
+  <text x="890" y="200" font-size="10" fill="#111827" text-anchor="middle">WLC</text>
+  <text x="890" y="214" font-size="9" fill="#111827" text-anchor="middle">pengontrol</text>
+
+  <g font-size="11" fill="#374151">
+    <text x="560" y="330">Pengaturan diturunkan dari pengontrol,</text>
+    <text x="560" y="350">sehingga satu kebijakan berlaku serentak.</text>
+    <text x="560" y="378">Kanal dan daya dapat diatur bersama,</text>
+    <text x="560" y="398">perpindahan pengguna lebih mulus.</text>
+    <text x="560" y="426">Cocok untuk belasan perangkat atau lebih.</text>
+  </g>
+
+  <line x1="480" y1="110" x2="480" y2="450" stroke="#d1d5db" stroke-width="1" stroke-dasharray="6 5"/>
+
+  <rect x="60" y="456" width="840" height="76" fill="#f9fafb" stroke="#6b7280"/>
+  <g font-size="12" fill="#111827">
+    <text x="76" y="480">Pada kedua susunan, pemisahan segmen tetap sama: SSID staf ke VLAN 10, SSID tamu ke VLAN 20, SSID perangkat ke VLAN 30.</text>
+    <text x="76" y="502">Karena titik akses meneruskan lebih dari satu segmen, port switch yang menghadap kepadanya harus trunk.</text>
+    <text x="76" y="524">Jaringan tamu hanya mendapat jalan keluar ke internet, tidak dapat mencapai segmen staf maupun server.</text>
+  </g>
+</svg>

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" font-family="Helvetica, Arial, sans-serif">
+  <rect width="960" height="540" fill="#ffffff"/>
+
+  <text x="40" y="38" font-size="18" font-weight="bold" fill="#111827">Gambar 5.1  Pertukaran keadaan taut dan peta yang tersusun</text>
+  <text x="40" y="60" font-size="13" fill="#4b5563">Sumber: diolah untuk buku ini</text>
+
+  <text x="40" y="98" font-size="14" font-weight="bold" fill="#1e3a8a">Keadaan jaringan yang sesungguhnya</text>
+
+  <g font-size="12" fill="#111827" text-anchor="middle">
+    <circle cx="120" cy="180" r="34" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="120" y="186">A</text>
+    <circle cx="300" cy="180" r="34" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="300" y="186">B</text>
+    <circle cx="300" cy="330" r="34" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="300" y="336">C</text>
+    <circle cx="480" cy="250" r="34" fill="#dbeafe" stroke="#2563eb"/>
+    <text x="480" y="256">D</text>
+  </g>
+
+  <g stroke="#374151" stroke-width="2">
+    <line x1="154" y1="180" x2="266" y2="180"/>
+    <line x1="154" y1="196" x2="266" y2="322"/>
+    <line x1="266" y1="322" x2="154" y2="196"/>
+    <line x1="334" y1="192" x2="446" y2="238"/>
+    <line x1="334" y1="318" x2="446" y2="262"/>
+  </g>
+
+  <g font-size="11" fill="#374151">
+    <text x="205" y="170">cost 1</text>
+    <text x="170" y="272">cost 10</text>
+    <text x="370" y="200">cost 1</text>
+    <text x="370" y="300">cost 1</text>
+  </g>
+
+  <text x="560" y="98" font-size="14" font-weight="bold" fill="#1e3a8a">Peta yang tersusun pada tiap perangkat</text>
+
+  <rect x="560" y="120" width="360" height="230" fill="#f9fafb" stroke="#6b7280"/>
+
+  <g font-size="11" fill="#111827">
+    <text x="576" y="146">Keterangan yang diterima A:</text>
+    <text x="586" y="170">A ke B tersambung, cost 1</text>
+    <text x="586" y="192">A ke C tersambung, cost 10</text>
+    <text x="586" y="214">B ke D tersambung, cost 1</text>
+    <text x="586" y="236">C ke D tersambung, cost 1</text>
+    <text x="586" y="266" font-weight="bold" fill="#1e3a8a">Perhitungan A menuju D:</text>
+    <text x="586" y="290">lewat B:  1 + 1  = 2</text>
+    <text x="586" y="312">lewat C:  10 + 1  = 11</text>
+    <text x="586" y="336" font-weight="bold" fill="#14532d">Dipilih lewat B, sebab ongkosnya 2</text>
+  </g>
+
+  <text x="40" y="400" font-size="13" fill="#111827">Tiap perangkat mengirim hanya keadaan tautannya sendiri, bukan seluruh tabel routingnya.</text>
+  <text x="40" y="424" font-size="13" fill="#111827">Keterangan itu disebar ke seluruh perangkat dalam area yang sama, sehingga seluruhnya memiliki basis data yang sama.</text>
+  <text x="40" y="448" font-size="13" fill="#111827">Sesudah basis datanya sama, tiap perangkat menghitung jalurnya sendiri dengan algoritma jalur terpendek.</text>
+
+  <g font-size="12" fill="#374151">
+    <text x="40" y="490">Akibatnya bila tautan A ke B putus: A menghitung ulang, dan memilih lewat C tanpa campur tangan administrator.</text>
+    <text x="40" y="514">Ongkosnya naik menjadi 11, tetapi lalu lintas tetap sampai. Itulah manfaat utama routing dinamis.</text>
+  </g>
+</svg>

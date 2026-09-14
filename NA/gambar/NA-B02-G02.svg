@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" font-family="Helvetica, Arial, sans-serif">
+  <rect width="960" height="540" fill="#ffffff"/>
+
+  <text x="40" y="38" font-size="18" font-weight="bold" fill="#111827">Gambar 2.2  Peta pembagian 192.168.10.0/24 dengan VLSM</text>
+  <text x="40" y="60" font-size="13" fill="#4b5563">Sumber: diolah untuk buku ini</text>
+
+  <text x="40" y="98" font-size="13" fill="#374151">Satu balok mewakili beberapa alamat; lebarnya sebanding dengan jumlah alamatnya.</text>
+
+  <rect x="80" y="240" width="800" height="80" fill="none" stroke="#6b7280"/>
+
+  <rect x="80" y="240" width="200" height="80" fill="#dbeafe" stroke="#2563eb"/>
+  <rect x="280" y="240" width="100" height="80" fill="#dcfce7" stroke="#16a34a"/>
+  <rect x="380" y="240" width="50" height="80" fill="#fef3c7" stroke="#b45309"/>
+  <rect x="430" y="240" width="25" height="80" fill="#e0e7ff" stroke="#4338ca"/>
+  <rect x="455" y="240" width="12.5" height="80" fill="#fee2e2" stroke="#dc2626"/>
+  <rect x="467.5" y="240" width="412.5" height="80" fill="#f3f4f6" stroke="#9ca3af" stroke-dasharray="5 4"/>
+
+  <g font-size="13" fill="#111827" text-anchor="middle">
+    <text x="180" y="278">Staf</text>
+    <text x="180" y="298" font-size="12" fill="#1e3a8a">/26</text>
+    <text x="330" y="278">Tamu</text>
+    <text x="330" y="298" font-size="12" fill="#14532d">/27</text>
+    <text x="467.5" y="278" fill="#374151">Cadangan</text>
+  </g>
+
+  <g font-size="11" fill="#374151" text-anchor="middle">
+    <text x="405" y="272">Server</text>
+    <text x="405" y="288">/28</text>
+    <text x="442" y="272">Mnm</text>
+    <text x="442" y="288">/29</text>
+    <text x="461" y="272" font-size="9">P2P</text>
+    <text x="461" y="288" font-size="9">/30</text>
+  </g>
+
+  <g stroke="#6b7280" stroke-width="1" fill="none">
+    <line x1="405" y1="180" x2="405" y2="240"/>
+    <line x1="442" y1="140" x2="442" y2="240"/>
+    <line x1="461" y1="100" x2="461" y2="240"/>
+  </g>
+
+  <g font-size="12" fill="#111827">
+    <text x="415" y="174">Server /28, 16 alamat</text>
+    <text x="452" y="134">Manajemen /29, 8 alamat</text>
+    <text x="471" y="94">Sambungan /30, 4 alamat</text>
+  </g>
+
+  <g stroke="#374151" stroke-width="1">
+    <line x1="80" y1="328" x2="80" y2="340"/>
+    <line x1="280" y1="328" x2="280" y2="340"/>
+    <line x1="380" y1="328" x2="380" y2="340"/>
+    <line x1="430" y1="328" x2="430" y2="340"/>
+    <line x1="455" y1="328" x2="455" y2="340"/>
+    <line x1="467.5" y1="328" x2="467.5" y2="340"/>
+    <line x1="880" y1="328" x2="880" y2="340"/>
+  </g>
+
+  <g font-size="11" fill="#374151" text-anchor="middle">
+    <text x="80" y="356">.0</text>
+    <text x="280" y="356">.64</text>
+    <text x="380" y="356">.96</text>
+    <text x="430" y="356">.112</text>
+    <text x="455" y="356">.120</text>
+    <text x="467.5" y="356">.124</text>
+    <text x="880" y="356">.255</text>
+  </g>
+
+  <text x="40" y="400" font-size="13" fill="#111827">Tiap balok mulai pada kelipatan ukurannya, sehingga tidak ada celah dan tidak ada yang tumpang tindih.</text>
+  <text x="40" y="424" font-size="13" fill="#111827">Pembagian diurutkan dari kebutuhan terbesar, yakni staf, lalu tamu, server, manajemen, dan sambungan.</text>
+  <text x="40" y="448" font-size="13" fill="#111827">Ruang yang tersisa dicatat sebagai cadangan, jangan dibiarkan tanpa keterangan.</text>
+
+  <g font-size="12" fill="#374151">
+    <text x="40" y="492">Kebutuhan awal: staf 60 perangkat, tamu 25, server 10, manajemen 5, sambungan 2.</text>
+    <text x="40" y="514">Sesudah pembagian, tersisa 132 alamat pada rentang .124 sampai .255.</text>
+  </g>
+</svg>

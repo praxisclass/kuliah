@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" font-family="Helvetica, Arial, sans-serif">
+  <rect width="960" height="520" fill="#ffffff"/>
+
+  <text x="40" y="38" font-size="18" font-weight="bold" fill="#111827">Gambar 6.1  Peering eBGP antar dua sistem otonom dan iBGP di dalamnya</text>
+  <text x="40" y="60" font-size="13" fill="#4b5563">Sumber: diolah untuk buku ini</text>
+
+  <rect x="60" y="110" width="380" height="300" rx="10" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="80" y="140" font-size="14" font-weight="bold" fill="#1e3a8a">Sistem Otonom 65001, milik sendiri</text>
+
+  <g font-size="12" fill="#111827" text-anchor="middle">
+    <rect x="90" y="170" width="100" height="46" fill="#ffffff" stroke="#2563eb"/>
+    <text x="140" y="199">R1</text>
+    <rect x="310" y="170" width="100" height="46" fill="#ffffff" stroke="#2563eb"/>
+    <text x="360" y="199">R2</text>
+    <rect x="200" y="300" width="100" height="46" fill="#ffffff" stroke="#2563eb"/>
+    <text x="250" y="329">R3</text>
+  </g>
+
+  <g stroke="#2563eb" stroke-width="2" stroke-dasharray="6 4">
+    <line x1="190" y1="193" x2="310" y2="193"/>
+    <line x1="140" y1="216" x2="250" y2="300"/>
+    <line x1="360" y1="216" x2="250" y2="300"/>
+  </g>
+  <text x="250" y="182" font-size="11" fill="#1e3a8a" text-anchor="middle">iBGP, nomor sistem otonom sama</text>
+
+  <rect x="520" y="110" width="380" height="300" rx="10" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="540" y="140" font-size="14" font-weight="bold" fill="#14532d">Sistem Otonom 65002, milik tetangga</text>
+
+  <g font-size="12" fill="#111827" text-anchor="middle">
+    <rect x="560" y="180" width="100" height="46" fill="#ffffff" stroke="#16a34a"/>
+    <text x="610" y="209">R4</text>
+    <rect x="760" y="180" width="100" height="46" fill="#ffffff" stroke="#16a34a"/>
+    <text x="810" y="209">R5</text>
+    <rect x="680" y="300" width="100" height="46" fill="#ffffff" stroke="#16a34a"/>
+    <text x="730" y="329">R6</text>
+  </g>
+
+  <g stroke="#16a34a" stroke-width="2" stroke-dasharray="6 4">
+    <line x1="660" y1="203" x2="760" y2="203"/>
+    <line x1="610" y1="226" x2="730" y2="300"/>
+    <line x1="810" y1="226" x2="730" y2="300"/>
+  </g>
+  <text x="710" y="192" font-size="11" fill="#14532d" text-anchor="middle">iBGP, nomor sistem otonom sama</text>
+
+  <line x1="440" y1="193" x2="520" y2="203" stroke="#dc2626" stroke-width="4"/>
+  <text x="480" y="176" font-size="12" font-weight="bold" fill="#dc2626" text-anchor="middle">eBGP</text>
+  <text x="480" y="228" font-size="11" fill="#374151" text-anchor="middle">melintasi batas</text>
+  <text x="480" y="244" font-size="11" fill="#374151" text-anchor="middle">organisasi</text>
+
+  <g font-size="12" fill="#374151">
+    <text x="60" y="450">Sesi eBGP ditulis satu per satu, dan nomor sistem otonom tetangganya harus tepat.</text>
+    <text x="60" y="474">Bila satu angkanya salah, sesi tidak pernah terbentuk, dan tidak ada pesan yang menjelaskannya.</text>
+    <text x="60" y="498">Sesi iBGP berada di dalam satu organisasi, sehingga nomor sistem otonomnya sama.</text>
+  </g>
+</svg>
